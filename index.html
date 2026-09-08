@@ -1819,6 +1819,20 @@
         a class-weighted Random Forest is trained supervised on the same subset. An ensemble score
         combines all of the unsupervised methods with the RF's own probability output.
       </p>
+      <div class="callout">
+        <span class="callout-label">Everything on this step is V6, not V7</span>
+        The trained precursor model and every number/chart below come from
+        <code>step_05_v6/precursor_detection.pkl</code> &mdash; V6, the last dataset with a full
+        downstream re-run, <b>not</b> V7 (see the "Data foundation" step above and the sidebar
+        footer for the V6/V7 dataset status). Step 05 is one of the steps Phase 2 (re-running
+        everything against V7) would need to redo, and Phase 2 hasn't happened yet. Concretely:
+        none of the ~756 events
+        recovered by the feed-forward fix (mostly 2019&ndash;2020) were in this model's
+        training/test data, and the mislabeled <code>beam_present</code> field (only correctly
+        meaningful post-2021 on V6) may itself have been a feature the model leaned on. The one
+        finding below that's unaffected by this: the buffer-length numbers (568.4ms/1136.8ms),
+        which come from reading raw postmortem files directly, independent of dataset version.
+      </div>
       <div class="mini-table">
         <div class="mini-table-row mini-table-head"><span>Method</span><span>ROC AUC</span><span>Labels</span><span>Notes</span></div>
         <div class="mini-table-row"><span>Random Forest</span><span class="mono-num">0.9991</span><span class="mono-num">supervised</span><span>386-feature true-precursor subset</span></div>
