@@ -1898,20 +1898,36 @@
         </figcaption>
       </figure>
       <p class="prose">
-        <b>Read together, this is evidence against a genuine near-trigger precursor signal, not
-        just an inconclusive measurement.</b> A model really keying on an approaching fault should
-        look uncertain far from the trigger and grow confident as it nears &mdash; instead,
-        confidence is already saturated at the furthest offset tested and never moves. The more
-        likely explanation: at least part of what step 05 detects is a
-        <b>stable per-capture characteristic</b> of files that will eventually fault, present
-        hundreds of ms before the trigger with no real dynamics, not proximity to the fault itself.
-        This is exactly the open caveat the report already carries (Sec. 6/7/8: &ldquo;stable
-        per-capture characteristic rather than genuine fault-onset proximity&rdquo;) &mdash; today's
-        curves are new, direct supporting evidence for it, not yet the report's own proposed
-        disambiguating test (scoring the same feature set on a window from the <em>middle</em> of a
-        Normal event's recording, far from any acquisition boundary) &mdash; that specific test is
-        still open future work.
+        A model really keying on an approaching fault should look uncertain far from the trigger
+        and grow confident as it nears &mdash; instead, confidence is already saturated at the
+        furthest offset tested and never moves. Taken alone, that pattern would suggest the model
+        is picking up a <b>stable per-capture characteristic</b> unrelated to the fault itself,
+        rather than genuine fault-onset proximity &mdash; the open caveat the report already
+        carries (Sec. 6/7/8).
       </p>
+      <div class="callout">
+        <span class="callout-label">Disambiguating test run, result complicates the simple reading</span>
+        Ran the report's own proposed test: score the same 386-feature true-precursor set on a
+        window from the <em>middle</em> of a <em>Normal</em> event's recording, far from any
+        acquisition boundary and unrelated to any real trigger (20 confidently-true-negative
+        Normal events, SLURM job 58257135). <b>If the model were keying on a generic, fault-unrelated
+        acquisition characteristic, these should score elevated too &mdash; they don't:</b> 0 of 20
+        scored above the 0.5 fault threshold (predicted fault probability 0.00&ndash;0.05 for 18 of
+        20; the other two, 0.34 and 0.44, still confidently below threshold). The model cleanly
+        separates &ldquo;this is a fault-event recording&rdquo; from &ldquo;this is a normal-event
+        recording&rdquo; even hundreds of ms before either file's own trigger point &mdash; that's
+        not consistent with a generic, label-blind acquisition artifact.
+        <br><br>
+        <b>Net reading:</b> there is a real, fault-specific signal present far earlier than the
+        interlock trip &mdash; genuine early separability, not a spurious correlate. What it is
+        <em>not</em>, per the flat curves above, is a signal that <em>ramps up</em> as the fault
+        approaches; it appears (at least within the tested window) present at roughly constant
+        strength well in advance, on fault-destined recordings specifically. Whether that constant
+        early signature reflects a genuine slow-developing physical precursor or an early
+        fault-associated operating-condition change that isn't itself the cause ramping toward the
+        trigger is still open &mdash; this test rules out the &ldquo;meaningless artifact&rdquo;
+        reading, it doesn't yet distinguish between those two remaining explanations.
+      </div>
     </section>
 
     <section class="step" id="s04">
@@ -2227,6 +2243,23 @@
             Rewrote it to the shared filesystem
             (<code>pipeline/00_scripts/investigate_precursor_curves.py</code>) and resubmitted via a
             proper <code>sbatch</code> wrapper &mdash; completed cleanly in 3 minutes.
+          </p>
+        </div>
+        <div class="log-entry">
+          <span class="log-date">2026-09-09</span>
+          <p class="log-text">
+            <b>Disambiguating test run &mdash; result complicates the earlier "stable per-capture
+            characteristic" reading.</b> Ran the report's own proposed follow-up: score the same
+            386-feature set on a window from the middle of a Normal event's own recording, far
+            from any boundary (SLURM job 58257135, 20 confidently-true-negative Normal events).
+            <b>0 of 20 scored above the 0.5 fault threshold</b> (0.00&ndash;0.05 for 18 of 20; two
+            at 0.34/0.44, still below). If the model were keying on a generic, label-blind
+            acquisition characteristic, these should have scored elevated too &mdash; they didn't.
+            Revised step 03's prose accordingly: this rules out "meaningless artifact," but doesn't
+            resolve whether the flat, early, fault-specific signal reflects a genuine slow-developing
+            physical precursor or an early fault-associated condition change that isn't itself
+            ramping toward the trigger. Left as open, now with one wrong branch (generic artifact)
+            eliminated rather than three explanations still on the table.
           </p>
         </div>
       </div>
