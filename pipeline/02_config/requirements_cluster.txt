@@ -1,0 +1,74 @@
+# LLRF Anomaly Detection - Cluster Requirements
+# For CC-IN2P3 SLURM cluster
+# Python 3.10 or 3.11 recommended
+
+# ============================================================================
+# Core Scientific Computing
+# ============================================================================
+numpy>=1.24.0,<2.0.0
+pandas>=2.0.0
+scipy>=1.10.0
+scikit-learn>=1.3.0
+
+# ============================================================================
+# Data Processing & Visualization
+# ============================================================================
+matplotlib>=3.7.0
+seaborn>=0.12.0
+tqdm>=4.65.0
+h5py>=3.8.0
+
+# ============================================================================
+# Machine Learning - Classical
+# ============================================================================
+xgboost>=2.0.0
+lightgbm>=4.0.0
+
+# ============================================================================
+# Machine Learning - Deep Learning (Optional for data prep, needed for phases)
+# ============================================================================
+# TensorFlow with GPU support (if using GPU nodes)
+# tensorflow>=2.14.0  # CPU version
+# tensorflow[and-cuda]>=2.14.0  # GPU version - install separately if needed
+
+# PyTorch (alternative, if preferred)
+# torch>=2.0.0
+# torchvision>=0.15.0
+
+# ============================================================================
+# Explainability & Advanced ML
+# ============================================================================
+shap>=0.42.0
+
+# ============================================================================
+# Time Series Analysis
+# ============================================================================
+tsfresh>=0.20.0
+statsmodels>=0.14.0
+
+# ============================================================================
+# Utilities
+# ============================================================================
+joblib>=1.3.0
+pathlib>=1.0.1
+click>=8.1.0  # For CLI arguments
+
+# ============================================================================
+# Jupyter (for interactive debugging on cluster)
+# ============================================================================
+jupyter>=1.0.0
+ipykernel>=6.25.0
+notebook>=7.0.0
+
+# ============================================================================
+# Parallel Processing
+# ============================================================================
+multiprocessing-logging>=0.3.4
+psutil>=5.9.0  # For monitoring resources
+
+# ============================================================================
+# Custom Dependencies (if PyPostMortem is not pip-installable)
+# ============================================================================
+# Note: If PyPostMortem needs to be installed separately:
+# pip install /path/to/PyPostMortem
+# or add it to your PYTHONPATH

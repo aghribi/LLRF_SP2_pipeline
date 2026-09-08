@@ -1,0 +1,81 @@
+phase: 06_phase1_binary_stability
+generated_at: '2026-09-07T14:13:56.206696+00:00'
+pipeline_run:
+  dataset_version: V6
+  dataset_path: /sps/m4cast/_spiral2_data/_llrf_data/cooked_data_v6/features_engineered.pkl
+  script: pipeline/00_scripts/prepare_06_phase1_binary.py
+metrics:
+  single_split_rf_roc_auc:
+    value: 1.0
+    fmt: .4f
+    label: Single-split (seed=42) RF ROC AUC
+    display: '1.0000'
+meta:
+  xgboost_stability:
+    accuracy:
+      mean: 0.9990521327014218
+      std: 0.0016110646172489184
+      min: 0.995260663507109
+      max: 1.0
+      values:
+      - 0.995260663507109
+      - 1.0
+      - 0.9968404423380727
+      - 1.0
+      - 1.0
+      - 1.0
+      - 0.9984202211690363
+      - 1.0
+      - 1.0
+      - 1.0
+    f1:
+      mean: 0.9990450914934754
+      std: 0.0016222048645115103
+      min: 0.9952305246422893
+      max: 1.0
+      values:
+      - 0.9952305246422893
+      - 1.0
+      - 0.9968152866242038
+      - 1.0
+      - 1.0
+      - 1.0
+      - 0.9984051036682615
+      - 1.0
+      - 1.0
+      - 1.0
+stability:
+  n_repeats: 10
+  metrics:
+    accuracy:
+      mean: 0.9996840442338073
+      std: 0.0006319115323854873
+      min: 0.9984202211690363
+      max: 1.0
+      values:
+      - 1.0
+      - 0.9984202211690363
+      - 1.0
+      - 1.0
+      - 1.0
+      - 0.9984202211690363
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+    f1:
+      mean: 0.99968
+      std: 0.0006400000000000183
+      min: 0.9984
+      max: 1.0
+      values:
+      - 1.0
+      - 0.9984
+      - 1.0
+      - 1.0
+      - 1.0
+      - 0.9984
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0

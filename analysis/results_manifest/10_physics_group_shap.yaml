@@ -1,0 +1,525 @@
+phase: 10_physics_group_shap
+generated_at: '2026-09-07T16:00:51.683918+00:00'
+pipeline_run:
+  dataset_version: V6
+  dataset_path: /sps/m4cast/_spiral2_data/_llrf_data/cooked_data_v6/features_engineered.pkl
+  script: pipeline/00_scripts/prepare_10_enhanced_shap_analysis.py
+metrics:
+  pickup_threshold_top_group:
+    value: Statistical
+    fmt: null
+    label: 'Pickup threshold: dominant physics-group, per-feature-mean SHAP (%)'
+    display: Statistical
+  pickup_threshold_top_group_mean_pct:
+    value: 45.2769102706262
+    fmt: .1f
+    label: 'Pickup threshold: Statistical share of per-feature-mean SHAP importance
+      (%)'
+    display: '45.3'
+  pickup_threshold_top_group_by_sum:
+    value: Statistical
+    fmt: null
+    label: 'Pickup threshold: dominant physics-group, group-sum SHAP (%) -- may differ
+      from the per-feature-mean top group'
+    display: Statistical
+  pickup_threshold_top_group_sum_pct:
+    value: 62.690967317084734
+    fmt: .1f
+    label: 'Pickup threshold: Statistical share of group-sum SHAP importance (%)'
+    display: '62.7'
+  pickup_threshold_top_group_by_median:
+    value: Phase Stability
+    fmt: null
+    label: 'Pickup threshold: dominant physics-group, per-feature-median SHAP (%)
+      -- robust to single-feature outliers but degenerate at small group sizes'
+    display: Phase Stability
+  pickup_threshold_top_group_median_pct:
+    value: 100.0
+    fmt: .1f
+    label: 'Pickup threshold: Phase Stability share of per-feature-median SHAP importance
+      (%)'
+    display: '100.0'
+  fast_external_cutoff_top_group:
+    value: RF Power Flow
+    fmt: null
+    label: 'Fast external cutoff: dominant physics-group, per-feature-mean SHAP (%)'
+    display: RF Power Flow
+  fast_external_cutoff_top_group_mean_pct:
+    value: 40.77878553741574
+    fmt: .1f
+    label: 'Fast external cutoff: RF Power Flow share of per-feature-mean SHAP importance
+      (%)'
+    display: '40.8'
+  fast_external_cutoff_top_group_by_sum:
+    value: Temporal
+    fmt: null
+    label: 'Fast external cutoff: dominant physics-group, group-sum SHAP (%) -- may
+      differ from the per-feature-mean top group'
+    display: Temporal
+  fast_external_cutoff_top_group_sum_pct:
+    value: 58.47290691625062
+    fmt: .1f
+    label: 'Fast external cutoff: Temporal share of group-sum SHAP importance (%)'
+    display: '58.5'
+  fast_external_cutoff_top_group_by_median:
+    value: RF Power Flow
+    fmt: null
+    label: 'Fast external cutoff: dominant physics-group, per-feature-median SHAP
+      (%) -- robust to single-feature outliers but degenerate at small group sizes'
+    display: RF Power Flow
+  fast_external_cutoff_top_group_median_pct:
+    value: 56.28863841086783
+    fmt: .1f
+    label: 'Fast external cutoff: RF Power Flow share of per-feature-median SHAP importance
+      (%)'
+    display: '56.3'
+  rf_authorization_absent_top_group:
+    value: Modulator Command
+    fmt: null
+    label: 'RF authorization absent: dominant physics-group, per-feature-mean SHAP
+      (%)'
+    display: Modulator Command
+  rf_authorization_absent_top_group_mean_pct:
+    value: 28.488380901179145
+    fmt: .1f
+    label: 'RF authorization absent: Modulator Command share of per-feature-mean SHAP
+      importance (%)'
+    display: '28.5'
+  rf_authorization_absent_top_group_by_sum:
+    value: Temporal
+    fmt: null
+    label: 'RF authorization absent: dominant physics-group, group-sum SHAP (%) --
+      may differ from the per-feature-mean top group'
+    display: Temporal
+  rf_authorization_absent_top_group_sum_pct:
+    value: 51.81516392346863
+    fmt: .1f
+    label: 'RF authorization absent: Temporal share of group-sum SHAP importance (%)'
+    display: '51.8'
+  rf_authorization_absent_top_group_by_median:
+    value: RF Power Flow
+    fmt: null
+    label: 'RF authorization absent: dominant physics-group, per-feature-median SHAP
+      (%) -- robust to single-feature outliers but degenerate at small group sizes'
+    display: RF Power Flow
+  rf_authorization_absent_top_group_median_pct:
+    value: 27.377807988915094
+    fmt: .1f
+    label: 'RF authorization absent: RF Power Flow share of per-feature-median SHAP
+      importance (%)'
+    display: '27.4'
+  vacuum_threshold_top_group:
+    value: Statistical
+    fmt: null
+    label: 'Vacuum threshold: dominant physics-group, per-feature-mean SHAP (%)'
+    display: Statistical
+  vacuum_threshold_top_group_mean_pct:
+    value: 36.41753427565803
+    fmt: .1f
+    label: 'Vacuum threshold: Statistical share of per-feature-mean SHAP importance
+      (%)'
+    display: '36.4'
+  vacuum_threshold_top_group_by_sum:
+    value: Statistical
+    fmt: null
+    label: 'Vacuum threshold: dominant physics-group, group-sum SHAP (%) -- may differ
+      from the per-feature-mean top group'
+    display: Statistical
+  vacuum_threshold_top_group_sum_pct:
+    value: 50.87434976360662
+    fmt: .1f
+    label: 'Vacuum threshold: Statistical share of group-sum SHAP importance (%)'
+    display: '50.9'
+  vacuum_threshold_top_group_by_median:
+    value: RF Power Flow
+    fmt: null
+    label: 'Vacuum threshold: dominant physics-group, per-feature-median SHAP (%)
+      -- robust to single-feature outliers but degenerate at small group sizes'
+    display: RF Power Flow
+  vacuum_threshold_top_group_median_pct:
+    value: 56.91284158745685
+    fmt: .1f
+    label: 'Vacuum threshold: RF Power Flow share of per-feature-median SHAP importance
+      (%)'
+    display: '56.9'
+  cavity_quench_breakdown_top_group:
+    value: Effective Decay
+    fmt: null
+    label: 'Cavity quench/breakdown: dominant physics-group, per-feature-mean SHAP
+      (%)'
+    display: Effective Decay
+  cavity_quench_breakdown_top_group_mean_pct:
+    value: 18.04164345191063
+    fmt: .1f
+    label: 'Cavity quench/breakdown: Effective Decay share of per-feature-mean SHAP
+      importance (%)'
+    display: '18.0'
+  cavity_quench_breakdown_top_group_by_sum:
+    value: Temporal
+    fmt: null
+    label: 'Cavity quench/breakdown: dominant physics-group, group-sum SHAP (%) --
+      may differ from the per-feature-mean top group'
+    display: Temporal
+  cavity_quench_breakdown_top_group_sum_pct:
+    value: 51.029295363681
+    fmt: .1f
+    label: 'Cavity quench/breakdown: Temporal share of group-sum SHAP importance (%)'
+    display: '51.0'
+  cavity_quench_breakdown_top_group_by_median:
+    value: Effective Decay
+    fmt: null
+    label: 'Cavity quench/breakdown: dominant physics-group, per-feature-median SHAP
+      (%) -- robust to single-feature outliers but degenerate at small group sizes'
+    display: Effective Decay
+  cavity_quench_breakdown_top_group_median_pct:
+    value: 31.189382128125647
+    fmt: .1f
+    label: 'Cavity quench/breakdown: Effective Decay share of per-feature-median SHAP
+      importance (%)'
+    display: '31.2'
+  rf_safety_threshold_exceeded_top_group:
+    value: Statistical
+    fmt: null
+    label: 'RF safety threshold exceeded: dominant physics-group, per-feature-mean
+      SHAP (%)'
+    display: Statistical
+  rf_safety_threshold_exceeded_top_group_mean_pct:
+    value: 26.00449522660016
+    fmt: .1f
+    label: 'RF safety threshold exceeded: Statistical share of per-feature-mean SHAP
+      importance (%)'
+    display: '26.0'
+  rf_safety_threshold_exceeded_top_group_by_sum:
+    value: Statistical
+    fmt: null
+    label: 'RF safety threshold exceeded: dominant physics-group, group-sum SHAP (%)
+      -- may differ from the per-feature-mean top group'
+    display: Statistical
+  rf_safety_threshold_exceeded_top_group_sum_pct:
+    value: 51.98860773379669
+    fmt: .1f
+    label: 'RF safety threshold exceeded: Statistical share of group-sum SHAP importance
+      (%)'
+    display: '52.0'
+  rf_safety_threshold_exceeded_top_group_by_median:
+    value: Detuning
+    fmt: null
+    label: 'RF safety threshold exceeded: dominant physics-group, per-feature-median
+      SHAP (%) -- robust to single-feature outliers but degenerate at small group
+      sizes'
+    display: Detuning
+  rf_safety_threshold_exceeded_top_group_median_pct:
+    value: 96.48644885718404
+    fmt: .1f
+    label: 'RF safety threshold exceeded: Detuning share of per-feature-median SHAP
+      importance (%)'
+    display: '96.5'
+  rf_regulation_out_of_tolerance_top_group:
+    value: Modulator Command
+    fmt: null
+    label: 'RF regulation out of tolerance: dominant physics-group, per-feature-mean
+      SHAP (%)'
+    display: Modulator Command
+  rf_regulation_out_of_tolerance_top_group_mean_pct:
+    value: 30.636660126248277
+    fmt: .1f
+    label: 'RF regulation out of tolerance: Modulator Command share of per-feature-mean
+      SHAP importance (%)'
+    display: '30.6'
+  rf_regulation_out_of_tolerance_top_group_by_sum:
+    value: Temporal
+    fmt: null
+    label: 'RF regulation out of tolerance: dominant physics-group, group-sum SHAP
+      (%) -- may differ from the per-feature-mean top group'
+    display: Temporal
+  rf_regulation_out_of_tolerance_top_group_sum_pct:
+    value: 50.67199274276621
+    fmt: .1f
+    label: 'RF regulation out of tolerance: Temporal share of group-sum SHAP importance
+      (%)'
+    display: '50.7'
+  rf_regulation_out_of_tolerance_top_group_by_median:
+    value: RF Power Flow
+    fmt: null
+    label: 'RF regulation out of tolerance: dominant physics-group, per-feature-median
+      SHAP (%) -- robust to single-feature outliers but degenerate at small group
+      sizes'
+    display: RF Power Flow
+  rf_regulation_out_of_tolerance_top_group_median_pct:
+    value: 23.55668977748944
+    fmt: .1f
+    label: 'RF regulation out of tolerance: RF Power Flow share of per-feature-median
+      SHAP importance (%)'
+    display: '23.6'
+  n_features_effective_decay:
+    value: 6
+    fmt: null
+    label: Number of features classified into the Effective Decay group
+    display: '6'
+  n_features_detuning:
+    value: 5
+    fmt: null
+    label: Number of features classified into the Detuning group
+    display: '5'
+  n_features_microphonics:
+    value: 4
+    fmt: null
+    label: Number of features classified into the Microphonics group
+    display: '4'
+  n_features_rf_mismatch:
+    value: 9
+    fmt: null
+    label: Number of features classified into the RF Mismatch group
+    display: '9'
+  n_features_modulator_command:
+    value: 6
+    fmt: null
+    label: Number of features classified into the Modulator Command group
+    display: '6'
+  n_features_phase_stability:
+    value: 4
+    fmt: null
+    label: Number of features classified into the Phase Stability group
+    display: '4'
+  n_features_rf_power_flow:
+    value: 5
+    fmt: null
+    label: Number of features classified into the RF Power Flow group
+    display: '5'
+  n_features_statistical:
+    value: 262
+    fmt: null
+    label: Number of features classified into the Statistical group
+    display: '262'
+  n_features_temporal:
+    value: 466
+    fmt: null
+    label: Number of features classified into the Temporal group
+    display: '466'
+  n_features_metadata_status:
+    value: 10
+    fmt: null
+    label: Number of features classified into the Metadata/Status group
+    display: '10'
+  n_features_other:
+    value: 0
+    fmt: null
+    label: Number of features classified into the Other group
+    display: '0'
+  n_features_physics_informed_total:
+    value: 39
+    fmt: null
+    label: Total features across the seven named physics-informed families combined
+    display: '39'
+meta:
+  grouping_method: Exact-name / prefix / suffix classification by the actual engineer_features()
+    code section that produced each feature (effective decay, detuning, microphonics,
+    RF mismatch, modulator command, phase stability, RF power flow -- the seven families
+    in Appendix A -- plus Statistical, Temporal, Metadata/Status, Other), verified
+    100% coverage with no 'Other' fallback against the real 770-feature V6 set. Replaces
+    a first-match substring heuristic that misclassified known features (see get_physics_group()
+    in prepare_10_enhanced_shap_analysis.py).
+  primary_metric_is_per_feature_mean: The seven physics-informed families total only
+    39 features combined, versus 262 Statistical and 466 Temporal -- a group-SUM comparison
+    structurally favors the larger groups regardless of per-feature informativeness,
+    so the per-feature MEAN (dividing out this count imbalance) is the metric this
+    manifest treats as primary; the sum-based table is exposed alongside it for direct
+    comparison, not hidden.
+  full_mean_table_pct:
+    Pickup threshold:
+      Effective Decay: 0.0
+      Detuning: 0.0
+      Microphonics: 0.0
+      RF Mismatch: 0.0
+      Modulator Command: 0.0
+      Phase Stability: 19.15
+      RF Power Flow: 10.96
+      Statistical: 45.28
+      Temporal: 14.65
+      Metadata/Status: 9.96
+      Other: 0.0
+    Fast external cutoff:
+      Effective Decay: 8.95
+      Detuning: 2.12
+      Microphonics: 7.83
+      RF Mismatch: 16.47
+      Modulator Command: 2.86
+      Phase Stability: 1.66
+      RF Power Flow: 40.78
+      Statistical: 8.81
+      Temporal: 8.46
+      Metadata/Status: 2.06
+      Other: 0.0
+    RF authorization absent:
+      Effective Decay: 12.1
+      Detuning: 4.05
+      Microphonics: 4.36
+      RF Mismatch: 9.22
+      Modulator Command: 28.49
+      Phase Stability: 5.67
+      RF Power Flow: 15.71
+      Statistical: 9.71
+      Temporal: 7.03
+      Metadata/Status: 3.66
+      Other: 0.0
+    Vacuum threshold:
+      Effective Decay: 0.0
+      Detuning: 15.08
+      Microphonics: 0.0
+      RF Mismatch: 10.57
+      Modulator Command: 0.0
+      Phase Stability: 0.0
+      RF Power Flow: 18.73
+      Statistical: 36.42
+      Temporal: 19.2
+      Metadata/Status: 0.0
+      Other: 0.0
+    Cavity quench/breakdown:
+      Effective Decay: 18.04
+      Detuning: 7.54
+      Microphonics: 8.99
+      RF Mismatch: 8.78
+      Modulator Command: 4.65
+      Phase Stability: 2.34
+      RF Power Flow: 14.9
+      Statistical: 17.2
+      Temporal: 11.06
+      Metadata/Status: 6.49
+      Other: 0.0
+    RF safety threshold exceeded:
+      Effective Decay: 4.27
+      Detuning: 7.88
+      Microphonics: 1.47
+      RF Mismatch: 13.09
+      Modulator Command: 11.24
+      Phase Stability: 1.44
+      RF Power Flow: 21.9
+      Statistical: 26.0
+      Temporal: 12.71
+      Metadata/Status: 0.0
+      Other: 0.0
+    RF regulation out of tolerance:
+      Effective Decay: 6.81
+      Detuning: 5.17
+      Microphonics: 4.48
+      RF Mismatch: 8.55
+      Modulator Command: 30.64
+      Phase Stability: 3.94
+      RF Power Flow: 19.9
+      Statistical: 10.78
+      Temporal: 7.3
+      Metadata/Status: 2.43
+      Other: 0.0
+  full_sum_table_pct:
+    Pickup threshold:
+      Effective Decay: 0.0
+      Detuning: 0.0
+      Microphonics: 0.0
+      RF Mismatch: 0.0
+      Modulator Command: 0.0
+      Phase Stability: 0.4
+      RF Power Flow: 0.29
+      Statistical: 62.69
+      Temporal: 36.09
+      Metadata/Status: 0.53
+      Other: 0.0
+    Fast external cutoff:
+      Effective Decay: 0.8
+      Detuning: 0.16
+      Microphonics: 0.46
+      RF Mismatch: 2.2
+      Modulator Command: 0.25
+      Phase Stability: 0.1
+      RF Power Flow: 3.02
+      Statistical: 34.23
+      Temporal: 58.47
+      Metadata/Status: 0.31
+      Other: 0.0
+    RF authorization absent:
+      Effective Decay: 1.15
+      Detuning: 0.32
+      Microphonics: 0.28
+      RF Mismatch: 1.31
+      Modulator Command: 2.7
+      Phase Stability: 0.36
+      RF Power Flow: 1.24
+      Statistical: 40.24
+      Temporal: 51.82
+      Metadata/Status: 0.58
+      Other: 0.0
+    Vacuum threshold:
+      Effective Decay: 0.0
+      Detuning: 0.4
+      Microphonics: 0.0
+      RF Mismatch: 0.51
+      Modulator Command: 0.0
+      Phase Stability: 0.0
+      RF Power Flow: 0.5
+      Statistical: 50.87
+      Temporal: 47.72
+      Metadata/Status: 0.0
+      Other: 0.0
+    Cavity quench/breakdown:
+      Effective Decay: 1.07
+      Detuning: 0.37
+      Microphonics: 0.36
+      RF Mismatch: 0.78
+      Modulator Command: 0.28
+      Phase Stability: 0.09
+      RF Power Flow: 0.74
+      Statistical: 44.64
+      Temporal: 51.03
+      Metadata/Status: 0.64
+      Other: 0.0
+    RF safety threshold exceeded:
+      Effective Decay: 0.2
+      Detuning: 0.3
+      Microphonics: 0.04
+      RF Mismatch: 0.9
+      Modulator Command: 0.51
+      Phase Stability: 0.04
+      RF Power Flow: 0.84
+      Statistical: 51.99
+      Temporal: 45.18
+      Metadata/Status: 0.0
+      Other: 0.0
+    RF regulation out of tolerance:
+      Effective Decay: 0.61
+      Detuning: 0.39
+      Microphonics: 0.27
+      RF Mismatch: 1.15
+      Modulator Command: 2.74
+      Phase Stability: 0.24
+      RF Power Flow: 1.48
+      Statistical: 42.1
+      Temporal: 50.67
+      Metadata/Status: 0.36
+      Other: 0.0
+  feature_counts_per_group:
+    Effective Decay: 6
+    Detuning: 5
+    Microphonics: 4
+    RF Mismatch: 9
+    Modulator Command: 6
+    Phase Stability: 4
+    RF Power Flow: 5
+    Statistical: 262
+    Temporal: 466
+    Metadata/Status: 10
+    Other: 0
+  per_label_test_scores:
+    Pickup threshold: 0.9952153110047847
+    Fast external cutoff: 0.9904306220095693
+    RF authorization absent: 0.937799043062201
+    Vacuum threshold: 0.9952153110047847
+    Cavity quench/breakdown: 0.9856459330143541
+    RF safety threshold exceeded: 0.9856459330143541
+    RF regulation out of tolerance: 0.9712918660287081
+  per_label_n_positive:
+    Pickup threshold: 12
+    Fast external cutoff: 11
+    RF authorization absent: 309
+    Vacuum threshold: 20
+    Cavity quench/breakdown: 28
+    RF safety threshold exceeded: 72
+    RF regulation out of tolerance: 591

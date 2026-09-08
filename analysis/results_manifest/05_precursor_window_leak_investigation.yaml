@@ -1,0 +1,94 @@
+phase: 05_precursor_window_leak_investigation
+generated_at: '2026-09-07T14:57:32.635101+00:00'
+pipeline_run:
+  dataset_version: V6
+  dataset_path: /sps/m4cast/_spiral2_data/_llrf_data/cooked_data_v6/features_engineered_v6.pkl
+  script: pipeline/00_scripts/investigate_precursor_window_leak.py
+metrics:
+  normal_pretrigger_fraction_mean:
+    value: 0.715752762405562
+    fmt: .3f
+    label: 'Normal events: mean pre-trigger fraction of buffer'
+    display: '0.716'
+  fault_pretrigger_fraction_mean:
+    value: 0.5019893560149102
+    fmt: .3f
+    label: 'Fault events: mean pre-trigger fraction of buffer'
+    display: '0.502'
+  pretrigger_fraction_gap:
+    value: 0.21376340639065172
+    fmt: .3f
+    label: Gap in mean pre-trigger fraction (Normal minus Fault)
+    display: '0.214'
+  true_precursor_rf_auc:
+    value: 0.9998227835463259
+    fmt: .4f
+    label: Supervised RF AUC on the 382-col fixed-window precursor subset
+    display: '0.9998'
+  true_precursor_isolation_forest_auc:
+    value: 0.6546325878594249
+    fmt: .4f
+    label: Isolation Forest AUC on the same 382-col subset
+    display: '0.6546'
+  true_precursor_lof_auc:
+    value: 0.5912806176783812
+    fmt: .4f
+    label: LOF AUC on the same 382-col subset
+    display: '0.5913'
+meta:
+  n_per_class_sampled: 40
+  method: Re-read raw postmortem files directly (bypassing the cached feature pkl),
+    re-ran zero_idx = argmin(abs(time_arr)) exactly as prepare_data_cluster_v6.py,
+    and computed pre-trigger fraction = zero_idx / total_samples per file.
+  conclusion: Normal events have a substantially larger pre-trigger fraction than
+    Fault events (gap ~0.21-0.25), confirmed via two independent raw-file samples.
+    This is real and affects engineer_features()'s "steady-state" pre/post features
+    (detuning, RF-mismatch, modulator, RF-power), which deliberately use ALL available
+    pre-trigger data with no fixed bound.
+  corrected_conclusion: 'This window-length gap does NOT explain step 05''s near-perfect
+    supervised AUC, however: restricting to ONLY the codebase''s already-correctly-bounded
+    "true precursor" features (engineer_features() section 4 trend/CUSUM/early-late-window
+    + section 6 segment-based, 382 of 766 columns, all built on a FIXED scale_samples(3000,
+    dt_us) window with a `continue`-if-too-short guard against variable window length)
+    still gives supervised RF AUC=0.9998+/-0.0002 across 10 repeated splits, while
+    Isolation Forest/LOF on the SAME 382 columns still only reach 0.65/0.59 -- identical
+    to their score on the full 766-column set. Window length cannot explain a result
+    on features where window length is already fixed. The strong-supervised/weak-unsupervised
+    gap is the ordinary signature of a real, learnable decision boundary, not an artifact.
+    The remaining caveat is interpretive: this fixed window sits immediately before
+    zero_idx (the informatic ALM trigger), which this codebase''s own AMPT-refinement
+    work already establishes can lag the true physical fault onset for at least one
+    category -- so this likely reflects detecting the fault already ramping up ahead
+    of the interlock trip, not an independent precursor from before any physical change
+    begins. Recommendation: step 05/05a should be restricted to this 382-column "true
+    precursor" subset (excluding whole-signal and unbounded steady-state features,
+    which ARE inappropriate for this task) and the result reported as early detection
+    of fault onset ahead of the interlock, not as prediction before any physical change
+    -- a real, valuable, but differently-scoped claim than "precursor detection" currently
+    implies.'
+  full_result:
+    normal:
+      n_files: 40
+      n_failed: 0
+      zero_idx_mean: 76523.8
+      zero_idx_median: 50047.0
+      zero_idx_std: 34941.310372680644
+      pretrigger_fraction_mean: 0.715752762405562
+      pretrigger_fraction_median: 0.4999900095907928
+      pretrigger_fraction_std: 0.227020435955879
+    fault:
+      n_files: 40
+      n_failed: 0
+      zero_idx_mean: 57610.2
+      zero_idx_median: 50047.0
+      zero_idx_std: 34110.306562093516
+      pretrigger_fraction_mean: 0.5019893560149102
+      pretrigger_fraction_median: 0.4999900095907928
+      pretrigger_fraction_std: 0.0917442022450576
+  feature_scope_test:
+    n_columns: 386
+    n_columns_total: 777
+    rf_auc_mean: 0.9998227835463259
+    rf_auc_std: 0.00019762634002415736
+    isolation_forest_auc_mean: 0.6546325878594249
+    lof_auc_mean: 0.5912806176783812

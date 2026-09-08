@@ -1,0 +1,65 @@
+phase: inference_latency_benchmark
+generated_at: '2026-09-07T15:56:36.243135+00:00'
+pipeline_run:
+  dataset_version: V6
+  dataset_path: /sps/m4cast/_spiral2_data/_llrf_data/cooked_data_v6/features_engineered_v6.pkl
+  script: pipeline/00_scripts/benchmark_inference_latency.py
+metrics:
+  step06_binary_rf_mean_ms:
+    value: 20.338951309677213
+    fmt: .3f
+    label: 'step06_binary_rf: mean inference latency (ms/event)'
+    display: '20.339'
+  step06_binary_rf_p95_ms:
+    value: 24.054655013605952
+    fmt: .3f
+    label: 'step06_binary_rf: p95 inference latency (ms/event)'
+    display: '24.055'
+  phaseC_label_powerset_mean_ms:
+    value: 0.4939627251587808
+    fmt: .3f
+    label: 'phaseC_label_powerset: mean inference latency (ms/event)'
+    display: '0.494'
+  phaseC_label_powerset_p95_ms:
+    value: 0.5307511892169713
+    fmt: .3f
+    label: 'phaseC_label_powerset: p95 inference latency (ms/event)'
+    display: '0.531'
+  step05_precursor_rf_mean_ms:
+    value: 19.673098605126143
+    fmt: .3f
+    label: 'step05_precursor_rf: mean inference latency (ms/event)'
+    display: '19.673'
+  step05_precursor_rf_p95_ms:
+    value: 24.01549951173365
+    fmt: .3f
+    label: 'step05_precursor_rf: p95 inference latency (ms/event)'
+    display: '24.015'
+meta:
+  method: Single-event, single-threaded wall-clock timing (scaler.transform + predict,
+    one row at a time, no batching) over each model's own V6 test set -- the realistic
+    "one new postmortem file arrives" deployment scenario. Replaces the unverified
+    "45ms/event"/"<100ms" claims, which predate this session's leakage fixes and V6,
+    with a real, reproducible number. Feature engineering time (reading the raw postmortem
+    file, computing the ~766/382 features) is NOT included -- this times model inference
+    only, given per-file feature engineering already runs as part of the existing
+    offline pipeline, not per-event online in this benchmark's scope.
+  full_summary:
+    step06_binary_rf:
+      mean_ms: 20.338951309677213
+      median_ms: 22.231664042919874
+      p95_ms: 24.054655013605952
+      max_ms: 35.34418484196067
+      n_timed: 200
+    phaseC_label_powerset:
+      mean_ms: 0.4939627251587808
+      median_ms: 0.451608095318079
+      p95_ms: 0.5307511892169713
+      max_ms: 6.599209271371365
+      n_timed: 200
+    step05_precursor_rf:
+      mean_ms: 19.673098605126143
+      median_ms: 22.144234739243984
+      p95_ms: 24.01549951173365
+      max_ms: 63.988001085817814
+      n_timed: 200

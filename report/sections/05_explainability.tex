@@ -1,0 +1,78 @@
+% Explainability and Interpretability
+% Author: Adnan Ghribi
+
+\label{sec:explainability}
+
+Explainability is critical for deploying machine learning in safety-critical accelerator environments. This section presents an explainability framework combining global feature importance (SHAP), local instance explanations (LIME), and physics-grounded interpretation.
+
+\subsection{Feature Importance Analysis with SHAP}
+
+SHapley Additive exPlanations (SHAP) assigns feature importance values based on Shapley values from cooperative game theory, providing theoretically consistent explanations for model predictions~\cite{shap}.
+
+\subsubsection{Global Feature Importance}
+
+We compute SHAP values for all \MetricZeroSixBinaryClassificationNFeatures{} features across the test set, for a per-fault-category Random Forest classifier trained with a leakage-safe split, to identify globally important predictors. Figure~\ref{fig:shap_summary} shows the top features ranked by mean absolute SHAP value.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\linewidth]{figures/shap_summary.pdf}
+    \caption{SHAP summary (beeswarm) plot for \textit{RF regulation out of tolerance} (the largest category, n=591), from the same one-vs-rest, leakage-safe-split Random Forest used for the physics-group breakdown (Table~\ref{tab:physics_group_shap}, Sec.~\ref{sec:results}). Color indicates feature value (purple=high, orange=low); the x-axis shows each point's impact on model output. Shown for one representative, well-populated category rather than all seven to keep the figure legible; the full 7-category physics-group breakdown is tabulated separately.} % MANUAL: "591"/"7" are real, already macro-cited counts elsewhere (Sec. 1/6), repeated here as plain prose inside a caption
+    \label{fig:shap_summary}
+\end{figure}
+
+Key findings, grouped by the actual \texttt{engineer\_features()} code section that produced each feature (Effective Decay, Detuning, Microphonics, RF Mismatch, Modulator Command, Phase Stability, RF Power Flow, Statistical, Temporal, Metadata/Status -- Sec.~\ref{sec:methodology}) rather than a substring-name heuristic, and reported as per-feature-mean importance rather than the group sum:
+
+\begin{itemize}
+    \item \textbf{Why per-feature-mean, not group sum}: the seven named physics-informed families total only \MetricOneZeroPhysicsGroupShapNFeaturesPhysicsInformedTotal{} features combined, versus \MetricOneZeroPhysicsGroupShapNFeaturesStatistical{} Statistical and \MetricOneZeroPhysicsGroupShapNFeaturesTemporal{} Temporal features -- roughly a 20:1 imbalance (full per-group breakdown in Sec.~\ref{sec:methodology}). % MANUAL: 20:1 is a rounded summary of the macro-cited counts, not a separate manifest metric
+Summing SHAP importance by group structurally favors Statistical/Temporal regardless of how informative any individual physics-informed feature is; dividing by group size (per-feature mean) is the fairer basis for a "which group matters most" claim, and changes the answer substantially (Table~\ref{tab:physics_group_shap}).
+    \item \textbf{A physics-informed family is dominant for four of seven fault categories} on a per-feature-mean basis: RF Power Flow for fast external cutoff (\MetricOneZeroPhysicsGroupShapFastExternalCutoffTopGroupMeanPct\%); Modulator Command for RF authorization absent (\MetricOneZeroPhysicsGroupShapRfAuthorizationAbsentTopGroupMeanPct\%) and RF regulation out of tolerance (\MetricOneZeroPhysicsGroupShapRfRegulationOutOfToleranceTopGroupMeanPct\%); and Effective Decay for cavity quench/breakdown (\MetricOneZeroPhysicsGroupShapCavityQuenchBreakdownTopGroupMeanPct\%, physically consistent with a quench's defining rapid-collapse signature). The remaining three categories are genuinely Statistical-dominated: pickup threshold (\MetricOneZeroPhysicsGroupShapPickupThresholdTopGroupMeanPct\%) and vacuum threshold (\MetricOneZeroPhysicsGroupShapVacuumThresholdTopGroupMeanPct\%) have no dedicated physics-informed feature family in this pipeline (Appendix~\ref{appendix:features}), so any physical signal from those two categories can only appear in the generic Statistical group; RF safety threshold exceeded (\MetricOneZeroPhysicsGroupShapRfSafetyThresholdExceededTopGroupMeanPct\%) does have a matching family (RF Power Flow) but Statistical still edges it out.
+    \item \textbf{The literal top-ranked individual features per category are a separate question from group dominance}, and are still often drawn from the large Temporal/Statistical groups even where a physics-informed family wins on a per-feature-mean basis -- e.g. cavity quench/breakdown's single highest-SHAP individual features are \texttt{Ucav\_accel\_max} and \texttt{Q\_Ucav\_binary\_accel\_max} (both Temporal) and \texttt{Ucav\_autocorr\_lag1} (Statistical), even though Effective Decay is the top group on average. Per-feature-mean answers "which family is most reliably informative, member for member"; the individual ranking answers "which single feature ranks highest" -- these are both legitimate, different questions, and we report both rather than only the more flattering one.
+\end{itemize}
+
+This is a data-driven finding, not an assumed one, and a substantially different one than an unnormalized group-sum comparison would suggest (Sec.~\ref{sec:methodology}). None of these physics-informed families include a loaded quality factor ($Q_L$), which -- as noted in Sec.~\ref{sec:methodology} -- is not physically well-defined for the postmortem fault transients this pipeline analyzes and is not among the implemented features.
+
+\subsubsection{Per-Fault-Type Feature Importance}
+
+SHAP analysis stratified by fault type (Table~\ref{tab:physics_group_shap}, Sec.~\ref{sec:results}) shows the dominant feature group differs by category and is generally consistent with each category's distinct physical signature: a cavity quench manifests as an abrupt voltage collapse (Effective Decay-dominated), safety-threshold and regulation-tolerance faults are more directly tied to the RF drive demand itself (Modulator Command-dominated), and vacuum/pickup-threshold categories -- lacking a dedicated physics feature family for the signals that literally define them -- fall back to generic statistical or microphonics-adjacent structure.
+
+\subsection{LIME for Local Explanations}
+
+Local Interpretable Model-Agnostic Explanations (LIME)~\cite{lime} generates instance-level explanations by fitting a local linear model around one individual prediction. Fig.~\ref{fig:lime_example} shows one representative example -- a confidently-classified true positive -- rather than a systematic sweep over every misclassified event, which is future work (Sec.~\ref{sec:conclusion}).
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\linewidth]{figures/lime_example.pdf}
+    \caption{LIME local explanation for one confidently-classified \textit{RF regulation out of tolerance} test event (same model as Fig.~\ref{fig:shap_summary}), showing the discretized feature-threshold rules with the largest local contribution. Orange bars support the prediction, blue bars oppose it.}
+    \label{fig:lime_example}
+\end{figure}
+
+Analysis of the root-cause classifier's confusion pairs (Sec.~\ref{sec:results}) shows the dominant confusion is between the two largest categories: \textit{RF regulation out of tolerance} events are misclassified as \textit{RF authorization absent} in 8 of 313 % MANUAL: confusion counts from a single held-out split (analysis/results_manifest/10_phase3_weakness_diagnosis.yaml meta.confusion.root_cause), not currently exposed as manifest metrics
+test events -- a real physical overlap between the two largest categories, not a random minority-class artifact -- while each of the four rarest categories has 2-3 events routed into the majority class, consistent with ordinary class-imbalance bias. % MANUAL: same source as above (10_phase3_weakness_diagnosis.yaml confusion counts), not yet a manifest metric
+A systematic LIME sweep specifically over these confusion pairs, to test whether they share overlapping statistical-feature contributions, has not yet been run against the corrected V6 pipeline and is left as future work (Sec.~\ref{sec:conclusion}) rather than asserted here.
+
+\subsection{Physics-Grounded Interpretation}
+
+To ensure that model decisions align with physical plausibility, we validate feature importance against known LLRF physics at the signal-group level rather than asserting specific classical quantities that are not implemented in this pipeline:
+
+\begin{itemize}
+    \item \textbf{Effective-decay features} (Sec.~\ref{sec:methodology}) are the top per-feature-mean group for cavity quench/breakdown, physically consistent with a quench's defining rapid voltage-collapse signature, even though the single highest-ranked individual features there are drawn from the (much larger) Temporal group of generic derivative statistics (acceleration, velocity of cavity voltage) -- both point to the same underlying physical mechanism, a rapid change in cavity voltage, described at different levels of feature engineering.
+    \item \textbf{Modulator-command features} dominating RF safety threshold exceeded and RF regulation out of tolerance is consistent with these categories' names: both are defined by a threshold or tolerance on the RF regulation loop's own behavior, so features describing the drive demand itself (rather than the cavity's measured response) are a physically direct signal.
+    \item \textbf{Statistical features dominate only vacuum threshold}, the one category with no dedicated physics-informed feature family for its defining signal (vacuum pressure) in this pipeline -- a taxonomy gap, not necessarily evidence that this fault manifests as a diffuse statistical change rather than through a specific physical mechanism.
+    \item We explicitly do not compute or cite a loaded quality factor ($Q_L$) as an implemented feature: as discussed in Sec.~\ref{sec:methodology}, the standard exponential-decay-based $Q_L$ calculation requires a free cavity decay with the drive/loop disengaged, which does not describe the postmortem fault transients this pipeline analyzes (the loop remains closed and active throughout). $Q_L$ remains measurable on SPIRAL2's CW cavities by other standard means -- a frequency-domain bandwidth sweep, or a deliberately loop-opened decay test -- but those require dedicated measurements outside this pipeline's postmortem-only data, so no such feature exists in the pipeline's feature set.
+\end{itemize}
+
+\subsection{Explainability for Operator Trust}
+
+The explainability framework serves several practical purposes:
+
+\begin{enumerate}
+    \item \textbf{Model Validation}: Physics-grounded validation ensures that ML models align with domain knowledge, preventing deployment of models that achieve accuracy through non-physical shortcuts.
+
+    \item \textbf{Operator Trust}: Real-time explanations (SHAP values, feature importance) accompany predictions, allowing operators to verify that decisions are based on expected physical indicators.
+
+    \item \textbf{Failure Diagnosis}: LIME explanations for misclassifications reveal model weaknesses, guiding targeted improvements (e.g., collecting more examples of rare fault types).
+
+    \item \textbf{Knowledge Discovery}: Feature importance analysis can surface candidate fault mechanisms worth further physics review, informing hardware improvements and operational procedures.
+\end{enumerate}
+
+This explainability approach distinguishes our work from black-box ML applications in accelerator physics and demonstrates that high accuracy and interpretability are not mutually exclusive.

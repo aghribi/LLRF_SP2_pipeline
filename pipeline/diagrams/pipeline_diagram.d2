@@ -1,0 +1,94 @@
+direction: right
+
+# Legend: fill FDF2E9 = implemented & verified in code
+#         fill DCEDEA = added here (missing from the original diagram)
+#
+# Update, same day 2026-09-05: Precursor's Isolation Forest/LOF/Mahalanobis/
+# PCA reconstruction/DBSCAN/Ensemble and Explainability's LIME/Saliency were
+# "not yet built" earlier the same day -- implemented and verified against V6
+# a few hours later, so both nodes are merged into one "done" node each
+# rather than staying split (dashed/gray "todo" style is no longer used).
+
+data: Waveforms raw data {
+  shape: cylinder
+  style.fill: "#F5CBA7"
+}
+
+prep: Pre-processing {
+  label: "Pre-processing\nNormalisation, filtering, segmentation"
+  style.fill: "#FDF2E9"
+}
+
+feat: Feature engineering {
+  label: "Feature engineering\nPhysics-based, statistical, rate-of-change"
+  style.fill: "#FDF2E9"
+}
+
+anomaly: Anomaly scoring (unsupervised) {
+  label: "Anomaly scoring (unsupervised)\nIsolation Forest, LOF, DBSCAN, Autoencoder, VAE"
+  style.fill: "#FDF2E9"
+}
+
+binary: Binary classification (supervised) {
+  label: "Binary classification (supervised)\nLogReg, Random Forest, XGBoost, SVM, DNN, CNN, Ensemble"
+  style.fill: "#FDF2E9"
+}
+
+dec1: "" {
+  shape: diamond
+  label: "Anomalous?"
+}
+
+data -> prep -> feat
+feat -> anomaly
+feat -> binary
+anomaly -> dec1
+binary -> dec1
+
+precursor: Precursor analysis {
+  label: "Precursor analysis\nRandom Forest, LSTM Classifier, LSTM Autoencoder,\nIsolation Forest, LOF, Mahalanobis distance,\nPCA reconstruction error, DBSCAN, Ensemble"
+  style.fill: "#FDF2E9"
+}
+
+dec1 -> precursor: No
+dec1 -> classif_hub: Yes {style.stroke-dash: 0}
+
+classif_hub: "" {shape: circle; width: 14; height: 14}
+precursor -> classif_hub: signature found
+precursor -> artifacts: clear {style.stroke-dash: 4}
+
+multilabel: Multi-label classification (supervised) {
+  label: "Multi-label classification (supervised)\nBinary Relevance, Classifier Chain, Label Powerset,\nCNN/Transformer/CNN-LSTM/MLP encoders, Random Forest"
+  style.fill: "#FDF2E9"
+}
+clustering: Fault clustering (unsupervised) {
+  label: "Fault clustering (unsupervised)\nK-Means, DBSCAN, Hierarchical, Gaussian Mixture"
+  style.fill: "#FDF2E9"
+}
+classif_hub -> multilabel
+classif_hub -> clustering
+
+rootcause: Root cause ID {
+  label: "Root cause ID\nRandom Forest -- added, missing from original diagram"
+  style.fill: "#DCEDEA"
+  style.stroke: "#0F6E63"
+}
+multilabel -> rootcause
+
+subclass: Subclass discovery {
+  label: "Subclass discovery\nK-Means, Hierarchical, Gaussian Mixture, Spectral, HDBSCAN"
+  style.fill: "#FDF2E9"
+}
+rootcause -> subclass
+clustering -> subclass
+
+explain: Explainability {
+  label: "Explainability\nSHAP, LIME, Saliency"
+  style.fill: "#FDF2E9"
+}
+subclass -> explain
+
+artifacts: Artifacts / outputs {
+  style.fill: "#F5CBA7"
+}
+explain -> artifacts

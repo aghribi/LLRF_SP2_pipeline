@@ -1,0 +1,184 @@
+# SPIRAL2 LLRF Anomaly Detection Pipeline
+# .gitignore for anomalies_exploration/
+
+# ============================================================================
+# Python
+# ============================================================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# ============================================================================
+# Jupyter Notebooks
+# ============================================================================
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/*
+*.ipynb_checkpoints
+
+# Exclude executed notebook variants (these can be regenerated)
+*_executed.ipynb
+
+# ============================================================================
+# Data Files (Large files - stored in /sps/m4cast/)
+# ============================================================================
+*.pkl
+*.pickle
+*.h5
+*.hdf5
+*.npy
+*.npz
+
+# Exclude large output files
+*.csv
+*.parquet
+
+# ============================================================================
+# Plots and Figures (Can be regenerated)
+# ============================================================================
+*.png
+*.jpg
+*.jpeg
+*.pdf
+*.svg
+
+# Exception: Keep README images if any
+!README_images/*.png
+
+# Exception: report/figures/ holds the actual paper's figures (real facility
+# photo + generated PDFs from report/code/fig_*.py) -- these are essential
+# document assets synced to Overleaf via GitHub, not disposable pipeline
+# plots like analysis/outputs/*.png. Without this, the repo (and Overleaf)
+# would have zero figures.
+!report/figures/
+!report/figures/*.png
+!report/figures/*.jpg
+!report/figures/*.jpeg
+!report/figures/*.pdf
+
+# ============================================================================
+# Project Directories (Excluded from git)
+# ============================================================================
+# Input files (reference papers - too large)
+inputs/
+
+# Claude configuration (local)
+.claude/
+
+# Legacy archive (era-organized historical work, consolidated 2026-09-03 from
+# archive/, development/, analysis/notebooks/legacy/, .claude/docs_archive/).
+# Bulk content stays untracked (local use only); the index and tooling stay tracked.
+legacy/*
+!legacy/README.md
+!legacy/INDEX.tsv
+!legacy/INDEX.md
+!legacy/tools/
+!legacy/tools/*.py
+
+# Old symlinks
+anomalies_exploration/
+
+# ============================================================================
+# Logs (all logs in logs/ directory)
+# ============================================================================
+logs/
+*.out
+*.err
+*.log
+slurm-*.out
+pipeline/03_logs/*.out
+pipeline/03_logs/*.err
+
+# LaTeX build artifacts (report/main.aux etc. got committed once by mistake)
+*.aux
+*.bbl
+*.blg
+*.toc
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.glo
+*.gls
+*.glg
+*.ist
+*.acn
+*.acr
+*.alg
+
+# ============================================================================
+# IDE and Editor
+# ============================================================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# ============================================================================
+# Virtual Environments
+# ============================================================================
+venv/
+env/
+ENV/
+.venv
+
+# ============================================================================
+# Temporary Files
+# ============================================================================
+*.tmp
+*.bak
+*.backup
+*_old.*
+*_backup.*
+
+# ============================================================================
+# Specific Project Files
+# ============================================================================
+# Migration script (one-time use)
+migrate_to_new_structure.sh
+
+# Temporary test outputs
+test_outputs/
+temp/
+
+# ============================================================================
+# Configuration (Keep tracked, but allow local overrides)
+# ============================================================================
+# Uncomment if you want local config overrides
+# local_config.py
+# .env
+
+# ============================================================================
+# Documentation (Temporary/Draft)
+# ============================================================================
+# Keep plan and summary for reference, exclude drafts
+*DRAFT*.md
+*TODO*.md
+
+# ============================================================================
+# What TO INCLUDE (explicitly tracked despite patterns above)
+# ============================================================================
+# These will be included even if they match patterns above:
+# - pipeline/ (all scripts and config)
+# - analysis/ (notebooks, scripts, documentation)
+# - utilities/ (tools and utilities)
+# - README.md and other root documentation
+# - requirements_cluster.txt

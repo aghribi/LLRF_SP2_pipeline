@@ -1,0 +1,113 @@
+% Appendix B: Hyperparameter Settings
+% Author: Adnan Ghribi
+
+\label{appendix:hyperparameters}
+
+This appendix details the actual, fixed hyperparameter values used in each pipeline script (\texttt{pipeline/00\_scripts/*.py}), read directly from the code rather than from a separate configuration record. No grid search or automated hyperparameter tuning was performed anywhere in this pipeline -- every value below is a hand-set constant in its script; we state this explicitly rather than describe a tuning process that did not happen.  % MANUAL: hyperparameter constant, verified directly from pipeline/00_scripts/*.py, not a manifest metric
+
+\subsection{Step 05: Early Fault-Onset Detection}  % MANUAL: hyperparameter constant, verified directly from pipeline/00_scripts/*.py, not a manifest metric
+
+\subsubsection{Random Forest Classifier}
+\begin{itemize}
+    \item \texttt{n\_estimators}: 100  % MANUAL: hyperparameter constant, verified directly from pipeline/00_scripts/*.py, not a manifest metric
+    \item \texttt{max\_depth}: 10  % MANUAL: hyperparameter constant, verified directly from pipeline/00_scripts/*.py, not a manifest metric
+    \item \texttt{random\_state}: 42  % MANUAL: hyperparameter constant, verified directly from pipeline/00_scripts/*.py, not a manifest metric
+    \item \texttt{n\_jobs}: -1  % MANUAL: hyperparameter constant, verified directly from pipeline/00_scripts/*.py, not a manifest metric
+    \item Trained on the fixed-window ``true precursor'' feature subset (\MetricZeroFivePhaseZeroPrecursorNFeatures{} features, Appendix~\ref{appendix:features}), not the full \MetricZeroSixBinaryClassificationNFeatures{}
+\end{itemize}
+
+\subsubsection{Unsupervised Baselines (Same Feature Subset)}
+\begin{itemize}
+    \item \textbf{Isolation Forest}: \texttt{n\_estimators}=100, \texttt{contamination}='auto', \texttt{random\_state}=42  % MANUAL: hyperparameter constant, verified directly from pipeline/00_scripts/*.py, not a manifest metric
+    \item \textbf{Local Outlier Factor}: \texttt{n\_neighbors}=20, \texttt{contamination}='auto', \texttt{novelty}=True  % MANUAL: hyperparameter constant, verified directly from pipeline/00_scripts/*.py, not a manifest metric
+    \item \textbf{DBSCAN}: \texttt{eps}=0.5, \texttt{min\_samples}=5 (transductive -- fit and scored on the test fold directly, since sklearn's DBSCAN has no separate fit/predict-on-new-data capability)  % MANUAL: hyperparameter constant, verified directly from pipeline/00_scripts/*.py, not a manifest metric
+    \item \textbf{Mahalanobis distance}: Ledoit-Wolf shrinkage covariance estimator on a 30-component PCA-reduced representation of the training fold  % MANUAL: hyperparameter constant, verified directly from pipeline/00_scripts/*.py, not a manifest metric
+    \item \textbf{PCA reconstruction error}: PCA retaining 95\% variance, fit on the training fold only  % MANUAL: hyperparameter constant, verified directly from pipeline/00_scripts/*.py, not a manifest metric
+\end{itemize}
+
+None of the above use class weighting -- this step's own labels are close to balanced (Sec.~\ref{sec:introduction}).
+
+\subsection{Step 06: Binary Classification}  % MANUAL: hyperparameter constant, verified directly from pipeline/00_scripts/*.py, not a manifest metric
+
+\subsubsection{Random Forest Classifier}
+\begin{itemize}
+    \item \texttt{n\_estimators}: 100, \texttt{max\_depth}: 10, \texttt{random\_state}: 42, \texttt{n\_jobs}: -1  % MANUAL: hyperparameter constant, verified directly from pipeline/00_scripts/*.py, not a manifest metric
+    \item No class weighting applied (near-balanced classes at this stage)
+\end{itemize}
+
+Logistic Regression, XGBoost, and SVM (RBF kernel) baselines are also trained with library-default hyperparameters aside from \texttt{random\_state}=42; see \texttt{prepare\_06\_phase1\_binary.py} for the exact calls.  % MANUAL: hyperparameter constant, verified directly from pipeline/00_scripts/*.py, not a manifest metric
+
+\subsection{Step 07: Multi-Label Classification (MultiOutput Random Forest Baseline)}  % MANUAL: hyperparameter constant, verified directly from pipeline/00_scripts/*.py, not a manifest metric
+
+\begin{itemize}
+    \item \texttt{n\_estimators}: 100, \texttt{random\_state}: 42, \texttt{n\_jobs}: -1  % MANUAL: hyperparameter constant, verified directly from pipeline/00_scripts/*.py, not a manifest metric
+    \item \texttt{class\_weight}: 'balanced' (per label, since \texttt{MultiOutputClassifier} clones and refits the base estimator independently per label column -- sklearn recomputes balanced weights from each column's own class counts at fit time)
+    \item \texttt{max\_depth}: unset (unlimited)
+\end{itemize}
+
+\subsection{Step 08: Root Cause Identification}  % MANUAL: hyperparameter constant, verified directly from pipeline/00_scripts/*.py, not a manifest metric
+
+\begin{itemize}
+    \item \texttt{n\_estimators}: 100, \texttt{random\_state}: 42, \texttt{n\_jobs}: -1  % MANUAL: hyperparameter constant, verified directly from pipeline/00_scripts/*.py, not a manifest metric
+    \item \texttt{class\_weight}: 'balanced'
+    \item \texttt{max\_depth}: unset (unlimited)
+\end{itemize}
+
+\subsection{Phase A/B/C: Multi-Label Approach Comparison}
+
+\begin{itemize}
+    \item \textbf{Phase A, Binary Relevance} (\texttt{MultiOutputClassifier(RandomForestClassifier)}): \texttt{n\_estimators}=50, \texttt{random\_state}=42, \texttt{class\_weight}='balanced'.  % MANUAL: hyperparameter constant, verified directly from pipeline/00_scripts/*.py, not a manifest metric
+    \item \textbf{Phase A, Classifier Chain} (XGBoost): \texttt{n\_estimators}=100, \texttt{scale\_pos\_weight} computed per run from the training fold's own aggregate positive/negative ratio (a single value applied across the whole chain -- XGBoost has no per-label auto-balancing equivalent to sklearn's \texttt{class\_weight} string).  % MANUAL: hyperparameter constant, verified directly from pipeline/00_scripts/*.py, not a manifest metric
+    \item \textbf{Phase B, Classifier Chain} (XGBoost): \texttt{n\_estimators}=10 (a deliberately low-iteration smoke-test configuration), same data-driven \texttt{scale\_pos\_weight}; falls back to \texttt{RandomForestClassifier(n\_estimators=50, class\_weight='balanced')} if XGBoost is unavailable.  % MANUAL: hyperparameter constant, verified directly from pipeline/00_scripts/*.py, not a manifest metric
+    \item \textbf{Phase C, Label Powerset} (XGBoost): \texttt{n\_estimators}=30; because Label Powerset collapses the multi-label problem into one multiclass problem over label-combinations, per-label weighting does not apply -- \texttt{sample\_weight} computed as 'balanced' over the resulting powerset classes is used instead, applied identically whether the XGBoost or Random Forest (\texttt{n\_estimators}=50) fallback path is used.  % MANUAL: hyperparameter constant, verified directly from pipeline/00_scripts/*.py, not a manifest metric
+\end{itemize}
+
+\subsection{Phase D: Deep Multi-Head Architectures}
+
+Four encoder architectures (CNN, Transformer, CNN-LSTM, MLP) share a common multi-head classification wrapper (one linear head per fault label) and training setup:
+\begin{itemize}
+    \item Optimizer: Adam, weight decay $10^{-5}$  % MANUAL: hyperparameter constant, verified directly from pipeline/00_scripts/*.py, not a manifest metric
+    \item Loss: \texttt{BCEWithLogitsLoss} with a per-label \texttt{pos\_weight} vector, computed once per run as each label's train-fold negative/positive count ratio -- unlike the XGBoost case above, PyTorch's \texttt{pos\_weight} is genuinely per-label, not an aggregate approximation.
+    \item Bottleneck dimension: 256 (default, configurable via CLI)  % MANUAL: hyperparameter constant, verified directly from pipeline/00_scripts/*.py, not a manifest metric
+\end{itemize}
+As discussed in Sec.~\ref{sec:discussion}, all four architectures underperformed the classical Random Forest/XGBoost baselines on every multi-label metric tracked (Sec.~\ref{sec:methodology}).
+
+\subsection{Step 09: Fault Subtype Clustering}  % MANUAL: hyperparameter constant, verified directly from pipeline/00_scripts/*.py, not a manifest metric
+
+Per fault category, three clustering methods are tried and the best selected by silhouette score, not a single fixed method:
+\begin{itemize}
+    \item \textbf{K-Means}: \texttt{n\_init}=10, \texttt{random\_state}=42, tested over a candidate range of cluster counts  % MANUAL: hyperparameter constant, verified directly from pipeline/00_scripts/*.py, not a manifest metric
+    \item \textbf{Agglomerative Clustering}: multiple linkage criteria tested
+    \item \textbf{Gaussian Mixture Model}: \texttt{random\_state}=42  % MANUAL: hyperparameter constant, verified directly from pipeline/00_scripts/*.py, not a manifest metric
+\end{itemize}
+The candidate cluster-count range ($k \in [2,6]$, further capped per-category, Sec.~\ref{sec:methodology}) and a minimum-event-count guard (categories with too few events are skipped, not forced into a fixed cluster count) are set in \texttt{prepare\_09c\_enhanced\_subclass\_discovery.py}'s \texttt{cluster\_within\_fault\_type()}, which also winsorizes each feature at the 5th/95th percentile within each category and only accepts a candidate split where every cluster holds at least 15\% of that category's events (Sec.~\ref{sec:methodology}). % MANUAL: code constants (n_clusters_range, winsorization percentiles, balance threshold), not manifest metrics
+In every category with enough events to analyze, the actual best method selected converges to $k=\MetricZeroNinecEnhancedSubclassDiscoveryRfAuthorizationAbsentBestK$ (Sec.~\ref{sec:results}); as noted in Sec.~\ref{sec:methodology}, this is partly a consequence of the balance constraint itself being infeasible for larger $k$, not solely an unconstrained data-driven convergence.
+
+\subsection{Step 10: Physics-Group SHAP Analysis}  % MANUAL: hyperparameter constant, verified directly from pipeline/00_scripts/prepare_10_enhanced_shap_analysis.py, not a manifest metric
+
+A separate Random Forest is trained per fault category (one-vs-rest on that category's binary label), each with \texttt{n\_estimators}=100, \texttt{random\_state}=42, \texttt{class\_weight}='balanced', on an 80/20 leakage-safe stratified split (\texttt{test\_size}=0.2, \texttt{random\_state}=42, scaler fit on that label's own training fold only, Sec.~\ref{sec:methodology}). % MANUAL: hyperparameter constants verified directly from prepare_10_enhanced_shap_analysis.py's train_per_label_models(), not manifest metrics
+SHAP values are computed with \texttt{shap.TreeExplainer} on each category's held-out test fold, subsampled to at most 500 events per category if larger (uniform random subsample, no replacement). Per-feature-mean $|$SHAP value$|$ across that test fold is the primary physics-group metric reported in Sec.~\ref{sec:explainability}; the per-feature-median and group-sum alternatives (Sec.~\ref{sec:results}) are computed from the same SHAP arrays. % MANUAL: max_samples=500 subsampling constant verified directly from compute_shap_values(), not a manifest metric
+
+\subsection{Preprocessing}
+
+\begin{itemize}
+    \item \textbf{Scaling}: \texttt{StandardScaler} (zero mean, unit variance), fit on the training fold only and applied unchanged to the test fold -- never fit on the combined train+test data (see \texttt{leakage\_safe\_features.py}, Sec.~\ref{sec:methodology}, for why this matters).
+    \item \textbf{Feature selection}: pairwise correlation thresholding at 0.95 (deduplicating near-identical features, keeping the more physically interpretable name where an exact alias exists), applied once during feature engineering, not per-script.  % MANUAL: hyperparameter constant, verified directly from pipeline/00_scripts/*.py, not a manifest metric
+\end{itemize}
+
+\subsection{Train/Test Splits}
+
+Split fractions and random seeds are set independently per script rather than following one fixed convention -- listed here rather than collapsed to a single (incorrect) number:
+
+\begin{itemize}
+    \item Steps 05, 06, 07, 08, and Phase A: \texttt{test\_size}=0.3, \texttt{random\_state}=42  % MANUAL: hyperparameter constant, verified directly from pipeline/00_scripts/*.py, not a manifest metric
+    \item Phase B, Phase C: \texttt{test\_size}=0.25, \texttt{random\_state}=0  % MANUAL: hyperparameter constant, verified directly from pipeline/00_scripts/*.py, not a manifest metric
+    \item Phase D: \texttt{test\_size}=0.2, \texttt{random\_state}=0  % MANUAL: hyperparameter constant, verified directly from pipeline/00_scripts/*.py, not a manifest metric
+\end{itemize}
+
+All splits are stratified where the target supports it (single-label tasks) and unstratified for genuinely multi-label targets (sklearn has no native multi-label stratification; see Sec.~\ref{sec:methodology} for the repeated-split evaluation used to compensate for this). Total dataset size is \MetricZeroZeroDataAttritionChainVSixTotalEvents{} events (V6); split sizes are the stated fraction of that total per script, not a separately-fixed event count.
+
+\subsection{Statistical Reliability: Repeated-Split Evaluation}
+
+Beyond the single reference split above, headline metrics for steps 06--09 and Phase A/B/C are additionally evaluated via 10 repeated splits % MANUAL: n_repeats=10 code constant, not a manifest metric
+(different random seeds, same \texttt{test\_size} per script), reporting mean $\pm$ std rather than a single-split point estimate -- see Sec.~\ref{sec:methodology} and \texttt{leakage\_safe\_features.repeated\_leakage\_safe\_eval()}. We report this repeated-split mean $\pm$ std wherever both a single-split and a repeated-split number exist for the same metric (Sec.~\ref{sec:results}), since a single fixed-seed split is not sufficient evidence of stability, particularly for the rarest fault categories.

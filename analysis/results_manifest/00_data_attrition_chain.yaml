@@ -1,0 +1,167 @@
+phase: 00_data_attrition_chain
+generated_at: '2026-09-08T12:36:12.793413+00:00'
+pipeline_run:
+  dataset_version: V6
+  dataset_path: /sps/m4cast/_spiral2_data/_llrf_data/cooked_data_v6/features_engineered_v6.pkl
+  script: pipeline/00_scripts/data_attrition_chain.py
+metrics:
+  raw_files:
+    value: 14232
+    fmt: ','
+    label: Raw postmortem files scanned
+    display: 14,232
+  processing_errors:
+    value: 102
+    fmt: null
+    label: Classifier processing errors ('Fichier ignoré')
+    display: '102'
+  zero_byte_files:
+    value: 20
+    fmt: null
+    label: Zero-byte raw files
+    display: '20'
+  ground_truth_rows:
+    value: 14109
+    fmt: ','
+    label: Ground-truth CSV rows (LLRF_result.csv)
+    display: 14,109
+  filtre_rejected:
+    value: 11243
+    fmt: ','
+    label: Rows rejected by quality filter (Label == 'Filtré')
+    display: 11,243
+  gt_passing:
+    value: 2866
+    fmt: ','
+    label: Rows passing ground-truth quality filter
+    display: 2,866
+  v6_feature_extraction_errors:
+    value: 1
+    fmt: null
+    label: Events dropped by V6 feature-extraction failure
+    display: '1'
+  v6_total_events:
+    value: 2109
+    fmt: ','
+    label: V6 final dataset event count
+    display: 2,109
+  v6_normal_events:
+    value: 1066
+    fmt: ','
+    label: V6 Normal events
+    display: 1,066
+  v6_fault_events:
+    value: 1043
+    fmt: ','
+    label: V6 fault events (all 7 categories)
+    display: 1,043
+  raw_seuil_pick-up:
+    value: 509
+    fmt: ','
+    label: 'Raw ''Defaut'' count: Seuil pick-up'
+    display: '509'
+  gt_passing_seuil_pick-up:
+    value: 94
+    fmt: null
+    label: 'Ground-truth-passing count: Seuil pick-up'
+    display: '94'
+  raw_coupure_externe_rapide:
+    value: 33
+    fmt: ','
+    label: 'Raw ''Defaut'' count: Coupure externe rapide'
+    display: '33'
+  gt_passing_coupure_externe_rapide:
+    value: 11
+    fmt: null
+    label: 'Ground-truth-passing count: Coupure externe rapide'
+    display: '11'
+  raw_absence_autorisation_rf:
+    value: 6152
+    fmt: ','
+    label: 'Raw ''Defaut'' count: Absence autorisation RF'
+    display: 6,152
+  gt_passing_absence_autorisation_rf:
+    value: 329
+    fmt: null
+    label: 'Ground-truth-passing count: Absence autorisation RF'
+    display: '329'
+  raw_claquage_ou_quench_cavité:
+    value: 101
+    fmt: ','
+    label: 'Raw ''Defaut'' count: Claquage ou quench cavité'
+    display: '101'
+  gt_passing_claquage_ou_quench_cavité:
+    value: 31
+    fmt: null
+    label: 'Ground-truth-passing count: Claquage ou quench cavité'
+    display: '31'
+  raw_seuil_de_vide:
+    value: 197
+    fmt: ','
+    label: 'Raw ''Defaut'' count: Seuil de vide'
+    display: '197'
+  gt_passing_seuil_de_vide:
+    value: 46
+    fmt: null
+    label: 'Ground-truth-passing count: Seuil de vide'
+    display: '46'
+  raw_dép_seuil_de_sécurité_rf:
+    value: 419
+    fmt: ','
+    label: 'Raw ''Defaut'' count: Dép seuil de sécurité RF'
+    display: '419'
+  gt_passing_dép_seuil_de_sécurité_rf:
+    value: 86
+    fmt: null
+    label: 'Ground-truth-passing count: Dép seuil de sécurité RF'
+    display: '86'
+  raw_rég_signal_rf_hors_tolérance:
+    value: 3433
+    fmt: ','
+    label: 'Raw ''Defaut'' count: Rég signal RF hors tolérance'
+    display: 3,433
+  gt_passing_rég_signal_rf_hors_tolérance:
+    value: 790
+    fmt: null
+    label: 'Ground-truth-passing count: Rég signal RF hors tolérance'
+    display: '790'
+  filtre_reason_feed_forward_non:
+    value: 3229
+    fmt: ','
+    label: 'Quality-filter rejections: Feed-forward NON'
+    display: 3,229
+  filtre_reason_kpi_10_0:
+    value: 3168
+    fmt: ','
+    label: 'Quality-filter rejections: KPI < 10.0'
+    display: 3,168
+  filtre_reason_loop_off:
+    value: 2878
+    fmt: ','
+    label: 'Quality-filter rejections: Loop OFF'
+    display: 2,878
+  filtre_reason_ampt_10_0:
+    value: 1187
+    fmt: ','
+    label: 'Quality-filter rejections: AMPT > 10.0%'
+    display: 1,187
+  filtre_reason_ucav_moyenne_0_1_mv_m:
+    value: 579
+    fmt: ','
+    label: 'Quality-filter rejections: Ucav moyenne < 0.1 MV/m'
+    display: '579'
+  filtre_reason_ucav_0_1_mv_m_avant_t0:
+    value: 174
+    fmt: ','
+    label: 'Quality-filter rejections: Ucav < 0.1 MV/m avant t0'
+    display: '174'
+  filtre_reason_probl_me_de_masque:
+    value: 28
+    fmt: ','
+    label: 'Quality-filter rejections: Problème de masque'
+    display: '28'
+meta:
+  unreconciled_count: -1
+  unreconciled_note: raw_files - processing_errors - zero_byte_files - ground_truth_rows
+    is off by -1; likely a zero-byte file also caught by the processing-error logging
+    (double-counted across both buckets), not yet root-caused further.

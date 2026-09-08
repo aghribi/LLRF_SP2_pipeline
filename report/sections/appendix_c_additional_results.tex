@@ -1,0 +1,21 @@
+% Appendix C: Additional Results
+% Author: Adnan Ghribi
+
+This appendix provides supplementary results that support the main findings, restricted to what has actually been computed and verified against the pipeline's own code and results manifests (Sec.~\ref{sec:methodology}).
+
+% NOTE: additional supplementary material (extended confusion matrices,
+% per-fault-type cluster profiles once the per-subtype characterization work
+% in Sec.~\ref{sec:conclusion} exists, t-SNE visualizations, ROC curves
+% across phases) is not yet generated -- left as a todo list rather than
+% populated with placeholder figures. The pipeline-architecture figure in
+% Sec.~\ref{sec:methodology} is still a placeholder for the same reason.
+
+\subsection{Repeated-Split Stability, Full Detail}
+
+Sec.~\ref{sec:results} reports the mean $\pm$ std of root cause identification accuracy and macro-F1 across 10 repeated splits (different random seeds, same 0.3 test fraction, Appendix~\ref{appendix:hyperparameters}) % MANUAL: n_repeats=10 and test_size=0.3 are code constants, not manifest metrics
+rather than a single-split point estimate. This is real repeated-split evaluation (\texttt{leakage\_safe\_features.repeated\_leakage\_safe\_eval()}), computed the same way for every headline metric in Sec.~\ref{sec:results} that reports a mean $\pm$ std -- not a 5-fold cross-validation procedure, and not limited to root cause identification. The full per-split values, per metric and per fault category, are stored alongside the summary statistics in the corresponding \texttt{analysis/results\_manifest/*.yaml} file (Sec.~\ref{sec:methodology}) rather than reproduced as a table here, since the mean $\pm$ std already reported is the number we recommend citing. % MANUAL: "5-fold" names the rejected mischaracterization being corrected, not the real methodology
+
+\subsection{Computational Performance}
+
+Sec.~\ref{sec:results} reports real, measured single-event inference latency for the three benchmarked models (step 06 binary classification, Phase C multi-label, step 05 early fault-onset detection). % MANUAL: "06"/"05" name pipeline steps, not results
+We do not report a per-pipeline-stage latency or memory breakdown (data loading, preprocessing, feature extraction considered separately): that level of instrumentation was not implemented in this pipeline, and we report only what was actually measured rather than an estimated or invented breakdown.

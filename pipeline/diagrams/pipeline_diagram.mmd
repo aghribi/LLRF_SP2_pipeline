@@ -1,0 +1,54 @@
+%% SPIRAL2 fault-detection pipeline -- corrected against actual code, 2026-09-05.
+%% Solid (done) = verified in code. Dashed/gray (todo) = named in the pipeline
+%% description but not yet implemented. Teal (added) = added here, was missing
+%% from the original diagram. See legacy/2026-current_retired-from-live/diagrams/
+%% pipeline_diagram_pre-code-verification.mmd for the prior, unverified draft.
+%%
+%% Update, same day: Precursor's Isolation Forest/LOF/Mahalanobis/PCA
+%% reconstruction/DBSCAN/Ensemble and Explainability's LIME/Saliency were
+%% "not yet built" earlier the same day -- implemented and verified against
+%% V6 a few hours later, so both boxes are merged back into one "done" node
+%% each rather than staying split.
+%%{init: {'theme': 'base', 'themeVariables': {'fontFamily': 'sans-serif'}, 'flowchart': {'curve': 'basis', 'htmlLabels': true}}}%%
+flowchart LR
+    classDef done fill:#F4E3C8,stroke:#B5591F,stroke-width:1.5px,color:#2C2013;
+    classDef added fill:#DCEDEA,stroke:#0F6E63,stroke-width:2px,color:#2C2013;
+    classDef stage fill:#FBF6EC,stroke:#8A4A22,stroke-width:1px,color:#2C2013;
+
+    Data[("Waveforms<br/>raw data")]:::stage
+    Prep["<b>Pre-processing</b><br/><small>Normalisation, filtering, segmentation</small>"]:::done
+    Feat["<b>Feature engineering</b><br/><small>Physics-based, statistical, rate-of-change</small>"]:::done
+
+    Anomaly["<b>Anomaly scoring</b> (unsupervised)<br/><small>Isolation Forest, LOF, DBSCAN, Autoencoder, VAE</small>"]:::done
+    Binary["<b>Binary classification</b> (supervised)<br/><small>LogReg, Random Forest, XGBoost, SVM, DNN, CNN, Ensemble</small>"]:::done
+
+    Dec1{Anomalous?}
+
+    Precursor["<b>Precursor analysis</b><br/><small>Random Forest, LSTM Classifier, LSTM Autoencoder,<br/>Isolation Forest, LOF, Mahalanobis distance,<br/>PCA reconstruction error, DBSCAN, Ensemble</small>"]:::done
+
+    MultiLabel["<b>Multi-label classification</b> (supervised)<br/><small>Binary Relevance, Classifier Chain, Label Powerset,<br/>CNN/Transformer/CNN-LSTM/MLP encoders, Random Forest</small>"]:::done
+    Clustering["<b>Fault clustering</b> (unsupervised)<br/><small>K-Means, DBSCAN, Hierarchical, Gaussian Mixture</small>"]:::done
+
+    RootCause["<b>Root cause ID</b><br/><small>Random Forest -- added, missing from original diagram</small>"]:::added
+
+    Subclass["<b>Subclass discovery</b><br/><small>K-Means, Hierarchical, Gaussian Mixture, Spectral, HDBSCAN</small>"]:::done
+
+    Explain["<b>Explainability</b><br/><small>SHAP, LIME, Saliency</small>"]:::done
+
+    Artifacts["Artifacts / outputs"]:::stage
+
+    Data --> Prep --> Feat
+    Feat --> Anomaly
+    Feat --> Binary
+    Anomaly --> Dec1
+    Binary --> Dec1
+    Dec1 -->|No| Precursor
+    Dec1 -->|Yes| MultiLabel
+    Dec1 -->|Yes| Clustering
+    Precursor -->|signature found| MultiLabel
+    Precursor -.->|clear| Artifacts
+    MultiLabel --> RootCause
+    Clustering --> Subclass
+    RootCause --> Subclass
+    Subclass --> Explain
+    Explain --> Artifacts

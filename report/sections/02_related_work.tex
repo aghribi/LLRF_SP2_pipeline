@@ -1,0 +1,47 @@
+% Related Work
+% Author: Adnan Ghribi
+
+\label{sec:related_work}
+
+\subsection{Anomaly Detection in Industrial Systems}
+
+Anomaly detection has been extensively studied across industrial domains, with applications in manufacturing~\cite{MAO2025118377}, power systems~\cite{al2024anomaly}, and cyber-physical systems~\cite{vm2025ai}. Traditional approaches rely on statistical methods such as control charts, threshold-based monitoring, and hypothesis testing. However, these methods struggle with high-dimensional data, complex fault patterns, and non-linear dependencies.
+
+Machine learning approaches have gained prominence for their ability to learn complex patterns from data. Unsupervised methods such as Isolation Forest~\cite{isolation_forest}, Local Outlier Factor (LOF)~\cite{lof}, and DBSCAN~\cite{dbscan} are widely used for anomaly detection without requiring labeled fault data. Deep learning methods, including Autoencoders~\cite{autoencoder_anomaly} and Generative Adversarial Networks (GANs)~\cite{gan_anomaly}, have shown promise in capturing intricate temporal and spatial patterns.
+
+Our work differs by employing an ensemble of unsupervised methods (Isolation Forest, LOF, DBSCAN) and progressing to supervised classification for fault type identification, rather than treating anomaly detection as an isolated task.
+
+\subsection{Fault Diagnosis in Particle Accelerators}
+
+Particle accelerators present unique challenges for fault diagnosis due to their complexity, safety-critical nature, and operational constraints~\cite{accelerator_ml_review, ghribi2025artificial}. Early work focused on rule-based expert systems~\cite{malandain1987} and model-based diagnostics~\cite{sayyar2010optimal}.
+
+Recent research has explored machine learning for accelerator fault diagnosis. At CERN, neural networks have been applied to detect beam loss events~\cite{valentino2018} and classify magnet quenches~\cite{mertik2016}. Fermilab researchers developed random forest classifiers for cavity fault prediction in superconducting linacs~\cite{peters2021}. Jefferson Lab investigated recurrent neural networks for LLRF fault classification~\cite{tennant2020}.
+
+However, these studies primarily address single-fault classification or fault detection, without tackling root cause identification or systematic precursor detection with lead-time quantification. Our work advances the state-of-the-art by:
+\begin{itemize}
+    \item Adopting a multi-label classification architecture so the pipeline generalizes to co-occurring faults, though the current dataset contains none (Sec.~\ref{sec:system_description})
+    \item Identifying the primary (root cause) fault, currently against a deterministic-argmax training target rather than an independently-labeled physical root cause (Sec.~\ref{sec:methodology})
+    \item Detecting fault onset ahead of the interlock trip, with a measured but right-censored lower bound on the detection lead time (Sec.~\ref{sec:results})
+    \item Discovering fault subtypes through unsupervised clustering
+\end{itemize}
+
+\subsection{Multi-Label Classification and Root Cause Analysis}
+
+Multi-label classification~\cite{multilabel_survey} extends traditional classification to scenarios where instances can belong to multiple classes simultaneously. Approaches include problem transformation methods (Binary Relevance, Classifier Chains~\cite{classifier_chains}, Label Powerset) and algorithm adaptation methods (ML-kNN~\cite{mlknn}, ML-DT~\cite{mldt}).
+
+Root cause analysis (RCA) in multi-fault scenarios has been studied in IT systems~\cite{rca_it}, manufacturing~\cite{rca_manufacturing}, and process industries~\cite{rca_process}. Causal inference methods~\cite{pearl_causality} and Bayesian networks~\cite{bayesian_rca} are commonly employed. However, these approaches typically require extensive domain knowledge encoding or large datasets with labeled root causes.
+
+\subsection{Explainability in Critical Systems}
+
+Explainable AI (XAI) has become essential for deploying machine learning in safety-critical domains~\cite{xai_survey}. Model-agnostic methods such as SHAP~\cite{shap} and LIME~\cite{lime} provide post-hoc explanations for black-box models. SHAP assigns feature importance based on Shapley values from cooperative game theory, ensuring consistent and theoretically grounded explanations. LIME generates local linear approximations to explain individual predictions.
+
+In accelerator physics, explainability is crucial for operator trust, regulatory compliance, and system validation~\cite{xai_accelerators}. Recent work at SLAC~\cite{slac_xai} and DESY~\cite{nawaz2021probabilistic} has demonstrated the value of interpretable models for beam tuning and fault diagnosis.
+
+Our explainability framework (Section~\ref{sec:explainability}) combines SHAP for global feature importance and LIME for local explanations. Importantly, we validate explanations against known physics of LLRF systems, ensuring that model decisions align with domain knowledge.
+
+
+
+% Note: \cmark and \xmark need to be defined in preamble:
+% \usepackage{pifont}
+% \newcommand{\cmark}{\ding{51}} % MANUAL: glyph code, not a result number
+% \newcommand{\xmark}{\ding{55}} % MANUAL: glyph code, not a result number

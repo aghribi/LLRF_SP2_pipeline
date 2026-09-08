@@ -1,0 +1,70 @@
+================================================================================
+SPIRAL2 LLRF ANOMALY DETECTION PIPELINE - COMPREHENSIVE REPORT
+================================================================================
+
+Pipeline Version: 1.0
+Phases Completed: 6
+
+PHASE SUMMARY:
+                          Phase           Method                     Key Metric     Status
+         03 - Anomaly Detection Isolation Forest           7427 events analyzed ✓ Complete
+    04-06 - Precursor Detection    Random Forest                Accuracy: 89.5% ✓ Complete
+  01-02 - Binary Classification    Random Forest                Accuracy: 84.7% ✓ Complete
+07 - Multi-label Classification  Multi-output RF Hamming Loss: 0.024 (7 faults) ✓ Complete
+ 08 - Root Cause Identification    Random Forest                Accuracy: 93.3% ✓ Complete
+  09 - Fault Subtype Clustering          K-Means         21 subtypes, Silh=0.33 ✓ Complete
+
+PIPELINE ARCHITECTURE:
+
+SPIRAL2 LLRF ANOMALY DETECTION PIPELINE FLOW
+============================================
+
+                    ┌──────────────────────────┐
+                    │  Raw LLRF Time Series    │
+                    │  (Ucav, PhaseCav, etc.)  │
+                    └────────────┬─────────────┘
+                                 │
+                    ┌────────────▼─────────────┐
+                    │  Feature Engineering     │
+                    │  (Domain + Statistical)  │
+                    └────────────┬─────────────┘
+                                 │
+                ┌────────────────┼────────────────┐
+                │                │                │
+    ┌───────────▼──────────┐ ┌──▼──────────┐ ┌──▼──────────────┐
+    │ Phase 03: Anomaly    │ │ Phase 04-06 │ │ Phase 01-02     │
+    │ Detection            │ │ Precursor   │ │ Binary          │
+    │ (IF, LOF, DBSCAN)    │ │ Detection   │ │ Classification  │
+    └───────────┬──────────┘ └──┬──────────┘ └──┬──────────────┘
+                │                │                │
+                └────────────────┼────────────────┘
+                                 │
+                    ┌────────────▼─────────────┐
+                    │  Phase 07: Multi-label   │
+                    │  Trigger Identification  │
+                    │  (Which faults active?)  │
+                    └────────────┬─────────────┘
+                                 │
+                    ┌────────────▼─────────────┐
+                    │  Phase 08: Root Cause    │
+                    │  Identification          │
+                    │  (Primary fault?)        │
+                    └────────────┬─────────────┘
+                                 │
+                    ┌────────────▼─────────────┐
+                    │  Phase 09: Subtype       │
+                    │  Clustering              │
+                    │  (Fault mechanisms)      │
+                    └────────────┬─────────────┘
+                                 │
+                    ┌────────────▼─────────────┐
+                    │  Phase 10: Dashboard     │
+                    │  Comprehensive Analysis  │
+                    └──────────────────────────┘
+
+
+KEY METRICS:
+  Binary Classification: 84.7%
+  Multi-label Hamming Loss: 0.024
+  Root Cause Accuracy: 93.3%
+  Total Subtypes: 21, Mean Silhouette: 0.33

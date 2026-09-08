@@ -1,0 +1,143 @@
+phase: 07_multilabel_phaseABCD
+generated_at: '2026-09-05T09:35:36.471225+00:00'
+pipeline_run:
+  dataset_version: V6
+  dataset_path: /sps/m4cast/_spiral2_data/_llrf_data/cooked_data_v6/features_engineered_v6.pkl
+  slurm_job: 57924850,57924852,57924853,57924854,57924855,57931121,57931122,57931123
+  script: pipeline/00_scripts/prepare_07_phase2_multilabel.py + phaseA_br_test.py
+    + phaseB_cc_test.py + phaseC_lp_test.py + phaseD_train.py
+metrics:
+  phase_c_label_powerset_xgboost_micro_f1:
+    value: 0.9296296296296296
+    fmt: .1%
+    label: 'Phase C: Label Powerset (XGBoost) Micro-F1'
+    display: 93.0%
+  phase_c_label_powerset_xgboost_macro_f1:
+    value: 0.8013150061417191
+    fmt: .1%
+    label: 'Phase C: Label Powerset (XGBoost) Macro-F1'
+    display: 80.1%
+  phase_c_label_powerset_xgboost_hamming:
+    value: 0.010281385281385282
+    fmt: .4f
+    label: 'Phase C: Label Powerset (XGBoost) Hamming loss'
+    display: '0.0103'
+  phase_d_multi_head_cnn_micro_f1:
+    value: 0.9057471264367816
+    fmt: .1%
+    label: 'Phase D: Multi-Head CNN Micro-F1'
+    display: 90.6%
+  phase_d_multi_head_cnn_macro_f1:
+    value: 0.6235983497657507
+    fmt: .1%
+    label: 'Phase D: Multi-Head CNN Macro-F1'
+    display: 62.4%
+  phase_d_multi_head_cnn_hamming:
+    value: 0.013879485443466486
+    fmt: .4f
+    label: 'Phase D: Multi-Head CNN Hamming loss'
+    display: '0.0139'
+  phase_a_classifier_chain_xgboost_micro_f1:
+    value: 0.8987341772151899
+    fmt: .1%
+    label: 'Phase A: Classifier Chain (XGBoost) Micro-F1'
+    display: 89.9%
+  phase_a_classifier_chain_xgboost_macro_f1:
+    value: 0.7185675720406657
+    fmt: .1%
+    label: 'Phase A: Classifier Chain (XGBoost) Macro-F1'
+    display: 71.9%
+  phase_a_classifier_chain_xgboost_hamming:
+    value: 0.014443692168810652
+    fmt: .4f
+    label: 'Phase A: Classifier Chain (XGBoost) Hamming loss'
+    display: '0.0144'
+  phase_d_multi_head_mlp_micro_f1:
+    value: 0.8981481481481481
+    fmt: .1%
+    label: 'Phase D: Multi-Head MLP Micro-F1'
+    display: 89.8%
+  phase_d_multi_head_mlp_macro_f1:
+    value: 0.7380590170063854
+    fmt: .1%
+    label: 'Phase D: Multi-Head MLP Macro-F1'
+    display: 73.8%
+  phase_d_multi_head_mlp_hamming:
+    value: 0.014895057549085985
+    fmt: .4f
+    label: 'Phase D: Multi-Head MLP Hamming loss'
+    display: '0.0149'
+  phase_a_binary_relevance_rf_micro_f1:
+    value: 0.8957654723127035
+    fmt: .1%
+    label: 'Phase A: Binary Relevance (RF) Micro-F1'
+    display: 89.6%
+  phase_a_binary_relevance_rf_macro_f1:
+    value: 0.665617379290385
+    fmt: .1%
+    label: 'Phase A: Binary Relevance (RF) Macro-F1'
+    display: 66.6%
+  phase_a_binary_relevance_rf_hamming:
+    value: 0.014443692168810652
+    fmt: .4f
+    label: 'Phase A: Binary Relevance (RF) Hamming loss'
+    display: '0.0144'
+  phase_b_classifier_chain_xgboost_micro_f1:
+    value: 0.8917910447761194
+    fmt: .1%
+    label: 'Phase B: Classifier Chain (XGBoost) Micro-F1'
+    display: 89.2%
+  phase_b_classifier_chain_xgboost_macro_f1:
+    value: 0.659661158072134
+    fmt: .1%
+    label: 'Phase B: Classifier Chain (XGBoost) Macro-F1'
+    display: 66.0%
+  phase_b_classifier_chain_xgboost_hamming:
+    value: 0.015692640692640692
+    fmt: .4f
+    label: 'Phase B: Classifier Chain (XGBoost) Hamming loss'
+    display: '0.0157'
+  phase_d_multi_head_transformer_micro_f1:
+    value: 0.8735083532219571
+    fmt: .1%
+    label: 'Phase D: Multi-Head Transformer Micro-F1'
+    display: 87.4%
+  phase_d_multi_head_transformer_macro_f1:
+    value: 0.48271708767275984
+    fmt: .1%
+    label: 'Phase D: Multi-Head Transformer Macro-F1'
+    display: 48.3%
+  phase_d_multi_head_transformer_hamming:
+    value: 0.01794177386594448
+    fmt: .4f
+    label: 'Phase D: Multi-Head Transformer Hamming loss'
+    display: '0.0179'
+  phase_d_multi_head_cnn_lstm_micro_f1:
+    value: 0.8445475638051044
+    fmt: .1%
+    label: 'Phase D: Multi-Head CNN-LSTM Micro-F1'
+    display: 84.5%
+  phase_d_multi_head_cnn_lstm_macro_f1:
+    value: 0.5725373725373727
+    fmt: .1%
+    label: 'Phase D: Multi-Head CNN-LSTM Macro-F1'
+    display: 57.3%
+  phase_d_multi_head_cnn_lstm_hamming:
+    value: 0.022681110358835476
+    fmt: .4f
+    label: 'Phase D: Multi-Head CNN-LSTM Hamming loss'
+    display: '0.0227'
+  step_07_baseline_multioutput_rf_hamming:
+    value: 0.01466937485894832
+    fmt: .4f
+    label: Step 07 baseline (MultiOutput RF) Hamming loss
+    display: '0.0147'
+  best_approach:
+    value: 'Phase C: Label Powerset (XGBoost)'
+    fmt: null
+    label: Best-performing multi-label approach
+    display: 'Phase C: Label Powerset (XGBoost)'
+meta:
+  correction: Report claims Multi-Head CNN is best Phase 07 model (93.5% Micro-F1
+    / 0.892 Macro-F1) -- FALSIFIED by these leakage-safe V6 numbers. Label Powerset
+    is best; all 4 Phase D architectures underperform it.

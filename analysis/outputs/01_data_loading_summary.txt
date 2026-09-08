@@ -1,0 +1,27 @@
+LLRF Data Loading Summary Report
+============================================================
+
+Date: 2025-12-24 21:43:56
+
+Dataset Size:
+  Total files processed: 100
+  Events after quality filters: 27
+  Unique cavities: 1
+  Unique cryomodules: 1
+
+Multi-label Statistics:
+  Label Cardinality (LC): 0.704
+  Label Density (LD): 0.101
+
+Trigger Mode Distribution:
+  Manual (LOOP=OFF): 3 (11.1%)
+  Automatic (LOOP=ON): 24 (88.9%)
+
+Fault Distribution:
+  Absence autorisation RF: 14 (51.9%)
+  Dép seuil de sécurité RF: 2 (7.4%)
+  Rég signal RF hors tolérance: 2 (7.4%)
+  Seuil pick-up: 1 (3.7%)
+  Coupure externe rapide: 0 (0.0%)
+  Seuil de vide: 0 (0.0%)
+  Claquage ou quench cavité: 0 (0.0%)

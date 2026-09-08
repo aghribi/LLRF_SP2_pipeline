@@ -1,0 +1,81 @@
+phase: 05_precursor_lead_time
+generated_at: '2026-09-07T15:12:15.795505+00:00'
+pipeline_run:
+  dataset_version: V6
+  dataset_path: /sps/m4cast/_spiral2_data/_llrf_data/cooked_data_v6/features_engineered_v6.pkl
+  script: pipeline/00_scripts/investigate_precursor_lead_time.py
+metrics:
+  n_events_total:
+    value: 40
+    fmt: null
+    label: True-positive fault events evaluated
+    display: '40'
+  n_censored:
+    value: 39
+    fmt: null
+    label: Events where buffer ran out before probability ever dropped below 0.5
+    display: '39'
+  censored_fraction:
+    value: 0.975
+    fmt: .1%
+    label: Fraction of evaluated events that were censored
+    display: 97.5%
+  lead_time_ms_mean_uncensored:
+    value: 340.7058289088309
+    fmt: .1f
+    label: Mean lead time, genuine drop observed (ms)
+    display: '340.7'
+  lead_time_ms_median_uncensored:
+    value: 340.7058289088309
+    fmt: .1f
+    label: Median lead time, genuine drop observed (ms)
+    display: '340.7'
+  lead_time_ms_lower_bound_mean_censored:
+    value: 476.98816047236323
+    fmt: .1f
+    label: Mean lower-bound lead time for censored events (ms)
+    display: '477.0'
+  lead_time_ms_lower_bound_max_censored:
+    value: 476.98816047236323
+    fmt: .1f
+    label: Max lower-bound lead time for censored events (ms)
+    display: '477.0'
+meta:
+  method: 'For each sampled true-positive fault event, reused prepare_data_cluster_v6.py''s
+    own preprocess_signals()/engineer_features() unchanged, calling them with zero_idx
+    shifted progressively earlier than the file''s real trigger index (offsets in
+    units of the training window''s own physical duration: [0.0, 0.5, 1.0, 1.5, 2.0,
+    3.0, 4.0, 6.0, 8.0, 10.0, 12.0, 14.0]), scored each with step 05''s already-trained
+    RF + already-fit scaler, and recorded the largest offset at which predicted probability
+    still exceeded 0.5. Events where the file''s own buffer ran out before probability
+    ever dropped are CENSORED (true lead time is >= the last successfully-probed offset,
+    not equal to it) and reported separately, not pooled with genuine boundary observations.'
+  offset_multiples_tested:
+  - 0.0
+  - 0.5
+  - 1.0
+  - 1.5
+  - 2.0
+  - 3.0
+  - 4.0
+  - 6.0
+  - 8.0
+  - 10.0
+  - 12.0
+  - 14.0
+  headline_finding: '39 of 40 sampled true-positive events were censored: detection
+    confidence never dropped below 0.5 within the available pre-trigger buffer (up
+    to several hundred ms tested). This means the report cannot cite a specific bounded
+    lead time from this measurement -- the honest statement is ''detectable at least
+    ~477ms before the interlock trip for most sampled events, true extent not established'',
+    not a precise duration like the report''s fabricated ''50-500ms''. This also raises
+    a further question worth flagging rather than resolving here: confidence this
+    stable across hundreds of ms may indicate the model is partly keying on a stable
+    per-capture characteristic rather than a fault-onset-proximate signal specifically
+    -- see PHASE3_WEAKNESS_DIAGNOSIS_AND_OPERATIONAL_USABILITY.md section 2.3 for
+    the related acquisition-convention caveat found earlier.'
+  caveat: This measures how far before the INFORMATIC trigger (zero_idx) the signal
+    remains distinguishable to this model, not how far before the TRUE PHYSICAL onset
+    -- zero_idx itself can lag true onset (see the AMPT-refinement work in prepare_data_cluster_v6.py,
+    applied to one of the seven fault categories). Report this as "detectable ahead
+    of the interlock trip," not "before any physical change."

@@ -1,0 +1,73 @@
+phase: 05_phase0_precursor
+generated_at: '2026-09-07T13:35:53.961300+00:00'
+pipeline_run:
+  dataset_version: V6
+  dataset_path: /sps/m4cast/_spiral2_data/_llrf_data/cooked_data_v6/features_engineered.pkl
+  script: pipeline/00_scripts/prepare_05_phase0_precursor.py
+metrics:
+  random_forest_roc_auc:
+    value: 0.9991114217252396
+    fmt: .4f
+    label: Supervised RF ROC AUC (true-precursor feature subset)
+    display: '0.9991'
+  random_forest_cv_f1_mean:
+    value: 0.986573707990247
+    fmt: .3f
+    label: RF 5-fold CV F1 (mean)
+    display: '0.987'
+  random_forest_cv_f1_std:
+    value: 0.011801295851194117
+    fmt: .3f
+    label: RF 5-fold CV F1 (std)
+    display: '0.012'
+  isolation_forest_roc_auc:
+    value: 0.6376297923322685
+    fmt: .4f
+    label: Isolation Forest ROC AUC (unsupervised)
+    display: '0.6376'
+  lof_roc_auc:
+    value: 0.5796924920127795
+    fmt: .4f
+    label: LOF ROC AUC (unsupervised)
+    display: '0.5797'
+  mahalanobis_roc_auc:
+    value: 0.788148961661342
+    fmt: .4f
+    label: Mahalanobis distance ROC AUC (unsupervised)
+    display: '0.7881'
+  pca_reconstruction_roc_auc:
+    value: 0.6368111022364217
+    fmt: .4f
+    label: PCA reconstruction error ROC AUC (unsupervised)
+    display: '0.6368'
+  ensemble_roc_auc:
+    value: 0.9880790734824282
+    fmt: .4f
+    label: Ensemble ROC AUC (unsupervised methods + RF probability)
+    display: '0.9881'
+  dbscan_outlier_fraction:
+    value: 1.0
+    fmt: .3f
+    label: 'DBSCAN: fraction of test events flagged as outliers'
+    display: '1.000'
+  n_events:
+    value: 2109
+    fmt: null
+    label: Total events used
+    display: '2109'
+  n_features:
+    value: 386
+    fmt: null
+    label: True-precursor feature columns (fixed pre-trigger window)
+    display: '386'
+  n_test:
+    value: 633
+    fmt: null
+    label: Test-set events
+    display: '633'
+meta:
+  unsupervised_vs_supervised_gap_note: The unsupervised methods (Isolation Forest/LOF/Mahalanobis/PCA-reconstruction)
+    never see labels and score 0.58-0.79; the supervised RF and the Ensemble (which
+    includes RF's probability) score much higher because there is a real, learnable
+    decision boundary in this fixed pre-trigger window -- confirmed genuine, not a
+    window-length artifact, via analysis_results_manifest/05_precursor_window_leak_investigation.yaml.

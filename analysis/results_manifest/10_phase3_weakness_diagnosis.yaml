@@ -1,0 +1,325 @@
+phase: 10_phase3_weakness_diagnosis
+generated_at: '2026-09-07T13:36:34.702627+00:00'
+pipeline_run:
+  dataset_version: V6
+  dataset_path: /sps/m4cast/_spiral2_data/_llrf_data/cooked_data_v6/features_engineered_v6.pkl
+  script: pipeline/00_scripts/phase3_weakness_diagnosis.py
+metrics:
+  imbalance_pearson_r:
+    value: 0.44970273571127123
+    fmt: .3f
+    label: 'Pearson r: category size vs mean F1'
+    display: '0.450'
+  imbalance_pearson_r_log:
+    value: 0.6502877606342577
+    fmt: .3f
+    label: 'Pearson r: log10(category size) vs mean F1'
+    display: '0.650'
+  feature_to_train_row_ratio:
+    value: 0.5264227642276422
+    fmt: .3f
+    label: Feature-to-train-row ratio (p/n)
+    display: '0.526'
+  binary_learning_curve_final_gap:
+    value: 0.004756632168843589
+    fmt: .3f
+    label: 'Step 06 binary: final train-CV F1 gap'
+    display: '0.005'
+  root_cause_learning_curve_final_gap:
+    value: 0.3771750178232727
+    fmt: .3f
+    label: 'Step 08 root-cause: final train-CV F1 gap'
+    display: '0.377'
+  root_cause_learning_curve_cv_slope:
+    value: 0.2703294905429669
+    fmt: .3f
+    label: 'Step 08 root-cause: CV F1 gain from 10% to 100% of data'
+    display: '0.270'
+meta:
+  imbalance_per_category:
+    Seuil pick-up:
+      n_events: 12
+      mean_f1: 0.5841161616161616
+    Coupure externe rapide:
+      n_events: 11
+      mean_f1: 0.05
+    Absence autorisation RF:
+      n_events: 309
+      mean_f1: 0.897635817420442
+    Seuil de vide:
+      n_events: 20
+      mean_f1: 0.8835236985236985
+    Claquage ou quench cavité:
+      n_events: 28
+      mean_f1: 0.7066925315863599
+    Dép seuil de sécurité RF:
+      n_events: 72
+      mean_f1: 0.975103101638288
+    Rég signal RF hors tolérance:
+      n_events: 591
+      mean_f1: 0.934701660108282
+  confusion:
+    root_cause:
+      confusion_matrix:
+      - - 3
+        - 0
+        - 1
+        - 0
+        - 0
+        - 0
+        - 1
+      - - 0
+        - 0
+        - 2
+        - 0
+        - 0
+        - 0
+        - 1
+      - - 0
+        - 0
+        - 85
+        - 0
+        - 0
+        - 0
+        - 2
+      - - 0
+        - 0
+        - 0
+        - 4
+        - 0
+        - 0
+        - 0
+      - - 0
+        - 0
+        - 0
+        - 0
+        - 4
+        - 0
+        - 3
+      - - 0
+        - 0
+        - 0
+        - 0
+        - 0
+        - 25
+        - 3
+      - - 0
+        - 0
+        - 7
+        - 0
+        - 0
+        - 0
+        - 172
+      label_names:
+      - Seuil pick-up
+      - Coupure externe rapide
+      - Absence autorisation RF
+      - Seuil de vide
+      - Claquage ou quench cavité
+      - Dép seuil de sécurité RF
+      - Rég signal RF hors tolérance
+      top_confused_pairs:
+      - 'true': Rég signal RF hors tolérance
+        pred: Absence autorisation RF
+        count: 7
+      - 'true': Claquage ou quench cavité
+        pred: Rég signal RF hors tolérance
+        count: 3
+      - 'true': Dép seuil de sécurité RF
+        pred: Rég signal RF hors tolérance
+        count: 3
+      - 'true': Coupure externe rapide
+        pred: Absence autorisation RF
+        count: 2
+      - 'true': Absence autorisation RF
+        pred: Rég signal RF hors tolérance
+        count: 2
+      - 'true': Seuil pick-up
+        pred: Absence autorisation RF
+        count: 1
+      - 'true': Seuil pick-up
+        pred: Rég signal RF hors tolérance
+        count: 1
+      - 'true': Coupure externe rapide
+        pred: Rég signal RF hors tolérance
+        count: 1
+    physics_subtype:
+      n_events: 591
+      n_subtypes: 9
+      subtype_names:
+      - Anomalie de la présence faisceau
+      - Autre
+      - Erreur de contrôle d'accord
+      - Fausse alerte
+      - Gain chaîne de puissance
+      - Oscillation Ucav
+      - Perte faisceau
+      - Quench
+      - Quench adjacent
+      macro_f1: 0.7266134057840208
+      confusion_matrix:
+      - - 8
+        - 0
+        - 0
+        - 1
+        - 0
+        - 1
+        - 0
+        - 0
+        - 0
+      - - 0
+        - 2
+        - 0
+        - 2
+        - 0
+        - 1
+        - 1
+        - 0
+        - 0
+      - - 0
+        - 0
+        - 1
+        - 0
+        - 0
+        - 1
+        - 0
+        - 0
+        - 0
+      - - 0
+        - 0
+        - 0
+        - 55
+        - 0
+        - 1
+        - 0
+        - 0
+        - 0
+      - - 0
+        - 0
+        - 0
+        - 0
+        - 32
+        - 1
+        - 0
+        - 0
+        - 0
+      - - 0
+        - 0
+        - 0
+        - 0
+        - 0
+        - 54
+        - 0
+        - 0
+        - 0
+      - - 1
+        - 0
+        - 0
+        - 1
+        - 0
+        - 0
+        - 8
+        - 0
+        - 0
+      - - 0
+        - 0
+        - 0
+        - 0
+        - 0
+        - 0
+        - 0
+        - 4
+        - 0
+      - - 0
+        - 0
+        - 0
+        - 1
+        - 0
+        - 0
+        - 0
+        - 2
+        - 0
+  learning_curves:
+    binary:
+      train_sizes:
+      - 168
+      - 385
+      - 602
+      - 819
+      - 1036
+      - 1253
+      - 1470
+      - 1687
+      train_f1_mean:
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      cv_f1_mean:
+      - 0.8622276437456703
+      - 0.9933420244753031
+      - 0.9933420244753031
+      - 0.9957197322714564
+      - 0.9966718803819375
+      - 0.9976233621804098
+      - 0.9957197322714564
+      - 0.9952433678311564
+      cv_f1_std:
+      - 0.2661364296364886
+      - 0.011098930033103737
+      - 0.011098930033103737
+      - 0.008560535457087194
+      - 0.006656239236124861
+      - 0.00475327563918011
+      - 0.008560535457087194
+      - 0.009513264337686955
+      final_train_cv_gap: 0.004756632168843589
+      cv_f1_slope_over_range: 0.13301572408548612
+    root_cause:
+      train_sizes:
+      - 83
+      - 190
+      - 297
+      - 405
+      - 512
+      - 619
+      - 726
+      - 834
+      train_f1_mean:
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      cv_f1_mean:
+      - 0.3524954916337604
+      - 0.35787556827594075
+      - 0.4412297507016891
+      - 0.5570750277387226
+      - 0.5858197590063067
+      - 0.6147487710834157
+      - 0.6186544560947501
+      - 0.6228249821767273
+      cv_f1_std:
+      - 0.09546949758952816
+      - 0.10247852184425141
+      - 0.10881197068718006
+      - 0.12174219768901744
+      - 0.022863429771476856
+      - 0.07177912159137471
+      - 0.06211055947409922
+      - 0.06796042508072835
+      final_train_cv_gap: 0.3771750178232727
+      cv_f1_slope_over_range: 0.2703294905429669
+  dimensionality:
+    n_features: 777
+    n_events: 2109
+    n_train_approx: 1476
+    feature_to_train_row_ratio: 0.5264227642276422

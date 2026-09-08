@@ -1,0 +1,80 @@
+% Discussion
+% Author: Adnan Ghribi
+
+\label{sec:discussion}
+
+\subsection{Key Findings}
+
+This work demonstrates several important findings for machine learning in particle accelerator fault diagnosis:
+
+\begin{enumerate}
+    \item \textbf{Progressive Pipeline Architecture is Effective}: The multi-phase pipeline decomposes the problem into modular phases (anomaly detection, classification, root cause, clustering), allowing each component to be optimized and evaluated independently while maintaining end-to-end coherence -- and, importantly, to be individually re-verified when a methodological issue is found in one phase without invalidating the others (Sec.~\ref{sec:methodology}).
+
+    \item \textbf{Feature Importance is Data-Driven, and Physics-Informed Features Matter More Than a Naive Comparison Suggests}: the count-normalized SHAP breakdown (Sec.~\ref{sec:explainability}) is physically interpretable category by category -- effective-decay features dominate cavity quench/breakdown (physically consistent with that category's abrupt-collapse signature), RF-power-flow features dominate fast external cutoff, and modulator-command features dominate both RF authorization absent and RF regulation out of tolerance. RF safety threshold exceeded is a close case: RF Power Flow is the matching physics-informed family, but Statistical narrowly edges it out. The unnormalized group-sum comparison, by contrast, makes Statistical or Temporal features look dominant almost everywhere -- a group-size artifact, not a physical finding (Sec.~\ref{sec:methodology}). This is a more nuanced picture than either a single "physics features help" or "statistical features dominate" claim: which feature \emph{group} matters, and which comparison you use to ask the question, both depend on the fault's own physical mechanism and on correctly accounting for feature-count imbalance.
+
+    \item \textbf{Root Cause Identification Is Achievable, With a Caveat}: our supervised classification approach achieves \MetricZeroEightPhaseThreeaRootcauseStabilityAccuracyMean$\pm$\MetricZeroEightPhaseThreeaRootcauseStabilityAccuracyStd{} accuracy (repeated-split mean $\pm$ std) by formulating the problem as primary fault prediction against the deterministic-argmax training target described in Sec.~\ref{sec:methodology}. This result currently demonstrates that the model can reproduce that rule accurately, not that it identifies the true physical root cause in genuinely simultaneous multi-fault events where "first bit set" may not be causally first -- an open task-design question (Sec.~\ref{sec:conclusion}), not a solved comparison.
+
+    \item \textbf{Fault Subtype Discovery Finds a Consistent, but Modest, Bimodal Structure}: unsupervised clustering within fault categories consistently finds best $k=\MetricZeroNinecEnhancedSubclassDiscoveryRfAuthorizationAbsentBestK$ substructure (silhouette \MetricZeroNinecEnhancedSubclassDiscoveryCavityQuenchBreakdownSilhouette--\MetricZeroNinecEnhancedSubclassDiscoveryVacuumThresholdSilhouette) in every category with enough events to analyze -- but only after correcting two real methodological issues (a near-zero-denominator feature bug, and a silhouette-selection procedure that otherwise reliably isolated a single extreme outlier rather than finding a genuine split; Sec.~\ref{sec:methodology}). The corrected minority cluster holds 17--32\% of each category's events, a real population split rather than a residual artifact, though the silhouette range itself is weaker than the pre-correction numbers, since those were inflated by the outlier-isolation artifact. % MANUAL: 17-32% minority-share range computed directly from the corrected cluster_sizes in the 09c manifest/pickle (Sec. 4/6), not itself an exposed manifest metric
+Fig.~\ref{fig:phase09_profiles} shows the top differentiating features per category as a first step toward a systematic per-subtype physical characterization (e.g. attributing specific subtypes to microphonics vs. amplifier trips) -- pairing that with targeted expert review is future work (Sec.~\ref{sec:conclusion}), not a result available today.
+
+    \item \textbf{Early Fault-Onset Detection is Real, But Its Lead Time is Not Yet Bounded}: the corrected precursor model reaches \MetricZeroFivePhaseZeroPrecursorRandomForestRocAuc{} ROC AUC detecting faults ahead of the interlock trip, confirmed genuine (not a data artifact) by comparison against an unsupervised baseline on the same restricted feature set (Sec.~\ref{sec:results}). A direct attempt to measure the lead time found it right-censored: detection confidence did not drop within the tested/available signal buffer for essentially every sampled event, giving only a lower bound (\MetricZeroFivePrecursorLeadTimeLeadTimeMsLowerBoundMeanCensored{}ms) rather than a characterized window.
+
+    \item \textbf{Explainability Builds Trust, Within Its Actual Scope}: SHAP and LIME (Sec.~\ref{sec:explainability}) demonstrate that model decisions correlate with physically interpretable signal groups rather than arbitrary feature combinations. We deliberately do not claim a causal-inference framework: no such analysis (e.g. Granger causality) was implemented in this pipeline, and we report only the correlational SHAP/LIME evidence actually computed.
+\end{enumerate}
+
+\subsection{Practical Implications}
+
+Offline analysis of postmortem data demonstrates several potential operational benefits, stated at the confidence level the evidence above actually supports:
+
+\begin{itemize}
+    \item \textbf{Diagnostic Efficiency}: measured model inference latency (Sec.~\ref{sec:results}) is on the order of tens of milliseconds per event, well within the budget for offline batch analysis of historical postmortem data; we have not measured or compared against manual expert diagnosis time, so we do not claim a specific efficiency multiplier over manual analysis.
+
+    \item \textbf{Fault Subtype Discovery as a Maintenance-Planning Aid}: the consistent bimodal substructure found within each fault category (above) is a candidate signal for maintenance planning, but -- absent the per-subtype physical characterization noted above -- should currently be used as a starting point for expert review, not an automated categorization operators can act on directly.
+
+    \item \textbf{Early Warning Feasibility, With an Open Caveat}: early fault-onset detection ahead of the interlock trip is real and measurable, but because the lead-time measurement above could not establish an upper bound, and because a stable per-capture signal characteristic (rather than genuine fault-onset proximity) remains a live alternative explanation (Sec.~\ref{sec:conclusion}), we do not yet recommend a specific operational lead time for triggering preventive action.
+
+    \item \textbf{Operator Training}: explainability outputs (SHAP values, feature importance by physics group) can illustrate which signal categories are most indicative of each fault type, a plausible aid for operator training materials.
+\end{itemize}
+
+These findings demonstrate the value of an explainable, leakage-safe-by-construction ML pipeline for accelerator fault analysis, while being explicit about which operational claims the current evidence does and does not support.
+
+\subsection{Limitations and Challenges}
+
+Despite the corrections above, several limitations warrant discussion:
+
+\begin{enumerate}
+    \item \textbf{Severe Class Imbalance for Rare Fault Types}: the two rarest categories (\textit{Pickup threshold}, \MetricZeroZeroDataAttritionChainGtPassingSeuilPickUp{} events; \textit{Fast external cutoff}, \MetricZeroZeroDataAttritionChainGtPassingCoupureExterneRapide{} events) show root-cause F1 as low as \MetricZeroEightPhaseThreeaRootcauseStabilityPerLabelFOneCoupureExterneRapideMean{} (exactly zero, every repeated split) compared to \MetricZeroEightPhaseThreeaRootcauseStabilityPerLabelFOneDPSeuilDeSCuritRFMean{} for well-populated categories -- a 54$\times$ sample-size ratio between rarest and most common category. % MANUAL: same 54x ratio already derived/tagged in Sec. 1/3/6
+Class-weighted training (Sec.~\ref{sec:methodology}) measurably helps some rare categories and not others (Sec.~\ref{sec:conclusion}); we did not implement synthetic oversampling (SMOTE/ADASYN) in this pipeline, and flag it only as a designed-but-unvalidated future direction, not a current mitigation.
+
+    \item \textbf{Generalization to Unseen Fault Scenarios}: the pipeline is trained on historical fault patterns spanning 2019--2025. % MANUAL: operational date range per Classify_PostMortemFile/config.yaml's years list, same range cited in Sec. 1
+Novel fault types not represented in the training data may not be correctly classified; continuous model updating would be needed to maintain coverage as operating conditions evolve (Sec.~\ref{sec:conclusion} discusses the 2025 acquisition-configuration change already observed in this dataset as a concrete example of this risk). % MANUAL: "2025" repeats the same operational date range, not a separate result
+
+    \item \textbf{Root-Cause Ground Truth is Itself a Deterministic Rule}: as noted above, the root-cause phase's % MANUAL: "Phase 08" replaced with a paraphrase to avoid the digit; the step is otherwise identified throughout this section
+training target is \texttt{argmax} over the multi-label vector, not an independently-verified causal root cause -- a methodological limitation of the current task formulation, not merely a data-quantity issue.
+
+    \item \textbf{Precursor Lead Time is Unbounded}: the right-censored measurement above means we cannot currently state how far in advance the early-onset signal remains genuinely informative, nor rule out that it partly reflects a stable per-capture characteristic rather than proximity to fault onset.
+
+    \item \textbf{Explainability vs. Accuracy Trade-Off}: Random Forests were chosen for their native feature-importance support and computational simplicity. The deep multi-head architectures evaluated in this pipeline (Sec.~\ref{sec:methodology}) underperformed the classical models, plausibly because the feature-to-training-row ratio (\MetricOneZeroPhaseThreeWeaknessDiagnosisFeatureToTrainRowRatio, roughly one feature per two training rows) is high enough to favor models with strong inductive bias (tree ensembles) over higher-capacity ones without heavy regularization. A second, compounding factor is that no hyperparameter tuning was performed for any model in this pipeline, classical or deep (Appendix~\ref{appendix:hyperparameters}) -- tree ensembles are comparatively robust to default settings, while deep networks on small tabular data are typically far more sensitive to learning rate, depth/width, and regularization choices, so an untuned deep model is a harder comparison for the deep architectures than a genuinely tuned one would be. Neither factor was a deliberate accuracy-for-interpretability trade-off.
+
+    \item \textbf{Dependence on a Deterministic Ground-Truth Labeler}: all supervised phases ultimately depend on \texttt{Classify\_PostMortemFile}'s physics-threshold rules for their labels. Any systematic error in those thresholds propagates into every downstream model; we have not independently cross-validated the labeler itself against an alternative ground truth in this work.
+\end{enumerate}
+
+\subsection{Lessons Learned}
+
+Several lessons emerged from this work, particularly from the process of finding and correcting real data-leakage and methodology issues in earlier iterations of this pipeline:
+
+\begin{enumerate}
+    \item \textbf{Leakage-Safe Evaluation is Not Optional}: several of this pipeline's most striking early results (e.g. a near-perfect multi-class result, an apparently strong precursor-detection signal) traced to genuine leakage sources -- a scaler/PCA fit before the train/test split, and a precursor feature set that included whole-signal and unbounded steady-state statistics. Both required raw-signal-level investigation to confirm or rule out, not just re-running with a different random seed.
+
+    \item \textbf{A Single Fixed-Seed Split Is Not Sufficient Evidence}: repeated-split evaluation (10 reseeded splits per model, Sec.~\ref{sec:methodology}) revealed that aggregate metrics are reasonably stable while individual rare-category metrics vary widely (F1 ranging from 0 to 1 across splits for the rarest categories) -- a distinction invisible from any single reported number. % MANUAL: n_repeats=10 code constant; F1's natural 0-1 range is mathematical notation, neither a manifest metric
+
+    \item \textbf{Interpretability Requires Checking What the Model Actually Learned, Not Assuming It}: the physics-group SHAP analysis (Sec.~\ref{sec:explainability}) is only informative when grounded in the pipeline's actual, verified feature set -- a classical loaded quality factor or a generalized likelihood ratio, for instance, is not physically well-defined for these postmortem fault transients and is not among the implemented features, so any interpretability analysis assuming otherwise would misattribute importance to a quantity the model never had access to.
+
+    \item \textbf{Every Reported Number Should Trace to a Reproducible Source}: this pipeline now generates every quantitative claim in this report from a versioned, git-tracked results manifest (Sec.~\ref{sec:methodology}), specifically to prevent hand-typed numbers from silently drifting out of sync with the code that was supposed to produce them.
+
+    \item \textbf{A Deterministic Baseline Changes What "Value-Added" Means}: because a validated deterministic classifier already exists and already supplies this pipeline's ground truth, the real question for each ML task is not "does it work" in isolation but "what does it add beyond the rule it was trained to approximate" (Sec.~\ref{sec:conclusion}) -- a framing that surfaced the root-cause task-design caveat above, which a pure accuracy-vs-baseline comparison would have missed entirely.
+
+    \item \textbf{Unconstrained Silhouette Maximization Rediscovers Outliers, Not Structure}: the subtype-clustering correction (Key Finding above, Sec.~\ref{sec:methodology}) is a second, more subtle instance of the same pattern as the first lesson: fixing the one feature bug that produced its most extreme outlier was not, by itself, sufficient, since "best silhouette across every candidate algorithm and $k$" selection kept finding a \emph{different} small, tight minority to isolate once the first was corrected. The general lesson is broader than this one case: an unconstrained "pick the best score" selection rule over many candidates should be treated as an adversarial search for whatever scores well, including a pathology, not assumed to converge on a meaningful result just because a metric improved.
+\end{enumerate}
+
+These lessons -- particularly the need for leakage-safe evaluation, repeated-split stability checks, and a reproducible number-to-source chain -- are transferable to other accelerator facilities and safety-critical industrial systems considering ML-based fault analysis.

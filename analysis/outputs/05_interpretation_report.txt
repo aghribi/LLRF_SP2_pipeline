@@ -1,0 +1,40 @@
+================================================================================
+LLRF ANOMALY DETECTION - INTERPRETATION REPORT
+================================================================================
+
+Total Events Analyzed: 95
+Anomalies Detected: 15 (15.8%)
+
+1. KEY FINDINGS
+--------------------------------------------------------------------------------
+   - Top discriminative feature: PhaseUci_autocorr_lag1
+     (Cohen's d = 1.22)
+
+2. ANOMALY DISTRIBUTION BY FAULT TYPE
+--------------------------------------------------------------------------------
+   Absence autorisation RF: 9/85 (10.6%)
+   Dép seuil de sécurité RF: 2/6 (33.3%)
+   Seuil pick-up: 4/4 (100.0%)
+
+3. DETECTOR PERFORMANCE
+--------------------------------------------------------------------------------
+   Isolation Forest: 19 anomalies
+   DBSCAN: 13 outliers
+   LOF: 19 anomalies
+   Ensemble (≥2 votes): 15 anomalies
+
+4. PHYSICAL INTERPRETATION
+--------------------------------------------------------------------------------
+   Most anomalous events show:
+   - ql: μ=-0.66σ
+   - ql_fit_r2: μ=0.39σ
+   - detuning_hz: μ=0.12σ
+   - control_rms_pre: μ=0.63σ
+   - control_settling_time: μ=0.63σ
+
+5. CONFIDENCE ASSESSMENT
+--------------------------------------------------------------------------------
+   High confidence (3/3 votes): 9 anomalies
+   Medium confidence (2/3 votes): 6 anomalies
+
+================================================================================

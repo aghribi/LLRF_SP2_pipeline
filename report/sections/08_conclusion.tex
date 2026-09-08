@@ -1,0 +1,60 @@
+% Conclusion and Future Work
+% Author: Adnan Ghribi
+
+\label{sec:conclusion}
+
+\subsection{Summary of Contributions}
+
+This paper presented a multi-phase machine learning pipeline for automated fault diagnosis and early fault-onset detection in the SPIRAL2 Low-Level Radio Frequency control system. The key contributions are:
+
+\begin{enumerate}
+    \item \textbf{Hybrid Multi-Phase Pipeline Architecture}: A modular design progressing from unsupervised anomaly detection through supervised multi-label classification, root cause identification, and fault subtype clustering, enabling independent optimization and re-verification of each component.
+
+    \item \textbf{Data-Driven, Physics-Grounded Feature Importance}: SHAP analysis grouped by the actual feature-generating code section (seven named physics-informed families -- effective decay, detuning, microphonics, RF mismatch, modulator command, phase stability, RF power flow -- plus generic Statistical, Temporal, and Metadata/Status groups) shows a physics-informed family dominant for four of seven fault categories, rather than assuming a fixed set of classical named physics quantities matters uniformly.
+
+    \item \textbf{Root Cause Identification, With Its Ground-Truth Limitation Made Explicit}: our classifier achieves \MetricZeroEightPhaseThreeaRootcauseStabilityAccuracyMean$\pm$\MetricZeroEightPhaseThreeaRootcauseStabilityAccuracyStd{} accuracy (repeated-split mean $\pm$ std) identifying the primary fault among \MetricZeroEightPhaseThreeaRootcauseNFaultEvents{} fault events, via class-weighted Random Forest classifiers -- while being explicit that the training target is itself a deterministic rule (Sec.~\ref{sec:discussion}), a limitation of the current task formulation rather than a solved comparison.
+
+    \item \textbf{Fault Subtype Discovery}: unsupervised clustering finds a consistent best $k=\MetricZeroNinecEnhancedSubclassDiscoveryRfAuthorizationAbsentBestK$ substructure within \MetricZeroNinecEnhancedSubclassDiscoveryNCategoriesAnalyzed{} of \MetricZeroNinecEnhancedSubclassDiscoveryNCategoriesTotal{} fault categories, a real bimodal pattern not yet paired with a systematic per-subtype physical characterization.
+
+    \item \textbf{Early Fault-Onset Detection, with a Verified Lower Bound}: the corrected precursor model achieves \MetricZeroFivePhaseZeroPrecursorRandomForestRocAuc{} ROC AUC ahead of the interlock trip; a direct lead-time measurement found it right-censored (a lower bound of \MetricZeroFivePrecursorLeadTimeLeadTimeMsLowerBoundMeanCensored{}ms, not a characterized window) rather than reporting an unsupported specific duration.
+
+    \item \textbf{Explainability Framework}: integration of SHAP (global feature importance) and LIME (local explanations), validated against known LLRF physics, without claiming a causal-inference capability (e.g. Granger causality) that was not implemented.
+
+    \item \textbf{Offline Validation on Real Data, With a Real Latency Benchmark}: analysis of \MetricZeroZeroDataAttritionChainVSixTotalEvents{} SPIRAL2 postmortem events (of \MetricZeroZeroDataAttritionChainRawFiles{} raw files scanned) with measured single-event inference latency (Sec.~\ref{sec:results}) in the tens-of-milliseconds range, suitable in principle for future real-time integration pending further tail-latency characterization.
+\end{enumerate}
+
+\subsection{Future Directions}
+
+Several research directions emerge from this work, informed by what the corrected results actually show rather than an assumed trajectory:
+
+\begin{enumerate}
+    \item \textbf{Resolving the Root-Cause Task-Design Question}: the most immediate open question (Sec.~\ref{sec:discussion}) is not accuracy improvement but ground truth itself -- sourcing independent root-cause labels for genuinely simultaneous multi-fault events, so the classifier's value can be measured against something other than the deterministic rule it was trained to approximate.
+
+    \item \textbf{Independently Validating the Ground-Truth Labeler}: every supervised result in this paper ultimately depends on \texttt{Classify\_PostMortemFile}'s physics-threshold rules for its labels (Sec.~\ref{sec:discussion}); we have not cross-validated that labeler itself against an independent ground truth (e.g. expert-reviewed events, or a second labeling methodology). Any systematic error in its thresholds would propagate into every downstream model without being visible from the model-evaluation numbers alone.
+
+    \item \textbf{A Full Permutation-Importance Audit of Metadata Features}: we checked the acquisition-metadata features (Appendix~\ref{appendix:features}) for a data leak via single-feature AUC and static feature-importance rank and found no evidence of one, but this is a weaker check than a full permutation-importance audit (shuffling each metadata feature and measuring the resulting drop in held-out performance, repeated across splits) -- a natural next verification step before treating the current negative finding as conclusive.
+
+    \item \textbf{Recalibrating Two Still-Non-Functional Threshold Features}: fixing the whole-signal-statistic normalization-order bug (Sec.~\ref{sec:methodology}) left two features still effectively non-functional -- a reflected-signal saturation-fraction check and an RF-drive-on flag -- because their absolute-unit threshold constants do not correspond to a real physical level for this signal even once computed on real-amplitude data (Appendix~\ref{appendix:features}). We had no grounds to invent new threshold values, so both remain near-constant in the current V6 feature set; recalibrating them against real raw-signal amplitude statistics (rather than the legacy constants currently in the code) is a contained, well-defined follow-up.
+
+    \item \textbf{Bounding the Precursor Detection Horizon}: the right-censored lead-time measurement in this work needs a wider search (this work tested offsets up to several hundred milliseconds before each event's own trigger) to find where detection confidence actually drops, and separately needs investigation of whether the signal reflects genuine fault-onset proximity or a stable per-capture characteristic of the acquisition itself.
+
+    \item \textbf{Per-Subtype Physical Characterization}: the consistent $k=\MetricZeroNinecEnhancedSubclassDiscoveryRfAuthorizationAbsentBestK$ clustering finding now has a first per-subtype feature-profile pass (Fig.~\ref{fig:phase09_profiles}, Sec.~\ref{sec:methodology}) -- the top differentiating features between subtypes, per category. Pairing those with targeted expert physical interpretation (extending the SHAP/LIME explainability work already applied to top-level fault categories) would let discovered subtypes support specific maintenance recommendations rather than serving only as a starting point for expert review.
+
+    \item \textbf{Deep Learning for Temporal Modeling -- An Open Problem, Not a Solved One}: the deep multi-head architectures evaluated in this pipeline (CNN, Transformer, CNN-LSTM, MLP) underperformed the classical Random Forest and XGBoost baselines across every multi-label metric tracked (Sec.~\ref{sec:methodology}), plausibly due to a combination of a high feature-to-training-row ratio (\MetricOneZeroPhaseThreeWeaknessDiagnosisFeatureToTrainRowRatio, Sec.~\ref{sec:discussion}) and the complete absence of hyperparameter tuning for any model in this pipeline (Appendix~\ref{appendix:hyperparameters}), which plausibly disadvantages the deep architectures more than the classical ones. Whether temporal architectures can outperform classical models on this task remains genuinely open, and would likely require either substantially more training events, actual hyperparameter tuning, or a dimensionality-reduction step not yet implemented (Sec.~\ref{sec:discussion}).
+
+    \item \textbf{Data Augmentation for Rare Fault Categories}: the two rarest categories (\textit{Pickup threshold}, \MetricZeroZeroDataAttritionChainGtPassingSeuilPickUp{} events; \textit{Fast external cutoff}, \MetricZeroZeroDataAttritionChainGtPassingCoupureExterneRapide{} events) remain the pipeline's weakest point even after class-weighted training. Feature-space Gaussian jitter (noise scaled to each feature's own training-fold standard deviation, applied only to minority-class rows) is a more physically conservative starting point than direct interpolation-based methods (e.g. SMOTE) in this feature space, and is a designed-but-not-yet-implemented direction for this pipeline. Separately, more real \textit{Fast external cutoff} data may not exist to collect: only a small number of raw events pass this pipeline's own upstream quality filters for that category in the first place, an upstream data-availability ceiling rather than a modeling gap.
+
+    \item \textbf{Multi-Cavity and System-Level Fault Diagnosis}: current work focuses on single-cavity fault diagnosis. Extending to system-level diagnosis across the full SPIRAL2 linac's cavities and cryomodules, with inter-cavity coupling and fault propagation, could use graph neural networks or multi-task learning to model spatial dependencies -- a natural extension we have not attempted here.
+
+    \item \textbf{Integration with Predictive Maintenance}: fault subtype patterns, once paired with the physical characterization noted above, are a plausible input to predictive-maintenance approaches (survival analysis, remaining-useful-life estimation) for tracking gradual component degradation -- speculative future work, not a capability of the current pipeline.
+
+    \item \textbf{Benchmarking and Public Dataset Release}: a curated, anonymized version of this dataset would support reproducibility and comparison with future methods; this has not yet been prepared or released, and would require data-sharing agreements beyond the scope of this work.
+\end{enumerate}
+
+\subsection{Concluding Remarks}
+
+This work demonstrates that machine learning can achieve strong, carefully-characterized fault-analysis performance in a complex, safety-critical particle accelerator system -- while remaining explicit about how easily an ML pipeline's reported numbers can drift from what the code actually computes: leakage sources that inflate apparent performance, single-split evaluations that hide rare-category instability, and feature-importance narratives built around quantities that were never implemented. The pipeline addresses each of these directly, and generates every quantitative claim in this report from a versioned, reproducible results manifest (Sec.~\ref{sec:methodology}) specifically to prevent this drift from recurring silently.
+
+Beyond SPIRAL2, this methodology -- and, as much as the specific numbers, the discipline of leakage-safe evaluation, repeated-split stability checking, and reproducible number-to-source traceability -- is applicable to other large-scale scientific facilities where fault-diagnosis complexity exceeds what manual analysis can keep pace with, but where interpretability and trustworthiness of the reported results remain paramount.
+
+As particle accelerators become increasingly complex and operational demands intensify, automated fault diagnosis will need to transition from research exploration to an operational tool. This work provides a foundation for that transition, along with an explicit account of which claims are currently well-supported and which remain open questions for future work.

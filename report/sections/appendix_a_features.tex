@@ -1,0 +1,66 @@
+% Appendix A: Complete Feature Set
+% Author: Adnan Ghribi
+
+\label{appendix:features}
+
+This appendix describes the feature set actually computed by the pipeline's feature-engineering code (\texttt{engineer\_features()} and \texttt{preprocess\_signals()} in \texttt{prepare\_data\_cluster\_v6.py}), \MetricZeroSixBinaryClassificationNFeatures{} features in total after correlation-based filtering (0.95 threshold), spanning 27 monitored LLRF signals.  % MANUAL: mathematical notation / signal count, not a result number
+
+\subsection{Whole-Signal Statistical Features}
+
+For each of the 27 monitored signals, 17 statistics are computed over the entire acquired signal (both pre- and post-trigger; these are general signal-shape descriptors, not restricted to a specific temporal window). Four of the 17 -- Mean, Standard Deviation, RMS, and Energy below -- are computed on the filtered-but-unnormalized signal specifically to avoid a normalization-order bug where computing them after this signal's own per-event Z-score normalization (Sec.~\ref{sec:methodology}) made them close to constant by construction; see Sec.~\ref{sec:methodology} for the full account of that bug and its fix. The remaining 13 (skewness, kurtosis, extrema, quartiles, crest factor, peak count, zero crossings, lag-1 autocorrelation) are scale/shift-invariant or use appropriately-normalized thresholds and were unaffected either way:  % MANUAL: mathematical notation / signal count, not a result number
+
+\begin{enumerate}
+    \item \textbf{Mean}: $\mu = \frac{1}{N}\sum_{i=1}^{N} x_i$  % MANUAL: mathematical notation / signal count, not a result number
+    \item \textbf{Standard Deviation}: $\sigma = \sqrt{\frac{1}{N}\sum_{i=1}^{N} (x_i - \mu)^2}$  % MANUAL: mathematical notation / signal count, not a result number
+    \item \textbf{Skewness}: $\gamma_1 = \frac{1}{N}\sum_{i=1}^{N} \left(\frac{x_i - \mu}{\sigma}\right)^3$  % MANUAL: mathematical notation / signal count, not a result number
+    \item \textbf{Kurtosis}: $\gamma_2 = \frac{1}{N}\sum_{i=1}^{N} \left(\frac{x_i - \mu}{\sigma}\right)^4 - 3$  % MANUAL: mathematical notation / signal count, not a result number
+    \item \textbf{Minimum, Maximum, Range}: $\min(x)$, $\max(x)$, $\max(x)-\min(x)$
+    \item \textbf{Median, Q1, Q3, IQR}: 25th/50th/75th percentiles and their spread  % MANUAL: mathematical notation / signal count, not a result number
+    \item \textbf{RMS and Crest Factor}: $\text{rms} = \sqrt{\frac{1}{N}\sum x_i^2}$, $\text{crest} = \max(x)/\text{rms}$  % MANUAL: mathematical notation / signal count, not a result number
+    \item \textbf{Peak Count}: number of local maxima above a fixed prominence threshold
+    \item \textbf{Energy}: $\sum_{i=1}^{N} x_i^2$  % MANUAL: mathematical notation / signal count, not a result number
+    \item \textbf{Zero Crossings}: number of sign changes
+    \item \textbf{Lag-1 Autocorrelation}: $\text{corr}(x_{1:N-1}, x_{2:N})$  % MANUAL: mathematical notation / signal count, not a result number
+\end{enumerate}
+
+These whole-signal statistics are the single largest feature group (17 statistics $\times$ 27 signals); % MANUAL: real signal/statistic counts, already tagged in Sec. 3/4
+by unnormalized group-sum, this size advantage makes the broader Statistical/Temporal groups look dominant for most fault categories -- but the count-normalized picture is materially different (Sec.~\ref{sec:explainability}).
+
+\subsection{Physics Features}
+
+Signal-specific physics-relevant quantities, computed either over the whole signal or split at each event's own true trigger sample index (not a fixed offset -- see Sec.~\ref{sec:methodology} for why a per-file trigger index matters):
+
+\begin{itemize}
+    \item \textbf{Effective decay} (cavity voltage post-trigger decay: time constant, decay rate, fit quality, deviation from nominal, non-exponentiality). We explicitly do \emph{not} report this as a loaded quality factor $Q_L$: the standard exponential-decay $Q_L$ calculation assumes the cavity field decays freely after RF drive is switched off, which does not hold for SPIRAL2's continuous-wave operation with an active feedback loop during the transient -- the observed decay reflects the coupled cavity-plus-control-system response, not the cavity's intrinsic electromagnetic dissipation alone.
+    \item \textbf{Detuning}: mean, std, linear slope, peak-to-peak of the accumulated (non-detrended) unwrapped phase over the window -- not detrended the way the microphonics features below are, so this is dominated by any static detuning offset accumulating over the window's duration rather than isolating short-timescale excursions -- and the jump in detuning at the trigger.
+    \item \textbf{Microphonics}: RMS of the detrended phase residual, dominant frequency, band power (10--100\,Hz), resonance Q-factor of the dominant peak.  % MANUAL: mathematical notation / signal count, not a result number
+    \item \textbf{RF mismatch} (reflected-signal minus amplifier-output amplitude, two distinct measured quantities): pre- and post-trigger RMS, post-trigger maximum excursion, settling time, reflected-signal saturation fraction, plus the cavity phase's own std over the same windows (a co-located jitter indicator, not a phase of the amplitude-difference signal itself). The saturation-fraction feature (and its \texttt{control\_saturation\_fraction} alias) now reads the real-amplitude signal rather than the Z-score-normalized one (Sec.~\ref{sec:methodology}), but its threshold constant is of unverified provenance and does not correspond to a real saturation level for this signal even in real units -- it remains near-constantly zero in the current V6 dataset and should still be treated as not functional, an open item for future recalibration (Sec.~\ref{sec:conclusion}) rather than something we had grounds to fix by guessing a new number.
+    \item \textbf{Modulator command}: pre-trigger amplitude/phase statistics and the post-trigger change in each.
+    \item \textbf{Phase stability}: jitter RMS, peak-to-peak excursion, low-frequency drift slope, integrated power spectral density (all pre-trigger).
+    \item \textbf{RF power flow}: forward/reflected power means, reflection ratio, power jump at the trigger, power-imbalance RMS.
+\end{itemize}
+
+\subsection{Fixed-Window Precursor Features}
+
+A separate feature group, distinguished from the whole-signal and physics features above by using a \emph{fixed physical-duration} window immediately before each event's own trigger sample (not the whole file, and not a fixed sample count -- scaled per file's own sample spacing so every event gets the same duration in milliseconds). For each of the 27 signals:  % MANUAL: mathematical notation / signal count, not a result number
+
+\begin{itemize}
+    \item \textbf{Trend slope and acceleration}: linear and quadratic polynomial fit coefficients over the window.
+    \item \textbf{CUSUM}: $S_i = \sum_{j=1}^{i}(x_j - \bar{x}_{\text{window}})$, maximum and minimum.  % MANUAL: mathematical notation / signal count, not a result number
+    \item \textbf{Early-late comparison}: difference and ratio of the mean value between the window's earliest and latest thirds.
+    \item \textbf{Variance ratio}: variance of the late third divided by variance of the early third.
+\end{itemize}
+
+This is the feature subset used, exclusively, by the corrected early-fault-onset-detection model (Sec.~\ref{sec:results}) -- restricted precisely because the whole-signal and unbounded physics features above were found to leak information inappropriate for that specific "before this event's own outcome is known" task, even though they are legitimate features for the post-hoc classification tasks (Steps 06--08). % MANUAL: "06"/"08" name pipeline steps, not results
+
+\subsection{Derivative and Segment Features}
+
+First and second derivatives (finite differences) of each signal, aggregated as mean/std/max-absolute-value, plus five equal-duration segments of the fixed pre-trigger window (Sec.~\ref{sec:results}'s clustering and precursor analyses draw on these), each contributing its own mean, std, and linear trend.
+
+\subsection{Metadata Features}
+
+Numeric fields from each acquisition's own header (decimation factor, row counts, loop gain parameters, AMPT/PHIT thresholds) are included directly as features. Because some of these fields (e.g.\ \texttt{meta\_KPI}, \texttt{meta\_AMPT}, \texttt{meta\_PHIT}) are acquisition-configuration values rather than measured signal statistics, we explicitly checked them for a data leak -- a metadata field that inadvertently encodes the fault label itself rather than a cause of it. Single-feature AUC for these fields against the fault label ranges 0.50--0.67 (near-chance to weak, not the near-perfect separability a direct label leak would produce), no metadata feature ranks higher than 90th by mean $|$SHAP value$|$ among all \MetricZeroSixBinaryClassificationNFeatures{} features, and most individual metadata features carry effectively zero Gini importance in the trained models. We treat this as evidence against a metadata leak, not proof of its absence -- a single-feature/static-importance check cannot detect leakage that only emerges through a combination of correlated metadata features, and is weaker than a full permutation-importance audit, which we leave as future verification (Sec.~\ref{sec:conclusion}). % MANUAL: AUC range and rank/importance findings are from a direct verification check (feature-importance and single-feature AUC against the fault label), not yet wired into a results manifest
+
+\subsection{Feature Selection}
+
+The features above are filtered by pairwise correlation (features correlated above 0.95 are deduplicated, keeping the more physically interpretable name where an exact alias exists) rather than by recursive elimination or a fixed target count -- the final \MetricZeroSixBinaryClassificationNFeatures{} is a consequence of this filtering, not a pre-specified target.  % MANUAL: mathematical notation / signal count, not a result number

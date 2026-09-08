@@ -1,0 +1,223 @@
+% ****** Start of file apssamp.tex ******
+%
+%   This file is part of the APS files in the REVTeX 4.2 distribution.
+%   Version 4.2a of REVTeX, December 2014
+%
+\documentclass[%
+ reprint,
+%superscriptaddress,
+%groupedaddress,
+%unsortedaddress,
+%runinaddress,
+%frontmatterverbose, 
+% preprint,
+preprintnumbers,
+nofootinbib,
+%nobibnotes,
+%bibnotes,
+amsmath,amssymb,
+aps,
+pra,
+%prb,
+%rmp,
+%prstab,
+%prstper,
+%floatfix,
+]{revtex4-2}
+% \documentclass{article}
+\usepackage{graphicx}% Include figure files
+\usepackage{dcolumn}% Align table columns on decimal point
+\usepackage{bm}% bold math
+% STRUCTURAL FIX (2026-09-06): xcolor was loaded TWICE with conflicting
+% options (plain here, then [dvipsnames] further down where \definecolor
+% actually needs it) -- a genuine "Option clash for package xcolor" fatal
+% error, not something introduced by this copy. Fixed by loading it once,
+% here, with the more complete [dvipsnames] option, before \definecolor.
+\usepackage[dvipsnames]{xcolor}
+\definecolor{linkblue}{RGB}{0,76,153}
+\definecolor{linkred}{RGB}{204,0,0}
+% PENDING-V7 MARKER (added 2026-09-09): a ground-truth quality-filter bug was found and
+% fixed (Sec.~\ref{sec:system_description}) -- the header field read as beam presence
+% actually encodes feed-forward state and was wrongly applied before 2021, likely
+% discarding several hundred legitimate 2019-2020 events. The dataset has not yet been
+% re-extracted (V7) or the downstream pipeline re-run against the fix, so every section
+% below whose numbers derive from the current V6 dataset is grayed out and banner-marked
+% until that re-run happens -- REMOVE \pendingbanner and the surrounding
+% \begingroup\color{pendinggray}...\endgroup once a section's numbers are re-verified
+% against V7, do not just delete the color wrapper and leave stale numbers looking current.
+\definecolor{pendinggray}{gray}{0.55}
+\newcommand{\pendingbanner}{%
+  \par\noindent\textcolor{pendinggray}{%
+    \textbf{[Pending V7 re-run, flagged 2026-09-09]} A ground-truth quality-filter bug was
+    found and fixed: the header field read as beam presence actually encodes feed-forward
+    state and was wrongly applied before 2021, likely discarding several hundred legitimate
+    events. The dataset has not yet been re-extracted or the pipeline re-run against the fix
+    -- the numbers below still reflect the pre-fix dataset and should not be cited until this
+    notice is removed. See Sec.~\ref{sec:system_description} for the corrected data
+    description.}\par\smallskip
+}
+\usepackage[
+  colorlinks=true,
+  linkcolor=linkblue,
+  citecolor=linkred,
+  urlcolor=blue
+]{hyperref}
+% \usepackage[mathlines]{lineno}% Enable numbering of text and display math
+% \usepackage{authblk}
+% \linenumbers\relax % Commence numbering lines
+\usepackage{array, longtable, booktabs, makecell}
+\usepackage{wasysym}
+% ENVIRONMENT NOTE (2026-09-06): current siunitx (CTAN 3.5.10) requires a
+% LaTeX2e kernel newer than this cluster's TeX Live 2020 base install.
+% Disabled here rather than upgrading the account-wide kernel for it --
+% grep across sections/*.tex found zero uses of \SI, \si, \num, or \ang, so
+% this has no effect on the compiled content. Re-enable if a unit-formatting
+% command is actually added later (and the kernel/package versions allow it).
+% \usepackage{siunitx}
+\usepackage{tabularx}
+% STRUCTURAL FIX (2026-09-06): booktabs and array were re-\usepackage'd here
+% with no options -- harmless (LaTeX no-ops a repeat load with identical/no
+% options) but redundant with the array/booktabs already loaded above;
+% removed for tidiness, not a functional change.
+\usepackage[acronym,nonumberlist]{glossaries}
+\makeglossaries
+\input{glossary/acronyms.tex}
+%\usepackage[showframe,%Uncomment any one of the following lines to test 
+%%scale=0.7, marginratio={1:1, 2:3}, ignoreall,% default settings
+%%text={7in,10in},centering,
+%%margin=1.5in,
+%%total={6.5in,8.75in}, top=1.2in, left=0.9in, includefoot,
+%%height=10in,a5paper,hmargin={3cm,0.8in},
+%]{geometry}
+
+\begin{document}
+
+\preprint{APS/123-QED}
+
+\title{Multi-phase Machine Learning Pipeline for Fault Diagnosis in the SPIRAL2 Low-Level Radio Frequency System}% Force line breaks with \\
+%\thanks{A footnote to the article title}%
+
+\author{Adnan Ghribi$^{1,2}$}
+\author{Patrick Bonnay$^3$}%
+\author{Frédéric Bouly$^2$}
+\author{Marco Di Giacomo$^{1,3}$}
+\author{Charly Lassalle$^{1,4}$}
+
+\affiliation{$^1$Grand accélérateur National d'Ions Lourds (GANIL)}
+\affiliation{$^2$Centre National de la Recherche Scientifique (CNRS)}
+\affiliation{$^3$Commissariat à l'énergie atomique et aux énergies alternatives (CEA)}
+\affiliation{$^4$Université de Caen - Normandie}
+
+
+ %\email{Second.Author@institution.edu}
+%\affiliation{%
+%Grand Accélérateur National d'Ions Lourds (GANIL).}%
+
+%\collaboration{MUSO Collaboration}%\noaffiliation
+
+%\author{Charlie Author}
+% \homepage{http://www.Second.institution.edu/~Charlie.Author}
+%\affiliation{
+ %Second institution and/or address\\
+ %This line break forced% with \\
+%}%
+%\affiliation{
+ %Third institution, the second for Charlie Author
+%}%
+%\author{Delta Author}
+%\affiliation{%
+ %Authors' institution and/or address\\
+ %This line break forced with \textbackslash\textbackslash
+%}%
+
+% Auto-generated results macros -- see report/code/generate_macros.py.
+% Regenerate after any results_manifest change: python report/code/generate_macros.py
+% Every results/discussion number should cite one of these macros, never a
+% bare/hand-typed number -- see report/code/check_no_hand_typed_numbers.py.
+% STRUCTURAL FIX (2026-09-07): this \input must come before the abstract --
+% 00_abstract.tex cites \Metric... macros itself, and \newcommand-ing them
+% only after \end{abstract} left every such macro undefined at the point the
+% abstract is typeset ("Undefined control sequence"), never caught locally
+% since this session verified via Overleaf compiles rather than pdflatex.
+\input{sections/_generated_macros}
+
+% ==================== ABSTRACT ====================
+\glsunsetall
+\begin{abstract}
+\begingroup\color{pendinggray}
+\pendingbanner
+\input{sections/00_abstract}
+\endgroup
+\end{abstract}
+\glsresetall
+% ==================== KEYWORDS ====================
+\keywords{
+Particle Accelerator, Low-Level RF, Fault Diagnosis, Anomaly Detection, Machine Learning, Root Cause Analysis, Explainable AI, Precursor Detection
+}
+
+\maketitle
+
+\tableofcontents
+\newpage
+% ==================== MAIN CONTENT ====================
+\section{Introduction}\label{sec:introduction}
+\input{sections/01_introduction}
+
+\section{Related Work}
+\input{sections/02_related_work}
+
+\section{System Description and Data Acquisition}
+\input{sections/03_system_description}
+\begingroup\color{pendinggray}
+\section{Methodology: Multi-Phase Pipeline Architecture}
+\pendingbanner
+\input{sections/04_methodology}
+
+\section{Explainability and Interpretability}
+\pendingbanner
+\input{sections/05_explainability}
+
+\section{Results and Performance Analysis}
+\pendingbanner
+\input{sections/06_results}
+
+\section{Discussion}
+\pendingbanner
+\input{sections/07_discussion}
+
+\section{Conclusion and Future Work}
+\pendingbanner
+\input{sections/08_conclusion}
+\endgroup
+
+% ==================== ACKNOWLEDGMENTS ====================
+\section*{Acknowledgments}
+\input{sections/09_acknowledgments}
+
+% ==================== BIBLIOGRAPHY ====================
+% STRUCTURAL FIX (2026-09-07): IEEEtran is an IEEE-conference bibstyle with
+% no relation to this document's actual class (revtex4-2, aps, pra) -- a
+% leftover from whatever template this section was copied from. bibtex
+% fails outright without IEEEtran.bst installed (confirmed locally); the
+% correct, class-native choice, always shipped alongside revtex4-2.cls, is
+% apsrev4-2 (natbib-compatible, which revtex4-2 already loads internally).
+\bibliographystyle{apsrev4-2}
+\bibliography{references/references}
+\printglossary[type=\acronymtype]
+% ==================== APPENDICES ====================
+\appendix
+\begingroup\color{pendinggray}
+\section{Complete Feature Set}
+\pendingbanner
+\input{sections/appendix_a_features}
+
+\section{Hyperparameter Settings}
+\pendingbanner
+\input{sections/appendix_b_hyperparameters}
+
+\section{Additional Results}
+\pendingbanner
+\input{sections/appendix_c_additional_results}
+\endgroup
+
+\end{document}
