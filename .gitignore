@@ -79,6 +79,10 @@ MANIFEST
 # Input files (reference papers - too large)
 inputs/
 
+# EPICS/control-system PV inventories and correlation code -- internal GANIL
+# facility information, kept private-only (see private origin's epics/README.md)
+epics/
+
 # Claude configuration (local)
 .claude/
 
