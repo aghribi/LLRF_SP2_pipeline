@@ -12,10 +12,12 @@ qualitative impression:
      tells "not enough data" apart from "wrong model/features".
   4. Dimensionality check: n_features vs. n_train_rows ratio.
 
-Everything is computed live from V6 + Phase 2's manifests and written to
+Everything is computed live from the configured dataset (see SPIRAL2_COOKED_DIR
+below) + Phase 2's manifests and written to
 analysis/results_manifest/10_phase3_weakness_diagnosis.yaml -- no hand-typed
 numbers, per this project's convention.
 """
+import os
 import sys
 import logging
 from pathlib import Path
@@ -40,12 +42,16 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s',
                     handlers=[logging.FileHandler('phase3_weakness_diagnosis.log'), logging.StreamHandler(sys.stdout)])
 logger = logging.getLogger(__name__)
 
-V6_DIR = Path('/sps/m4cast/_spiral2_data/_llrf_data/cooked_data_v6')
+# 2026-09-10: was hardcoded to cooked_data_v6/features_engineered_v6.pkl, the
+# same reproducibility trap already fixed in the SHAP scripts -- parameterized
+# the same way (SPIRAL2_COOKED_DIR, default V6 for back-compat) and switched to
+# the generic 'features_engineered.pkl' symlink both V6 and V7 dirs carry.
+COOKED_DIR = Path(os.environ.get('SPIRAL2_COOKED_DIR', '/sps/m4cast/_spiral2_data/_llrf_data/cooked_data_v6'))
 MANIFEST_DIR = Path(__file__).resolve().parents[2] / 'analysis' / 'results_manifest'
 
 
-def load_v6():
-    with open(V6_DIR / 'features_engineered_v6.pkl', 'rb') as f:
+def load_data():
+    with open(COOKED_DIR / 'features_engineered.pkl', 'rb') as f:
         return pickle.load(f)
 
 
@@ -54,7 +60,7 @@ def imbalance_correlation():
     logger.info("1. IMBALANCE-PERFORMANCE CORRELATION")
     logger.info("=" * 78)
 
-    data = load_v6()
+    data = load_data()
     label_names = data['fault_column_names']
     sizes = data['y_multilabel'].sum(axis=0)
 
@@ -100,7 +106,7 @@ def confusion_analysis():
     logger.info("2. CONFUSION ANALYSIS")
     logger.info("=" * 78)
 
-    data = load_v6()
+    data = load_data()
     label_names = list(data['fault_column_names'])
 
     # --- Root cause (7-class, argmax of y_multilabel among fault events) ---
@@ -186,7 +192,7 @@ def learning_curves():
     logger.info("3. LEARNING CURVES")
     logger.info("=" * 78)
 
-    data = load_v6()
+    data = load_data()
     results = {}
 
     # Binary (step 06)
@@ -239,7 +245,7 @@ def dimensionality_check():
     logger.info("=" * 78)
     logger.info("4. DIMENSIONALITY CHECK")
     logger.info("=" * 78)
-    data = load_v6()
+    data = load_data()
     n_features = len(data['feature_cols'])
     n_events = data['features_all'].shape[0]
     n_train = int(round(n_events * 0.7))
@@ -273,8 +279,8 @@ def main():
                                                     'label': 'Step 08 root-cause: CV F1 gain from 10% to 100% of data'},
         },
         pipeline_run={
-            'dataset_version': 'V6',
-            'dataset_path': str(V6_DIR / 'features_engineered_v6.pkl'),
+            'dataset_version': (lambda _n: _n.upper() if _n else 'V2')(COOKED_DIR.name.replace('cooked_data', '').lstrip('_')),
+            'dataset_path': str(COOKED_DIR / 'features_engineered.pkl'),
             'script': 'pipeline/00_scripts/phase3_weakness_diagnosis.py',
         },
         meta={

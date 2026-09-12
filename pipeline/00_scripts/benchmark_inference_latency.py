@@ -14,6 +14,7 @@ and step 05's corrected precursor RF. For each, times scaler.transform()
 followed by model.predict() per row, one row at a time, over that model's own
 test set, and reports mean/median/p95 wall-clock ms/event.
 """
+import os
 import sys
 import time
 from pathlib import Path
@@ -32,7 +33,13 @@ from leakage_safe_features import raw_feature_matrix
 import phaseC_lp_test
 __main__.LabelPowersetWrapper = phaseC_lp_test.LabelPowersetWrapper  # for unpickling lp_model.pkl
 
-V6_DIR = Path('/sps/m4cast/_spiral2_data/_llrf_data/cooked_data_v6')
+# 2026-09-10: was hardcoded to cooked_data_v6, the same reproducibility trap
+# already fixed in the SHAP scripts -- parameterized the same way
+# (SPIRAL2_COOKED_DIR, default V6 for back-compat). VERSION_SUFFIX (e.g. "v6",
+# "v7") feeds the two step-output subdirectory names below that carry an
+# explicit version suffix; step_09_phaseC_lp does not and is used as-is.
+COOKED_DIR = Path(os.environ.get('SPIRAL2_COOKED_DIR', '/sps/m4cast/_spiral2_data/_llrf_data/cooked_data_v6'))
+VERSION_SUFFIX = COOKED_DIR.name.replace('cooked_data', '').lstrip('_') or 'v6'
 N_TIMED = 200  # events timed per model (single-event calls; test sets are 313-633 events)
 
 
@@ -64,13 +71,13 @@ def summarize(name, times_ms):
 
 
 def main():
-    with open(V6_DIR / 'features_engineered_v6.pkl', 'rb') as f:
+    with open(COOKED_DIR / 'features_engineered.pkl', 'rb') as f:
         data = pickle.load(f)
 
     summary = {}
 
     # --- Step 06: binary RF ---
-    with open(V6_DIR / 'step_06_phase1_v6' / 'binary_classification.pkl', 'rb') as f:
+    with open(COOKED_DIR / f'step_06_phase1_{VERSION_SUFFIX}' / 'binary_classification.pkl', 'rb') as f:
         d6 = pickle.load(f)
     splits6 = d6['data_splits']
     X_raw6, _ = raw_feature_matrix({'features_all': data['features_all'], 'feature_cols': splits6['feature_cols']})
@@ -82,7 +89,7 @@ def main():
     summary['step06_binary_rf'] = summarize('Step 06 binary RF', times6)
 
     # --- Phase C: Label Powerset (XGBoost) ---
-    with open(V6_DIR / 'step_09_phaseC_lp' / 'lp_model.pkl', 'rb') as f:
+    with open(COOKED_DIR / 'step_09_phaseC_lp' / 'lp_model.pkl', 'rb') as f:
         dc = pickle.load(f)
     X_rawC, _ = raw_feature_matrix({'features_all': data['features_all'], 'feature_cols': dc['feature_cols']})
     X_test_rawC = X_rawC[dc['idx_test']]
@@ -93,7 +100,7 @@ def main():
     summary['phaseC_label_powerset'] = summarize('Phase C Label Powerset (XGBoost)', timesC)
 
     # --- Step 05: corrected precursor RF (382-column true-precursor subset) ---
-    with open(V6_DIR / 'step_05_v6' / 'precursor_detection.pkl', 'rb') as f:
+    with open(COOKED_DIR / f'step_05_{VERSION_SUFFIX}' / 'precursor_detection.pkl', 'rb') as f:
         d5 = pickle.load(f)
     splits5 = d5['data_splits']
     X_raw5, _ = raw_feature_matrix({'features_all': data['features_all'], 'feature_cols': splits5['feature_cols']})
@@ -115,14 +122,14 @@ def main():
         phase='inference_latency_benchmark',
         metrics=metrics,
         pipeline_run={
-            'dataset_version': 'V6',
-            'dataset_path': str(V6_DIR / 'features_engineered_v6.pkl'),
+            'dataset_version': VERSION_SUFFIX.upper(),
+            'dataset_path': str(COOKED_DIR / 'features_engineered.pkl'),
             'script': 'pipeline/00_scripts/benchmark_inference_latency.py',
         },
         meta={
             'method': (
                 'Single-event, single-threaded wall-clock timing (scaler.transform + predict, one row '
-                'at a time, no batching) over each model\'s own V6 test set -- the realistic '
+                f'at a time, no batching) over each model\'s own {VERSION_SUFFIX.upper()} test set -- the realistic '
                 '"one new postmortem file arrives" deployment scenario. Replaces the unverified '
                 '"45ms/event"/"<100ms" claims, which predate this session\'s leakage fixes and V6, '
                 'with a real, reproducible number. Feature engineering time (reading the raw postmortem '

@@ -1,97 +1,104 @@
 phase: 09c_enhanced_subclass_discovery
-generated_at: '2026-09-07T13:35:32.861332+00:00'
+generated_at: '2026-09-08T21:30:35.708063+00:00'
 pipeline_run:
-  dataset_version: V6
-  dataset_path: /sps/m4cast/_spiral2_data/_llrf_data/cooked_data_v6/features_engineered.pkl
+  dataset_version: V7
+  dataset_path: /sps/m4cast/_spiral2_data/_llrf_data/cooked_data_v7/features_engineered.pkl
   script: pipeline/00_scripts/prepare_09c_enhanced_subclass_discovery.py
 metrics:
   n_categories_analyzed:
-    value: 5
+    value: 6
     fmt: null
     label: Fault categories with enough events (>=20) to cluster
-    display: '5'
+    display: '6'
   n_categories_total:
     value: 7
     fmt: null
     label: Total fault categories
     display: '7'
+  pickup_threshold_best_k:
+    value: 2
+    fmt: null
+    label: 'Pickup threshold: best k (n=94)'
+    display: '2'
+  pickup_threshold_silhouette:
+    value: 0.18908870390793525
+    fmt: .3f
+    label: 'Pickup threshold: silhouette score'
+    display: '0.189'
   rf_authorization_absent_best_k:
     value: 2
     fmt: null
-    label: 'RF authorization absent: best k (n=309)'
+    label: 'RF authorization absent: best k (n=329)'
     display: '2'
   rf_authorization_absent_silhouette:
-    value: 0.12031884213100909
+    value: 0.13048500274039557
     fmt: .3f
     label: 'RF authorization absent: silhouette score'
-    display: '0.120'
+    display: '0.130'
   vacuum_threshold_best_k:
     value: 2
     fmt: null
-    label: 'Vacuum threshold: best k (n=20)'
+    label: 'Vacuum threshold: best k (n=46)'
     display: '2'
   vacuum_threshold_silhouette:
-    value: 0.33590750264298763
+    value: 0.17920563682208013
     fmt: .3f
     label: 'Vacuum threshold: silhouette score'
-    display: '0.336'
+    display: '0.179'
   cavity_quench_breakdown_best_k:
     value: 2
     fmt: null
-    label: 'Cavity quench/breakdown: best k (n=28)'
+    label: 'Cavity quench/breakdown: best k (n=31)'
     display: '2'
   cavity_quench_breakdown_silhouette:
-    value: 0.06354744755424287
+    value: 0.0736901514658977
     fmt: .3f
     label: 'Cavity quench/breakdown: silhouette score'
-    display: '0.064'
+    display: '0.074'
   rf_safety_threshold_exceeded_best_k:
     value: 2
     fmt: null
-    label: 'RF safety threshold exceeded: best k (n=72)'
+    label: 'RF safety threshold exceeded: best k (n=86)'
     display: '2'
   rf_safety_threshold_exceeded_silhouette:
-    value: 0.10442176515428254
+    value: 0.3347248775820634
     fmt: .3f
     label: 'RF safety threshold exceeded: silhouette score'
-    display: '0.104'
-  rf_regulation_out_of_tolerance_best_k:
-    value: 2
-    fmt: null
-    label: 'RF regulation out of tolerance: best k (n=591)'
-    display: '2'
-  rf_regulation_out_of_tolerance_silhouette:
-    value: 0.20135146752495975
-    fmt: .3f
-    label: 'RF regulation out of tolerance: silhouette score'
-    display: '0.201'
+    display: '0.335'
 meta:
   excluded_categories_note: Seuil pick-up (12 events) and Coupure externe rapide (11
     events) are excluded from per-fault clustering (minimum 20 events required); this
     reflects data scarcity, not an absence of substructure.
+  no_valid_clustering_note: 'Categories with >=20 events where every clustering method
+    still returned no usable result: RF regulation out of tolerance.'
   per_category_table:
-  - Fault Type: RF authorization absent
-    Samples: 309
+  - Fault Type: Pickup threshold
+    Samples: 94
     Best Method: Agglom-ward-2
-    Best K: 2
-    Silhouette: 0.12031884213100909
+    Best K: 2.0
+    Silhouette: 0.18908870390793525
+  - Fault Type: RF authorization absent
+    Samples: 329
+    Best Method: Agglom-ward-2
+    Best K: 2.0
+    Silhouette: 0.13048500274039557
   - Fault Type: Vacuum threshold
-    Samples: 20
-    Best Method: KMeans-2
-    Best K: 2
-    Silhouette: 0.33590750264298763
+    Samples: 46
+    Best Method: Agglom-average-2
+    Best K: 2.0
+    Silhouette: 0.17920563682208013
   - Fault Type: Cavity quench/breakdown
-    Samples: 28
-    Best Method: KMeans-2
-    Best K: 2
-    Silhouette: 0.06354744755424287
-  - Fault Type: RF safety threshold exceeded
-    Samples: 72
+    Samples: 31
     Best Method: GMM-2
-    Best K: 2
-    Silhouette: 0.10442176515428254
-  - Fault Type: RF regulation out of tolerance
-    Samples: 591
+    Best K: 2.0
+    Silhouette: 0.0736901514658977
+  - Fault Type: RF safety threshold exceeded
+    Samples: 86
     Best Method: KMeans-2
-    Best K: 2
-    Silhouette: 0.20135146752495975
+    Best K: 2.0
+    Silhouette: 0.3347248775820634
+  - Fault Type: RF regulation out of tolerance
+    Samples: 790
+    Best Method: null
+    Best K: .nan
+    Silhouette: .nan

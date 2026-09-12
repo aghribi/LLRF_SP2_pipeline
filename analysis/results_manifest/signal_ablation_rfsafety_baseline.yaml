@@ -1,0 +1,94 @@
+phase: signal_ablation_rfsafety_baseline
+generated_at: '2026-09-09T04:57:24.608813+00:00'
+pipeline_run:
+  dataset_version: V7
+  dataset_path: /sps/m4cast/_spiral2_data/_llrf_data/cooked_data_v7/features_engineered.pkl
+  script: pipeline/00_scripts/investigate_category_signal_ablation.py
+metrics:
+  n_category_events:
+    value: 86
+    fmt: null
+    label: Category events
+    display: '86'
+  n_normal_events:
+    value: 1478
+    fmt: null
+    label: Normal events (comparison set)
+    display: '1478'
+  n_features_used:
+    value: 418
+    fmt: null
+    label: Pre-trigger features used
+    display: '418'
+  n_features_excluded:
+    value: 0
+    fmt: null
+    label: Features excluded (channel-derived)
+    display: '0'
+  logistic_regression_accuracy:
+    value: 0.9829787234042553
+    fmt: .1%
+    label: logistic_regression accuracy
+    display: 98.3%
+  logistic_regression_roc_auc:
+    value: 0.9201316701316702
+    fmt: .4f
+    label: logistic_regression ROC AUC
+    display: '0.9201'
+  logistic_regression_f1:
+    value: 0.84
+    fmt: .3f
+    label: logistic_regression F1
+    display: '0.840'
+  random_forest_accuracy:
+    value: 0.9957446808510638
+    fmt: .1%
+    label: random_forest accuracy
+    display: 99.6%
+  random_forest_roc_auc:
+    value: 1.0
+    fmt: .4f
+    label: random_forest ROC AUC
+    display: '1.0000'
+  random_forest_f1:
+    value: 0.96
+    fmt: .3f
+    label: random_forest F1
+    display: '0.960'
+  xgboost_accuracy:
+    value: 0.9936170212765958
+    fmt: .1%
+    label: xgboost accuracy
+    display: 99.4%
+  xgboost_roc_auc:
+    value: 0.9994802494802494
+    fmt: .4f
+    label: xgboost ROC AUC
+    display: '0.9995'
+  xgboost_f1:
+    value: 0.9387755102040817
+    fmt: .3f
+    label: xgboost F1
+    display: '0.939'
+  svm_accuracy:
+    value: 0.9787234042553191
+    fmt: .1%
+    label: svm accuracy
+    display: 97.9%
+  svm_roc_auc:
+    value: 0.995538808038808
+    fmt: .4f
+    label: svm ROC AUC
+    display: '0.9955'
+  svm_f1:
+    value: 0.7619047619047619
+    fmt: .3f
+    label: svm F1
+    display: '0.762'
+meta:
+  category: Dép seuil de sécurité RF
+  excluded_channels: []
+  purpose: Category-vs-Normal, pre-trigger-only, testing whether early detection survives
+    excluding the raw signal(s) this category's own deterministic classification criterion
+    is based on -- distinguishes a real independent early-warning signal from the
+    model just reading out the same quantity that will trip the deterministic cut.

@@ -1,43 +1,48 @@
+
+
+
+
+
 phase: inference_latency_benchmark
-generated_at: '2026-09-07T15:56:36.243135+00:00'
+generated_at: '2026-09-10T08:19:04.101718+00:00'
 pipeline_run:
-  dataset_version: V6
-  dataset_path: /sps/m4cast/_spiral2_data/_llrf_data/cooked_data_v6/features_engineered_v6.pkl
+  dataset_version: V7
+  dataset_path: /sps/m4cast/_spiral2_data/_llrf_data/cooked_data_v7/features_engineered.pkl
   script: pipeline/00_scripts/benchmark_inference_latency.py
 metrics:
   step06_binary_rf_mean_ms:
-    value: 20.338951309677213
+    value: 12.279097861610353
     fmt: .3f
     label: 'step06_binary_rf: mean inference latency (ms/event)'
-    display: '20.339'
+    display: '12.279'
   step06_binary_rf_p95_ms:
-    value: 24.054655013605952
+    value: 12.451876886188984
     fmt: .3f
     label: 'step06_binary_rf: p95 inference latency (ms/event)'
-    display: '24.055'
+    display: '12.452'
   phaseC_label_powerset_mean_ms:
-    value: 0.4939627251587808
+    value: 0.3503858344629407
     fmt: .3f
     label: 'phaseC_label_powerset: mean inference latency (ms/event)'
-    display: '0.494'
+    display: '0.350'
   phaseC_label_powerset_p95_ms:
-    value: 0.5307511892169713
+    value: 0.3818926401436328
     fmt: .3f
     label: 'phaseC_label_powerset: p95 inference latency (ms/event)'
-    display: '0.531'
+    display: '0.382'
   step05_precursor_rf_mean_ms:
-    value: 19.673098605126143
+    value: 12.612920897081494
     fmt: .3f
     label: 'step05_precursor_rf: mean inference latency (ms/event)'
-    display: '19.673'
+    display: '12.613'
   step05_precursor_rf_p95_ms:
-    value: 24.01549951173365
+    value: 12.456663604825735
     fmt: .3f
     label: 'step05_precursor_rf: p95 inference latency (ms/event)'
-    display: '24.015'
+    display: '12.457'
 meta:
   method: Single-event, single-threaded wall-clock timing (scaler.transform + predict,
-    one row at a time, no batching) over each model's own V6 test set -- the realistic
+    one row at a time, no batching) over each model's own V7 test set -- the realistic
     "one new postmortem file arrives" deployment scenario. Replaces the unverified
     "45ms/event"/"<100ms" claims, which predate this session's leakage fixes and V6,
     with a real, reproducible number. Feature engineering time (reading the raw postmortem
@@ -46,20 +51,20 @@ meta:
     offline pipeline, not per-event online in this benchmark's scope.
   full_summary:
     step06_binary_rf:
-      mean_ms: 20.338951309677213
-      median_ms: 22.231664042919874
-      p95_ms: 24.054655013605952
-      max_ms: 35.34418484196067
+      mean_ms: 12.279097861610353
+      median_ms: 12.269631028175354
+      p95_ms: 12.451876886188984
+      max_ms: 19.928130321204662
       n_timed: 200
     phaseC_label_powerset:
-      mean_ms: 0.4939627251587808
-      median_ms: 0.451608095318079
-      p95_ms: 0.5307511892169713
-      max_ms: 6.599209271371365
+      mean_ms: 0.3503858344629407
+      median_ms: 0.30166469514369965
+      p95_ms: 0.3818926401436328
+      max_ms: 7.203448563814163
       n_timed: 200
     step05_precursor_rf:
-      mean_ms: 19.673098605126143
-      median_ms: 22.144234739243984
-      p95_ms: 24.01549951173365
-      max_ms: 63.988001085817814
+      mean_ms: 12.612920897081494
+      median_ms: 12.287966907024384
+      p95_ms: 12.456663604825735
+      max_ms: 76.09602436423302
       n_timed: 200

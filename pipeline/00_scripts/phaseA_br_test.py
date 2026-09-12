@@ -23,7 +23,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 from utilities.reporting.manifest import save_manifest
 
 sys.path.insert(0, str(Path(__file__).parent))
-from leakage_safe_features import leakage_safe_split, repeated_leakage_safe_eval, compute_scale_pos_weight
+from leakage_safe_features import leakage_safe_split, repeated_leakage_safe_eval, compute_scale_pos_weight, true_precursor_columns
 from split_diagnostics import log_split_composition
 
 try:
@@ -36,7 +36,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger(__name__)
 
 
-def load_data(features_file, max_samples=None):
+def load_data(features_file, max_samples=None, pretrigger=False):
     with open(features_file, 'rb') as f:
         data = pickle.load(f)
     y = data.get('y_multilabel')
@@ -50,11 +50,18 @@ def load_data(features_file, max_samples=None):
         sample_idx = np.random.RandomState(42).choice(n_total, size=max_samples, replace=False)
         y = y[sample_idx]
 
+    feature_cols = data['feature_cols']
+    if pretrigger:
+        # Same restriction as prepare_05_phase0_precursor.py / step 06b -- see
+        # leakage_safe_features.true_precursor_columns() for why the full
+        # feature set isn't appropriate for a pre-trigger-only task.
+        feature_cols = true_precursor_columns(feature_cols)
+
     # Leakage-safe: subsample features_all rows to match y, keep as pkl-shaped
     # dict so leakage_safe_split can fit scaler/PCA on the train fold only.
     sampled_data = {
         'features_all': data['features_all'].iloc[sample_idx].reset_index(drop=True),
-        'feature_cols': data['feature_cols'],
+        'feature_cols': feature_cols,
     }
 
     return sampled_data, y, data
@@ -111,13 +118,18 @@ def main():
     parser.add_argument('--features', type=str, required=True)
     parser.add_argument('--output', type=str, required=True)
     parser.add_argument('--max-samples', type=int, default=None)
+    parser.add_argument('--pretrigger', action='store_true',
+                         help='Restrict to the pre-trigger-only true-precursor feature subset')
     args = parser.parse_args()
 
     features_file = Path(args.features)
     out_dir = Path(args.output)
     out_dir.mkdir(parents=True, exist_ok=True)
+    phase_suffix = '_pretrigger' if args.pretrigger else ''
+    dataset_version = (lambda _n: _n.upper() if _n else 'V2')(
+        features_file.parent.name.replace('cooked_data', '').lstrip('_'))
 
-    sampled_data, y, data = load_data(features_file, max_samples=args.max_samples)
+    sampled_data, y, data = load_data(features_file, max_samples=args.max_samples, pretrigger=args.pretrigger)
     label_names = data.get('fault_column_names')
 
     logger.info(f'Loaded data: y={y.shape}')
@@ -242,12 +254,12 @@ def main():
         stability_baselines['cc'] = cc_stability_baseline
 
     save_manifest(
-        phase='07A_phaseA_br_cc_stability',
+        phase=f'07A_phaseA_br_cc_stability{phase_suffix}',
         metrics={
             'single_split_br_macro_f1': {'value': float(br_results['macro_f1']), 'fmt': '.4f', 'label': 'Single-split (seed=42) BR macro-F1'},
         },
         pipeline_run={
-            'dataset_version': 'V6',
+            'dataset_version': dataset_version,
             'dataset_path': str(features_file),
             'script': 'pipeline/00_scripts/phaseA_br_test.py',
         },
@@ -255,21 +267,22 @@ def main():
         meta={
             'baseline_unweighted_stability': stability_baselines['br'],
             'cc_stability_note': 'ClassifierChain (cc) stability stored separately -- see phase 07A_phaseA_cc_stability.' if 'cc' in stability_metrics else None,
+            'pretrigger': args.pretrigger,
         },
     )
     if 'cc' in stability_metrics:
         save_manifest(
-            phase='07A_phaseA_cc_stability',
+            phase=f'07A_phaseA_cc_stability{phase_suffix}',
             metrics={
                 'single_split_cc_macro_f1': {'value': float(cc_results['macro_f1']), 'fmt': '.4f', 'label': 'Single-split (seed=42) CC macro-F1'},
             },
             pipeline_run={
-                'dataset_version': 'V6',
+                'dataset_version': dataset_version,
                 'dataset_path': str(features_file),
                 'script': 'pipeline/00_scripts/phaseA_br_test.py',
             },
             stability=stability_metrics['cc'],
-            meta={'baseline_unweighted_stability': stability_baselines['cc']},
+            meta={'baseline_unweighted_stability': stability_baselines['cc'], 'pretrigger': args.pretrigger},
         )
 
     logger.info('Phase A test complete.')

@@ -23,7 +23,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 from utilities.reporting.manifest import save_manifest
 
 sys.path.insert(0, str(Path(__file__).parent))
-from leakage_safe_features import leakage_safe_split, repeated_leakage_safe_eval
+from leakage_safe_features import leakage_safe_split, repeated_leakage_safe_eval, true_precursor_columns
 from split_diagnostics import log_split_composition
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s',
@@ -32,14 +32,21 @@ logger = logging.getLogger(__name__)
 
 
 class Step07Processor:
-    def __init__(self, input_dir, output_dir):
+    def __init__(self, input_dir, output_dir, pretrigger=False):
         self.input_dir = Path(input_dir)
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(parents=True, exist_ok=True)
+        self.pretrigger = pretrigger
+        self.phase_suffix = '_pretrigger' if pretrigger else ''
+        self.dataset_version = (lambda _n: _n.upper() if _n else 'V2')(
+            self.input_dir.name.replace('cooked_data', '').lstrip('_'))
 
     def load_inputs(self):
         with open(self.input_dir / 'features_engineered.pkl', 'rb') as f:
             self.data = pickle.load(f)
+        if self.pretrigger:
+            # Same restriction as prepare_05_phase0_precursor.py / step 06b.
+            self.data['feature_cols'] = true_precursor_columns(self.data['feature_cols'])
         logger.info(f"Loaded: {self.data['features_all'].shape}, "
                     f"{len(self.data['feature_cols'])} filtered feature columns")
 
@@ -135,17 +142,17 @@ class Step07Processor:
             logger.info(f"    [{lname}]: {b['mean']:.3f}+/-{b['std']:.3f} -> {a['mean']:.3f}+/-{a['std']:.3f}")
 
         save_manifest(
-            phase='07_phase2_multilabel_stability',
+            phase=f'07_phase2_multilabel_stability{self.phase_suffix}',
             metrics={
                 'single_split_hamming_loss': {'value': float(hamming), 'fmt': '.4f', 'label': 'Single-split (seed=42) Hamming loss'},
             },
             pipeline_run={
-                'dataset_version': 'V6',
+                'dataset_version': self.dataset_version,
                 'dataset_path': str(self.input_dir / 'features_engineered.pkl'),
                 'script': 'pipeline/00_scripts/prepare_07_phase2_multilabel.py',
             },
             stability=stability,
-            meta={'baseline_unweighted_stability': stability_baseline},
+            meta={'baseline_unweighted_stability': stability_baseline, 'pretrigger': self.pretrigger},
         )
 
         return {
@@ -181,8 +188,10 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--input', required=True)
     parser.add_argument('--output', required=True)
+    parser.add_argument('--pretrigger', action='store_true',
+                         help='Restrict to the pre-trigger-only true-precursor feature subset')
     args = parser.parse_args()
-    Step07Processor(args.input, args.output).run()
+    Step07Processor(args.input, args.output, pretrigger=args.pretrigger).run()
 
 
 if __name__ == '__main__':

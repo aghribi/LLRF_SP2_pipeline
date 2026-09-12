@@ -1,5 +1,24 @@
 % Bibliography for SPIRAL2 LLRF Anomaly Detection Paper
 % Author: Adnan Ghribi
+%
+% 2026-09-12: full DOI verification pass. Every entry below was checked
+% against Crossref/publisher records (see session log / commit message for
+% the verification method). The ~16 entries previously filed under
+% "Unverified references" that were accelerator- or domain-specific
+% (fermilab_cavity_faults, jlab_llrf, cern_beam_loss, cern_quench,
+% expert_systems_accelerator, model_based_diagnostics, desy_xai,
+% anomaly_manufacturing, xai_accelerators, slac_xai, rca_it,
+% rca_manufacturing, rca_process, bayesian_rca, anomaly_power, anomaly_cyber)
+% returned NO matching real paper on Crossref despite a genuine search --
+% several are clear duplicates of a different real paper's exact
+% volume/issue/page numbers under a fabricated title/author (e.g.
+% fermilab_cavity_faults copied tennant2020's citation numbers verbatim;
+% expert_systems_accelerator duplicates malandain1987's topic under a
+% different fake year/author). Removed rather than kept as unverifiable.
+% The remaining, well-known ML-methods entries in that same section (SHAP,
+% LIME, classifier chains, ML-kNN, multi-label survey, Granger causality,
+% Pearl's Causality, silhouette score) are genuinely real and are folded
+% into the verified list below with confirmed DOIs.
 
 % ===== verified references =====
 
@@ -11,7 +30,8 @@
   number={05},
   pages={T05006},
   year={2024},
-  publisher={IOP Publishing}
+  publisher={IOP Publishing},
+  doi={10.1088/1748-0221/19/05/t05006}
 }
 
 @inproceedings{bouly2022superconducting,
@@ -19,7 +39,8 @@
   author={Bouly, Fr{\'e}d{\'e}ric and Di Giacomo, Marco and Leyge, Jean-Fran{\c{c}}ois and Tontayeva, Mereke},
   booktitle={LINAC2022-31st Linear Accelerator Conference},
   pages={THPOPA13},
-  year={2022}
+  year={2022},
+  doi={10.18429/JACoW-LINAC2022-THPOPA13}
 }
 
 @article{MAO2025118377,
@@ -29,7 +50,7 @@ volume = {256},
 pages = {118377},
 year = {2025},
 issn = {0263-2241},
-doi = {https://doi.org/10.1016/j.measurement.2025.118377},
+doi = {10.1016/j.measurement.2025.118377},
 url = {https://www.sciencedirect.com/science/article/pii/S0263224125017361},
 author = {Yu Mao and Ziyang Chen and Ying Liu and Cong Dong and Kechen Song},
 keywords = {Industrial image anomaly detection, Supervised learning, Semi-supervised learning, Unsupervised learning, Deep reinforcement learning},
@@ -42,7 +63,8 @@ keywords = {Industrial image anomaly detection, Supervised learning, Semi-superv
   volume={1},
   number={2},
   pages={3},
-  year={2024}
+  year={2025}, % MANUAL: Crossref-confirmed publication year is 2025, not 2024 as this entry's key/original citation assumed
+  doi={10.64071/3080-5724.1012}
 }
 
 @article{vm2025ai,
@@ -53,7 +75,8 @@ keywords = {Industrial image anomaly detection, Supervised learning, Semi-superv
   number={1},
   pages={35506},
   year={2025},
-  publisher={Nature Publishing Group UK London}
+  publisher={Nature Publishing Group UK London},
+  doi={10.1038/s41598-025-19634-y}
 }
 
 @inproceedings{isolation_forest,
@@ -61,7 +84,8 @@ keywords = {Industrial image anomaly detection, Supervised learning, Semi-superv
     author={Liu, F. T. and Ting, K. M. and Zhou, Z. H.},
     booktitle={IEEE International Conference on Data Mining (ICDM)},
     pages={413--422},
-    year={2008}
+    year={2008},
+    doi={10.1109/icdm.2008.17}
 }
 
 @inproceedings{lof,
@@ -69,7 +93,8 @@ keywords = {Industrial image anomaly detection, Supervised learning, Semi-superv
     author={Breunig, M. M. and Kriegel, H. P. and Ng, R. T. and Sander, J.},
     booktitle={ACM SIGMOD International Conference on Management of Data},
     pages={93--104},
-    year={2000}
+    year={2000},
+    doi={10.1145/342009.335388}
 }
 
 @article{dbscan,
@@ -77,22 +102,25 @@ keywords = {Industrial image anomaly detection, Supervised learning, Semi-superv
     author={Ester, M. and Kriegel, H. P. and Sander, J. and Xu, X.},
     journal={Knowledge Discovery and Data Mining (KDD)},
     pages={226--231},
-    year={1996}
+    year={1996},
+    note={No DOI exists: pre-DOI-era (1996) KDD proceedings paper, not registered on Crossref as of this verification pass (2026-09-12).}
 }
 
 @article{autoencoder_anomaly,
     title={Deep Autoencoding Gaussian Mixture Model for Unsupervised Anomaly Detection},
     author={Zong, B. and Song, Q. and Min, M. R. and Cheng, W. and Lumezanu, C. and Cho, D. and Chen, H.},
     journal={International Conference on Learning Representations (ICLR)},
-    year={2018}
+    year={2018},
+    note={No DOI found on Crossref as of this verification pass (2026-09-12); ICLR/OpenReview papers are frequently not DOI-registered.}
 }
 
-@article{gan_anomaly,
+@inproceedings{gan_anomaly,
     title={GANomaly: Semi-Supervised Anomaly Detection via Adversarial Training},
     author={Akcay, S. and Atapour-Abarghouei, A. and Breckon, T. P.},
-    journal={Asian Conference on Computer Vision (ACCV)},
+    booktitle={Asian Conference on Computer Vision (ACCV)},
     pages={622--637},
-    year={2018}
+    year={2018},
+    doi={10.1007/978-3-030-20893-6_39} % MANUAL: ACCV 2018 conference; LNCS proceedings volume publication year is 2019
 }
 
 @article{ghribi2025artificial,
@@ -103,7 +131,8 @@ keywords = {Industrial image anomaly detection, Supervised learning, Semi-superv
   number={1},
   pages={15--19},
   year={2025},
-  publisher={EDP Sciences}
+  publisher={EDP Sciences},
+  doi={10.1051/epn/2025106}
 }
 
 @article{accelerator_ml_review,
@@ -112,7 +141,8 @@ keywords = {Industrial image anomaly detection, Supervised learning, Semi-superv
     journal={Reviews of Accelerator Science and Technology},
     volume={13},
     pages={1--40},
-    year={2020}
+    year={2020},
+    note={No matching Crossref record found as of this verification pass (2026-09-12); Review of Accelerator Science and Technology is not fully DOI-indexed on Crossref. A closely related, DOI-confirmed Edelen paper exists: "Machine learning for orders of magnitude speedup in multiobjective optimization of particle accelerator systems", Phys. Rev. Accel. Beams 23, 044601 (2020), doi:10.1103/physrevaccelbeams.23.044601 -- not a substitute citation, flagged for the author's own judgment.}
 }
 
 @inproceedings{malandain1987,
@@ -124,14 +154,15 @@ keywords = {Industrial image anomaly detection, Supervised learning, Semi-superv
   address      = {Washington, DC, USA},
   organization = {IEEE},
   url          = {https://proceedings.jacow.org/p87/PDF/PAC1987_0559.PDF},
-  note         = {PDF available from the JACoW archive; see also CERN Document Server record 176633}
+  note         = {No DOI exists: pre-DOI-era (1987) PAC proceedings paper. PDF available from the JACoW archive; see also CERN Document Server record 176633.}
 }
 
 @techreport{sayyar2010optimal,
   title={Optimal Model-Based Fault Estimation and Correction for Particle Accelerators and Industrial Plants Using Combined Support Vector Machines and First Principles Models},
   author={Sayyar-Rodsari, Bijan and Schweiger, Carl},
   year={2010},
-  institution={SLAC National Accelerator Lab., Menlo Park, CA (United States)}
+  institution={SLAC National Accelerator Lab., Menlo Park, CA (United States)},
+  doi={10.2172/992983}
 }
 
 @article{valentino2018,
@@ -150,7 +181,8 @@ keywords = {Industrial image anomaly detection, Supervised learning, Semi-superv
   title        = {A Conceptual Development of Quench Prediction App based on LSTM and ELQA Framework},
   journal      = {arXiv:1610.09201},
   year         = {2016},
-  url          = {https://arxiv.org/abs/1610.09201}
+  url          = {https://arxiv.org/abs/1610.09201},
+  doi          = {10.48550/arXiv.1610.09201}
 }
 
 @article{peters2021,
@@ -178,54 +210,8 @@ keywords = {Industrial image anomaly detection, Supervised learning, Semi-superv
   title={Probabilistic Model-based Anomaly Detection for the European X-ray Free Electron Laser},
   author={Nawaz, Ayla Schamineh},
   year={2021},
-  school={Universit{\"a}t zu L{\"u}beck}
-}
-%===== Unverified references ===
-
-% ===== Anomaly Detection Methods =====
-
-
-
-% ===== Fault Diagnosis in Accelerators =====
-
-@article{fermilab_cavity_faults,
-    title={Machine Learning for RF Cavity Fault Classification at Fermilab},
-    author={Edelen, J. and others},
-    journal={Physical Review Accelerators and Beams},
-    volume={23},
-    number={11},
-    pages={114601},
-    year={2020}
-}
-
-@article{jlab_llrf,
-    title={LLRF Fault Classification using Neural Networks at Jefferson Lab},
-    author={Tennant, C. and others},
-    journal={IEEE Transactions on Nuclear Science},
-    volume={65},
-    number={6},
-    pages={1216--1223},
-    year={2018}
-}
-
-@article{cern_beam_loss,
-    title={Beam Loss Pattern Recognition at CERN LHC using Machine Learning},
-    author={Fol, E. and others},
-    journal={Physical Review Accelerators and Beams},
-    volume={23},
-    number={10},
-    pages={104601},
-    year={2020}
-}
-
-@article{cern_quench,
-    title={Quench Detection in Superconducting Magnets using ML},
-    author={Apollonio, A. and others},
-    journal={IEEE Transactions on Applied Superconductivity},
-    volume={30},
-    number={4},
-    pages={1--5},
-    year={2020}
+  school={Universit{\"a}t zu L{\"u}beck},
+  note={No DOI found on Crossref as of this verification pass (2026-09-12); institutional-repository theses are inconsistently DOI-registered. A closely related, DOI-confirmed published paper on the same facility/topic exists: A. Eichler et al., "Anomaly detection at the European X-ray Free Electron Laser", Phys. Rev. Accel. Beams 26, 012801 (2023), doi:10.1103/physrevaccelbeams.26.012801.}
 }
 
 % ===== Multi-Label Classification =====
@@ -237,7 +223,8 @@ keywords = {Industrial image anomaly detection, Supervised learning, Semi-superv
     volume={26},
     number={8},
     pages={1819--1837},
-    year={2014}
+    year={2014},
+    doi={10.1109/tkde.2013.39}
 }
 
 @inproceedings{classifier_chains,
@@ -245,7 +232,8 @@ keywords = {Industrial image anomaly detection, Supervised learning, Semi-superv
     author={Read, J. and Pfahringer, B. and Holmes, G. and Frank, E.},
     booktitle={European Conference on Machine Learning (ECML)},
     pages={254--269},
-    year={2009}
+    year={2009},
+    doi={10.1007/978-3-642-04174-7_17}
 }
 
 @article{mlknn,
@@ -255,62 +243,41 @@ keywords = {Industrial image anomaly detection, Supervised learning, Semi-superv
     volume={40},
     number={7},
     pages={2038--2048},
-    year={2007}
+    year={2007},
+    doi={10.1016/j.patcog.2006.12.019}
 }
 
-@inproceedings{mldt,
-    title={Multi-Label Decision Trees},
+@article{mldt,
+    title={Decision Trees for Hierarchical Multi-Label Classification},
     author={Vens, C. and Struyf, J. and Schietgat, L. and Džeroski, S. and Blockeel, H.},
-    booktitle={International Workshop on Mining Multidimensional Data},
-    pages={185--197},
-    year={2008}
+    journal={Machine Learning},
+    volume={73},
+    number={2},
+    pages={185--214},
+    year={2008},
+    doi={10.1007/s10994-008-5077-3} % MANUAL: corrected from a workshop-preprint title/venue ("Multi-Label Decision Trees", Int'l Workshop on Mining Multidimensional Data, 185-197) to the real published journal version verified on Crossref -- same authors, year, and opening page, different venue/closing page
 }
 
-% ===== Root Cause Analysis =====
-
-@article{rca_it,
-    title={Root Cause Analysis in IT Systems using Bayesian Networks},
-    author={Cheng, Y. and others},
-    journal={ACM Transactions on Computer Systems},
-    volume={34},
-    number={1},
-    pages={1--32},
-    year={2016}
-}
-
-@article{rca_manufacturing,
-    title={Data-Driven Root Cause Analysis for Manufacturing Process Faults},
-    author={Liu, K. and others},
-    journal={Journal of Manufacturing Systems},
-    volume={56},
-    pages={120--135},
-    year={2020}
-}
-
-@article{rca_process,
-    title={Root Cause Diagnosis of Process Faults using Transfer Entropy},
-    author={Bauer, M. and others},
-    journal={Control Engineering Practice},
-    volume={45},
-    pages={102--114},
-    year={2015}
-}
+% ===== Root Cause Analysis / Causal Inference =====
 
 @book{pearl_causality,
     title={Causality: Models, Reasoning, and Inference},
     author={Pearl, J.},
     year={2009},
     edition={2nd},
-    publisher={Cambridge University Press}
+    publisher={Cambridge University Press},
+    doi={10.1017/cbo9780511803161}
 }
 
-@article{bayesian_rca,
-    title={Bayesian Networks for Root Cause Analysis},
-    author={Cai, B. and others},
-    journal={Reliability Engineering \& System Safety},
-    volume={165},
-    pages={120--132},
-    year={2017}
+@article{granger_causality,
+    title={Investigating Causal Relations by Econometric Models and Cross-Spectral Methods},
+    author={Granger, C. W. J.},
+    journal={Econometrica},
+    volume={37},
+    number={3},
+    pages={424--438},
+    year={1969},
+    doi={10.2307/1912791}
 }
 
 % ===== Explainability Methods =====
@@ -320,7 +287,8 @@ keywords = {Industrial image anomaly detection, Supervised learning, Semi-superv
     author={Lundberg, S. M. and Lee, S. I.},
     journal={Advances in Neural Information Processing Systems (NeurIPS)},
     pages={4765--4774},
-    year={2017}
+    year={2017},
+    note={No DOI found on Crossref as of this verification pass (2026-09-12); NeurIPS papers are indexed via proceedings.neurips.cc rather than DOI-registered.}
 }
 
 @inproceedings{lime,
@@ -328,58 +296,18 @@ keywords = {Industrial image anomaly detection, Supervised learning, Semi-superv
     author={Ribeiro, M. T. and Singh, S. and Guestrin, C.},
     booktitle={ACM SIGKDD International Conference on Knowledge Discovery and Data Mining},
     pages={1135--1144},
-    year={2016}
+    year={2016},
+    doi={10.1145/2939672.2939778}
 }
 
 @article{xai_survey,
-    title={Explainable Artificial Intelligence (XAI): Concepts, Taxonomies, Opportunities and Challenges},
+    title={Explainable Artificial Intelligence (XAI): Concepts, Taxonomies, Opportunities and Challenges Toward Responsible AI},
     author={Arrieta, A. B. and others},
     journal={Information Fusion},
     volume={58},
     pages={82--115},
-    year={2020}
-}
-
-@article{xai_accelerators,
-    title={Explainable AI for Particle Accelerator Applications},
-    author={Stein, O. and others},
-    journal={Physical Review Accelerators and Beams},
-    volume={24},
-    number={6},
-    pages={062801},
-    year={2021}
-}
-
-@article{slac_xai,
-    title={Interpretable Machine Learning for Beam Tuning at SLAC},
-    author={Edelen, A. and others},
-    journal={Machine Learning: Science and Technology},
-    volume={2},
-    number={4},
-    pages={045003},
-    year={2021}
-}
-
-@article{desy_xai,
-    title={Explainable Fault Classification for Accelerators at DESY},
-    author={Kaiser, M. and others},
-    journal={IEEE Transactions on Nuclear Science},
-    volume={68},
-    number={8},
-    pages={2106--2114},
-    year={2021}
-}
-
-% ===== Granger Causality =====
-
-@article{granger_causality,
-    title={Investigating Causal Relations by Econometric Models and Cross-Spectral Methods},
-    author={Granger, C. W. J.},
-    journal={Econometrica},
-    volume={37},
-    number={3},
-    pages={424--438},
-    year={1969}
+    year={2020},
+    doi={10.1016/j.inffus.2019.12.012}
 }
 
 % ===== Clustering and Silhouette =====
@@ -390,59 +318,6 @@ keywords = {Industrial image anomaly detection, Supervised learning, Semi-superv
     journal={Journal of Computational and Applied Mathematics},
     volume={20},
     pages={53--65},
-    year={1987}
+    year={1987},
+    doi={10.1016/0377-0427(87)90125-7}
 }
-
-% ===== Industrial Applications =====
-
-@article{anomaly_manufacturing,
-    title={Anomaly Detection in Manufacturing: A Survey},
-    author={Pang, G. and others},
-    journal={ACM Computing Surveys},
-    volume={54},
-    number={5},
-    pages={1--38},
-    year={2021}
-}
-
-@article{anomaly_power,
-    title={Machine Learning for Anomaly Detection in Power Systems},
-    author={Zhang, Y. and others},
-    journal={IEEE Transactions on Power Systems},
-    volume={35},
-    number={4},
-    pages={3110--3120},
-    year={2020}
-}
-
-@article{anomaly_cyber,
-    title={Deep Learning for Anomaly Detection in Cyber-Physical Systems},
-    author={Ahmed, C. M. and others},
-    journal={IEEE Access},
-    volume={8},
-    pages={140236--140247},
-    year={2020}
-}
-
-% ===== Expert Systems and Model-Based Diagnostics =====
-
-@article{expert_systems_accelerator,
-    title={Expert Systems for Accelerator Fault Diagnosis},
-    author={Bailey, R. and others},
-    journal={Particle Accelerator Conference (PAC)},
-    pages={1234--1236},
-    year={1993}
-}
-
-@article{model_based_diagnostics,
-    title={Model-Based Fault Diagnosis in Particle Accelerators},
-    author={Schaa, V. and others},
-    journal={International Conference on Accelerator and Large Experimental Physics Control Systems (ICALEPCS)},
-    pages={567--570},
-    year={2011}
-}
-
-% ===== Additional References (Placeholders - to be filled) =====
-
-% Add more references as needed for specific techniques, datasets, or comparative methods
-

@@ -17,7 +17,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 from utilities.reporting.manifest import save_manifest
 
 sys.path.insert(0, str(Path(__file__).parent))
-from leakage_safe_features import leakage_safe_split, repeated_leakage_safe_eval, compute_scale_pos_weight
+from leakage_safe_features import leakage_safe_split, repeated_leakage_safe_eval, compute_scale_pos_weight, true_precursor_columns
 from split_diagnostics import log_split_composition
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -25,7 +25,10 @@ logger = logging.getLogger('phaseB_cc')
 
 import os
 COOKED = Path(os.environ.get('SPIRAL2_COOKED_DIR', '/sps/m4cast/_spiral2_data/_llrf_data/cooked_data'))
-PHASEB = COOKED / 'step_08_phaseB_cc'
+PRETRIGGER = os.environ.get('SPIRAL2_PRETRIGGER', '0') == '1'
+PHASE_SUFFIX = '_pretrigger' if PRETRIGGER else ''
+DATASET_VERSION = (lambda _n: _n.upper() if _n else 'V2')(COOKED.name.replace('cooked_data', '').lstrip('_'))
+PHASEB = COOKED / f'step_08_phaseB_cc{PHASE_SUFFIX}'
 PHASEB.mkdir(parents=True, exist_ok=True)
 
 def load_features():
@@ -36,6 +39,10 @@ def load_features():
             with open(p, 'rb') as f:
                 obj = pickle.load(f)
             y = obj.get('y_multilabel')
+            if PRETRIGGER:
+                # Same restriction as prepare_05_phase0_precursor.py / step 06b.
+                obj = dict(obj)
+                obj['feature_cols'] = true_precursor_columns(obj['feature_cols'])
             return obj, y, obj.get('feature_cols')
     logger.warning('No features artifact found; generating synthetic data for smoke test')
     # synthetic multilabel: 200 samples, 50 features, 6 labels
@@ -148,17 +155,17 @@ def main():
             logger.info('    [%s]: %.3f+/-%.3f -> %.3f+/-%.3f', lname, b['mean'], b['std'], a['mean'], a['std'])
 
         save_manifest(
-            phase='08_phaseB_cc_stability',
+            phase=f'08_phaseB_cc_stability{PHASE_SUFFIX}',
             metrics={
                 'single_split_macro_f1': {'value': float(macro), 'fmt': '.4f', 'label': 'Single-split (seed=0) CC macro-F1'},
             },
             pipeline_run={
-                'dataset_version': 'V6',
+                'dataset_version': DATASET_VERSION,
                 'dataset_path': str(COOKED / 'step_03_features' / 'features_engineered.pkl'),
                 'script': 'pipeline/00_scripts/phaseB_cc_test.py',
             },
             stability=stability,
-            meta={'baseline_unweighted_stability': stability_baseline},
+            meta={'baseline_unweighted_stability': stability_baseline, 'pretrigger': PRETRIGGER},
         )
 
 if __name__ == '__main__':

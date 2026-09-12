@@ -29,13 +29,13 @@ However, these studies primarily address single-fault classification or fault de
 
 Multi-label classification~\cite{multilabel_survey} extends traditional classification to scenarios where instances can belong to multiple classes simultaneously. Approaches include problem transformation methods (Binary Relevance, Classifier Chains~\cite{classifier_chains}, Label Powerset) and algorithm adaptation methods (ML-kNN~\cite{mlknn}, ML-DT~\cite{mldt}).
 
-Root cause analysis (RCA) in multi-fault scenarios has been studied in IT systems~\cite{rca_it}, manufacturing~\cite{rca_manufacturing}, and process industries~\cite{rca_process}. Causal inference methods~\cite{pearl_causality} and Bayesian networks~\cite{bayesian_rca} are commonly employed. However, these approaches typically require extensive domain knowledge encoding or large datasets with labeled root causes.
+Root cause analysis (RCA) in multi-fault scenarios is a broader research area spanning IT systems, manufacturing, and process industries, commonly built on causal inference methods~\cite{pearl_causality} or Bayesian networks. These approaches typically require extensive domain knowledge encoding or large datasets with labeled root causes -- a requirement this pipeline's own root-cause task does not yet meet (Sec.~\ref{sec:methodology}), which is why we do not claim to have implemented causal inference here.
 
 \subsection{Explainability in Critical Systems}
 
 Explainable AI (XAI) has become essential for deploying machine learning in safety-critical domains~\cite{xai_survey}. Model-agnostic methods such as SHAP~\cite{shap} and LIME~\cite{lime} provide post-hoc explanations for black-box models. SHAP assigns feature importance based on Shapley values from cooperative game theory, ensuring consistent and theoretically grounded explanations. LIME generates local linear approximations to explain individual predictions.
 
-In accelerator physics, explainability is crucial for operator trust, regulatory compliance, and system validation~\cite{xai_accelerators}. Recent work at SLAC~\cite{slac_xai} and DESY~\cite{nawaz2021probabilistic} has demonstrated the value of interpretable models for beam tuning and fault diagnosis.
+In accelerator physics, explainability is crucial for operator trust, regulatory compliance, and system validation. Related work at the European X-ray Free Electron Laser (DESY) has applied probabilistic anomaly-detection models to accelerator fault diagnosis~\cite{nawaz2021probabilistic}.
 
 Our explainability framework (Section~\ref{sec:explainability}) combines SHAP for global feature importance and LIME for local explanations. Importantly, we validate explanations against known physics of LLRF systems, ensuring that model decisions align with domain knowledge.
 

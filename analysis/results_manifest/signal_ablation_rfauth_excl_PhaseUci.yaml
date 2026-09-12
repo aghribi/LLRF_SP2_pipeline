@@ -1,0 +1,95 @@
+phase: signal_ablation_rfauth_excl_PhaseUci
+generated_at: '2026-09-09T05:01:30.318881+00:00'
+pipeline_run:
+  dataset_version: V7
+  dataset_path: /sps/m4cast/_spiral2_data/_llrf_data/cooked_data_v7/features_engineered.pkl
+  script: pipeline/00_scripts/investigate_category_signal_ablation.py
+metrics:
+  n_category_events:
+    value: 329
+    fmt: null
+    label: Category events
+    display: '329'
+  n_normal_events:
+    value: 1478
+    fmt: null
+    label: Normal events (comparison set)
+    display: '1478'
+  n_features_used:
+    value: 403
+    fmt: null
+    label: Pre-trigger features used
+    display: '403'
+  n_features_excluded:
+    value: 15
+    fmt: null
+    label: Features excluded (channel-derived)
+    display: '15'
+  logistic_regression_accuracy:
+    value: 0.998158379373849
+    fmt: .1%
+    label: logistic_regression accuracy
+    display: 99.8%
+  logistic_regression_roc_auc:
+    value: 0.99997724997725
+    fmt: .4f
+    label: logistic_regression ROC AUC
+    display: '1.0000'
+  logistic_regression_f1:
+    value: 0.9949238578680203
+    fmt: .3f
+    label: logistic_regression F1
+    display: '0.995'
+  random_forest_accuracy:
+    value: 0.994475138121547
+    fmt: .1%
+    label: random_forest accuracy
+    display: 99.4%
+  random_forest_roc_auc:
+    value: 0.9997497497497497
+    fmt: .4f
+    label: random_forest ROC AUC
+    display: '0.9997'
+  random_forest_f1:
+    value: 0.9849246231155779
+    fmt: .3f
+    label: random_forest F1
+    display: '0.985'
+  xgboost_accuracy:
+    value: 0.996316758747698
+    fmt: .1%
+    label: xgboost accuracy
+    display: 99.6%
+  xgboost_roc_auc:
+    value: 0.999908999909
+    fmt: .4f
+    label: xgboost ROC AUC
+    display: '0.9999'
+  xgboost_f1:
+    value: 0.9897959183673469
+    fmt: .3f
+    label: xgboost F1
+    display: '0.990'
+  svm_accuracy:
+    value: 0.9871086556169429
+    fmt: .1%
+    label: svm accuracy
+    display: 98.7%
+  svm_roc_auc:
+    value: 0.9991127491127492
+    fmt: .4f
+    label: svm ROC AUC
+    display: '0.9991'
+  svm_f1:
+    value: 0.9633507853403142
+    fmt: .3f
+    label: svm F1
+    display: '0.963'
+meta:
+  category: Absence autorisation RF
+  excluded_channels:
+  - PhaseUci
+  purpose: Category-vs-Normal, pre-trigger-only, testing whether early detection survives
+    excluding the raw signal(s) this category's own deterministic classification criterion
+    is based on -- distinguishes a real independent early-warning signal from the
+    model just reading out the same quantity that will trip the deterministic cut.

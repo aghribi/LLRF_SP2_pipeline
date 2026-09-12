@@ -1,0 +1,571 @@
+phase: 07b_phase2_multilabel_unsupervised
+generated_at: '2026-09-09T06:22:49.836012+00:00'
+pipeline_run:
+  dataset_version: V7
+  dataset_path: /sps/m4cast/_spiral2_data/_llrf_data/cooked_data_v7/features_engineered.pkl
+  script: pipeline/00_scripts/prepare_07b_phase2_multilabel_unsupervised.py
+metrics:
+  isolation_forest_auc_Seuil pick-up:
+    value: 0.7560994591229231
+    fmt: .4f
+    label: isolation_forest one-vs-rest AUC vs. Seuil pick-up (single split, seed=42)
+    display: '0.7561'
+  isolation_forest_auc_Coupure externe rapide:
+    value: 0.30313180371797016
+    fmt: .4f
+    label: isolation_forest one-vs-rest AUC vs. Coupure externe rapide (single split,
+      seed=42)
+    display: '0.3031'
+  isolation_forest_auc_Absence autorisation RF:
+    value: 0.2516821465428277
+    fmt: .4f
+    label: isolation_forest one-vs-rest AUC vs. Absence autorisation RF (single split,
+      seed=42)
+    display: '0.2517'
+  isolation_forest_auc_Seuil de vide:
+    value: 0.754657734980113
+    fmt: .4f
+    label: isolation_forest one-vs-rest AUC vs. Seuil de vide (single split, seed=42)
+    display: '0.7547'
+  isolation_forest_auc_Claquage ou quench cavité:
+    value: 0.3863993710691824
+    fmt: .4f
+    label: isolation_forest one-vs-rest AUC vs. Claquage ou quench cavité (single
+      split, seed=42)
+    display: '0.3864'
+  isolation_forest_auc_Dép seuil de sécurité RF:
+    value: 0.9166467065868265
+    fmt: .4f
+    label: isolation_forest one-vs-rest AUC vs. Dép seuil de sécurité RF (single split,
+      seed=42)
+    display: '0.9166'
+  isolation_forest_auc_Rég signal RF hors tolérance:
+    value: 0.5501887630468577
+    fmt: .4f
+    label: isolation_forest one-vs-rest AUC vs. Rég signal RF hors tolérance (single
+      split, seed=42)
+    display: '0.5502'
+  isolation_forest_auc_stability_Seuil pick-up_mean:
+    value: 0.7938939576426571
+    fmt: .4f
+    label: isolation_forest one-vs-rest AUC vs. Seuil pick-up (10-split mean)
+    display: '0.7939'
+  isolation_forest_auc_stability_Seuil pick-up_std:
+    value: 0.03332332655158922
+    fmt: .4f
+    label: isolation_forest one-vs-rest AUC vs. Seuil pick-up (10-split std)
+    display: '0.0333'
+  isolation_forest_auc_stability_Coupure externe rapide_mean:
+    value: 0.2177849831034287
+    fmt: .4f
+    label: isolation_forest one-vs-rest AUC vs. Coupure externe rapide (10-split mean)
+    display: '0.2178'
+  isolation_forest_auc_stability_Coupure externe rapide_std:
+    value: 0.11169561468615456
+    fmt: .4f
+    label: isolation_forest one-vs-rest AUC vs. Coupure externe rapide (10-split std)
+    display: '0.1117'
+  isolation_forest_auc_stability_Absence autorisation RF_mean:
+    value: 0.25637730321439084
+    fmt: .4f
+    label: isolation_forest one-vs-rest AUC vs. Absence autorisation RF (10-split
+      mean)
+    display: '0.2564'
+  isolation_forest_auc_stability_Absence autorisation RF_std:
+    value: 0.023908021294802503
+    fmt: .4f
+    label: isolation_forest one-vs-rest AUC vs. Absence autorisation RF (10-split
+      std)
+    display: '0.0239'
+  isolation_forest_auc_stability_Seuil de vide_mean:
+    value: 0.7581602915039459
+    fmt: .4f
+    label: isolation_forest one-vs-rest AUC vs. Seuil de vide (10-split mean)
+    display: '0.7582'
+  isolation_forest_auc_stability_Seuil de vide_std:
+    value: 0.03737650370192691
+    fmt: .4f
+    label: isolation_forest one-vs-rest AUC vs. Seuil de vide (10-split std)
+    display: '0.0374'
+  isolation_forest_auc_stability_Claquage ou quench cavité_mean:
+    value: 0.4768215635403769
+    fmt: .4f
+    label: isolation_forest one-vs-rest AUC vs. Claquage ou quench cavité (10-split
+      mean)
+    display: '0.4768'
+  isolation_forest_auc_stability_Claquage ou quench cavité_std:
+    value: 0.07187599635162462
+    fmt: .4f
+    label: isolation_forest one-vs-rest AUC vs. Claquage ou quench cavité (10-split
+      std)
+    display: '0.0719'
+  isolation_forest_auc_stability_Dép seuil de sécurité RF_mean:
+    value: 0.9251306127078417
+    fmt: .4f
+    label: isolation_forest one-vs-rest AUC vs. Dép seuil de sécurité RF (10-split
+      mean)
+    display: '0.9251'
+  isolation_forest_auc_stability_Dép seuil de sécurité RF_std:
+    value: 0.021832211510152816
+    fmt: .4f
+    label: isolation_forest one-vs-rest AUC vs. Dép seuil de sécurité RF (10-split
+      std)
+    display: '0.0218'
+  isolation_forest_auc_stability_Rég signal RF hors tolérance_mean:
+    value: 0.6293734057829681
+    fmt: .4f
+    label: isolation_forest one-vs-rest AUC vs. Rég signal RF hors tolérance (10-split
+      mean)
+    display: '0.6294'
+  isolation_forest_auc_stability_Rég signal RF hors tolérance_std:
+    value: 0.0416762896618173
+    fmt: .4f
+    label: isolation_forest one-vs-rest AUC vs. Rég signal RF hors tolérance (10-split
+      std)
+    display: '0.0417'
+  lof_auc_Seuil pick-up:
+    value: 0.7817424802521499
+    fmt: .4f
+    label: lof one-vs-rest AUC vs. Seuil pick-up (single split, seed=42)
+    display: '0.7817'
+  lof_auc_Coupure externe rapide:
+    value: 0.6102830346675598
+    fmt: .4f
+    label: lof one-vs-rest AUC vs. Coupure externe rapide (single split, seed=42)
+    display: '0.6103'
+  lof_auc_Absence autorisation RF:
+    value: 0.5303061575507395
+    fmt: .4f
+    label: lof one-vs-rest AUC vs. Absence autorisation RF (single split, seed=42)
+    display: '0.5303'
+  lof_auc_Seuil de vide:
+    value: 0.7676365920033494
+    fmt: .4f
+    label: lof one-vs-rest AUC vs. Seuil de vide (single split, seed=42)
+    display: '0.7676'
+  lof_auc_Claquage ou quench cavité:
+    value: 0.4626572327044025
+    fmt: .4f
+    label: lof one-vs-rest AUC vs. Claquage ou quench cavité (single split, seed=42)
+    display: '0.4627'
+  lof_auc_Dép seuil de sécurité RF:
+    value: 0.39123353293413177
+    fmt: .4f
+    label: lof one-vs-rest AUC vs. Dép seuil de sécurité RF (single split, seed=42)
+    display: '0.3912'
+  lof_auc_Rég signal RF hors tolérance:
+    value: 0.6489909504774596
+    fmt: .4f
+    label: lof one-vs-rest AUC vs. Rég signal RF hors tolérance (single split, seed=42)
+    display: '0.6490'
+  lof_auc_stability_Seuil pick-up_mean:
+    value: 0.7871551967562598
+    fmt: .4f
+    label: lof one-vs-rest AUC vs. Seuil pick-up (10-split mean)
+    display: '0.7872'
+  lof_auc_stability_Seuil pick-up_std:
+    value: 0.015070392148820144
+    fmt: .4f
+    label: lof one-vs-rest AUC vs. Seuil pick-up (10-split std)
+    display: '0.0151'
+  lof_auc_stability_Coupure externe rapide_mean:
+    value: 0.5382660189191466
+    fmt: .4f
+    label: lof one-vs-rest AUC vs. Coupure externe rapide (10-split mean)
+    display: '0.5383'
+  lof_auc_stability_Coupure externe rapide_std:
+    value: 0.16989558250389716
+    fmt: .4f
+    label: lof one-vs-rest AUC vs. Coupure externe rapide (10-split std)
+    display: '0.1699'
+  lof_auc_stability_Absence autorisation RF_mean:
+    value: 0.5223404707292817
+    fmt: .4f
+    label: lof one-vs-rest AUC vs. Absence autorisation RF (10-split mean)
+    display: '0.5223'
+  lof_auc_stability_Absence autorisation RF_std:
+    value: 0.02828269312261581
+    fmt: .4f
+    label: lof one-vs-rest AUC vs. Absence autorisation RF (10-split std)
+    display: '0.0283'
+  lof_auc_stability_Seuil de vide_mean:
+    value: 0.760057120548312
+    fmt: .4f
+    label: lof one-vs-rest AUC vs. Seuil de vide (10-split mean)
+    display: '0.7601'
+  lof_auc_stability_Seuil de vide_std:
+    value: 0.03879012897298515
+    fmt: .4f
+    label: lof one-vs-rest AUC vs. Seuil de vide (10-split std)
+    display: '0.0388'
+  lof_auc_stability_Claquage ou quench cavité_mean:
+    value: 0.5296127964961117
+    fmt: .4f
+    label: lof one-vs-rest AUC vs. Claquage ou quench cavité (10-split mean)
+    display: '0.5296'
+  lof_auc_stability_Claquage ou quench cavité_std:
+    value: 0.09375524651035771
+    fmt: .4f
+    label: lof one-vs-rest AUC vs. Claquage ou quench cavité (10-split std)
+    display: '0.0938'
+  lof_auc_stability_Dép seuil de sécurité RF_mean:
+    value: 0.49863686280902925
+    fmt: .4f
+    label: lof one-vs-rest AUC vs. Dép seuil de sécurité RF (10-split mean)
+    display: '0.4986'
+  lof_auc_stability_Dép seuil de sécurité RF_std:
+    value: 0.05492395535351025
+    fmt: .4f
+    label: lof one-vs-rest AUC vs. Dép seuil de sécurité RF (10-split std)
+    display: '0.0549'
+  lof_auc_stability_Rég signal RF hors tolérance_mean:
+    value: 0.6017908741538956
+    fmt: .4f
+    label: lof one-vs-rest AUC vs. Rég signal RF hors tolérance (10-split mean)
+    display: '0.6018'
+  lof_auc_stability_Rég signal RF hors tolérance_std:
+    value: 0.01806062988354755
+    fmt: .4f
+    label: lof one-vs-rest AUC vs. Rég signal RF hors tolérance (10-split std)
+    display: '0.0181'
+  mahalanobis_auc_Seuil pick-up:
+    value: 0.8097980466165998
+    fmt: .4f
+    label: mahalanobis one-vs-rest AUC vs. Seuil pick-up (single split, seed=42)
+    display: '0.8098'
+  mahalanobis_auc_Coupure externe rapide:
+    value: 0.37899849271478814
+    fmt: .4f
+    label: mahalanobis one-vs-rest AUC vs. Coupure externe rapide (single split, seed=42)
+    display: '0.3790'
+  mahalanobis_auc_Absence autorisation RF:
+    value: 0.30429996560027517
+    fmt: .4f
+    label: mahalanobis one-vs-rest AUC vs. Absence autorisation RF (single split,
+      seed=42)
+    display: '0.3043'
+  mahalanobis_auc_Seuil de vide:
+    value: 0.8818644895680692
+    fmt: .4f
+    label: mahalanobis one-vs-rest AUC vs. Seuil de vide (single split, seed=42)
+    display: '0.8819'
+  mahalanobis_auc_Claquage ou quench cavité:
+    value: 0.625
+    fmt: .4f
+    label: mahalanobis one-vs-rest AUC vs. Claquage ou quench cavité (single split,
+      seed=42)
+    display: '0.6250'
+  mahalanobis_auc_Dép seuil de sécurité RF:
+    value: 0.896383233532934
+    fmt: .4f
+    label: mahalanobis one-vs-rest AUC vs. Dép seuil de sécurité RF (single split,
+      seed=42)
+    display: '0.8964'
+  mahalanobis_auc_Rég signal RF hors tolérance:
+    value: 0.6505593493226738
+    fmt: .4f
+    label: mahalanobis one-vs-rest AUC vs. Rég signal RF hors tolérance (single split,
+      seed=42)
+    display: '0.6506'
+  mahalanobis_auc_stability_Seuil pick-up_mean:
+    value: 0.8343045684140822
+    fmt: .4f
+    label: mahalanobis one-vs-rest AUC vs. Seuil pick-up (10-split mean)
+    display: '0.8343'
+  mahalanobis_auc_stability_Seuil pick-up_std:
+    value: 0.026919665899910128
+    fmt: .4f
+    label: mahalanobis one-vs-rest AUC vs. Seuil pick-up (10-split std)
+    display: '0.0269'
+  mahalanobis_auc_stability_Coupure externe rapide_mean:
+    value: 0.20151028238788168
+    fmt: .4f
+    label: mahalanobis one-vs-rest AUC vs. Coupure externe rapide (10-split mean)
+    display: '0.2015'
+  mahalanobis_auc_stability_Coupure externe rapide_std:
+    value: 0.09353109660034545
+    fmt: .4f
+    label: mahalanobis one-vs-rest AUC vs. Coupure externe rapide (10-split std)
+    display: '0.0935'
+  mahalanobis_auc_stability_Absence autorisation RF_mean:
+    value: 0.25947858332168655
+    fmt: .4f
+    label: mahalanobis one-vs-rest AUC vs. Absence autorisation RF (10-split mean)
+    display: '0.2595'
+  mahalanobis_auc_stability_Absence autorisation RF_std:
+    value: 0.018370881842336925
+    fmt: .4f
+    label: mahalanobis one-vs-rest AUC vs. Absence autorisation RF (10-split std)
+    display: '0.0184'
+  mahalanobis_auc_stability_Seuil de vide_mean:
+    value: 0.8542168519907433
+    fmt: .4f
+    label: mahalanobis one-vs-rest AUC vs. Seuil de vide (10-split mean)
+    display: '0.8542'
+  mahalanobis_auc_stability_Seuil de vide_std:
+    value: 0.024980253607098886
+    fmt: .4f
+    label: mahalanobis one-vs-rest AUC vs. Seuil de vide (10-split std)
+    display: '0.0250'
+  mahalanobis_auc_stability_Claquage ou quench cavité_mean:
+    value: 0.7087681649370675
+    fmt: .4f
+    label: mahalanobis one-vs-rest AUC vs. Claquage ou quench cavité (10-split mean)
+    display: '0.7088'
+  mahalanobis_auc_stability_Claquage ou quench cavité_std:
+    value: 0.08784792902239028
+    fmt: .4f
+    label: mahalanobis one-vs-rest AUC vs. Claquage ou quench cavité (10-split std)
+    display: '0.0878'
+  mahalanobis_auc_stability_Dép seuil de sécurité RF_mean:
+    value: 0.8880330019673937
+    fmt: .4f
+    label: mahalanobis one-vs-rest AUC vs. Dép seuil de sécurité RF (10-split mean)
+    display: '0.8880'
+  mahalanobis_auc_stability_Dép seuil de sécurité RF_std:
+    value: 0.020195496349150948
+    fmt: .4f
+    label: mahalanobis one-vs-rest AUC vs. Dép seuil de sécurité RF (10-split std)
+    display: '0.0202'
+  mahalanobis_auc_stability_Rég signal RF hors tolérance_mean:
+    value: 0.6579795761326345
+    fmt: .4f
+    label: mahalanobis one-vs-rest AUC vs. Rég signal RF hors tolérance (10-split
+      mean)
+    display: '0.6580'
+  mahalanobis_auc_stability_Rég signal RF hors tolérance_std:
+    value: 0.018564303187274794
+    fmt: .4f
+    label: mahalanobis one-vs-rest AUC vs. Rég signal RF hors tolérance (10-split
+      std)
+    display: '0.0186'
+  pca_reconstruction_auc_Seuil pick-up:
+    value: 0.8059846686641504
+    fmt: .4f
+    label: pca_reconstruction one-vs-rest AUC vs. Seuil pick-up (single split, seed=42)
+    display: '0.8060'
+  pca_reconstruction_auc_Coupure externe rapide:
+    value: 0.5715960475632222
+    fmt: .4f
+    label: pca_reconstruction one-vs-rest AUC vs. Coupure externe rapide (single split,
+      seed=42)
+    display: '0.5716'
+  pca_reconstruction_auc_Absence autorisation RF:
+    value: 0.40024767801857586
+    fmt: .4f
+    label: pca_reconstruction one-vs-rest AUC vs. Absence autorisation RF (single
+      split, seed=42)
+    display: '0.4002'
+  pca_reconstruction_auc_Seuil de vide:
+    value: 0.8232502965599051
+    fmt: .4f
+    label: pca_reconstruction one-vs-rest AUC vs. Seuil de vide (single split, seed=42)
+    display: '0.8233'
+  pca_reconstruction_auc_Claquage ou quench cavité:
+    value: 0.4075275157232705
+    fmt: .4f
+    label: pca_reconstruction one-vs-rest AUC vs. Claquage ou quench cavité (single
+      split, seed=42)
+    display: '0.4075'
+  pca_reconstruction_auc_Dép seuil de sécurité RF:
+    value: 0.865437125748503
+    fmt: .4f
+    label: pca_reconstruction one-vs-rest AUC vs. Dép seuil de sécurité RF (single
+      split, seed=42)
+    display: '0.8654'
+  pca_reconstruction_auc_Rég signal RF hors tolérance:
+    value: 0.6587275149900067
+    fmt: .4f
+    label: pca_reconstruction one-vs-rest AUC vs. Rég signal RF hors tolérance (single
+      split, seed=42)
+    display: '0.6587'
+  pca_reconstruction_auc_stability_Seuil pick-up_mean:
+    value: 0.8223184274046611
+    fmt: .4f
+    label: pca_reconstruction one-vs-rest AUC vs. Seuil pick-up (10-split mean)
+    display: '0.8223'
+  pca_reconstruction_auc_stability_Seuil pick-up_std:
+    value: 0.02259279715024286
+    fmt: .4f
+    label: pca_reconstruction one-vs-rest AUC vs. Seuil pick-up (10-split std)
+    display: '0.0226'
+  pca_reconstruction_auc_stability_Coupure externe rapide_mean:
+    value: 0.42769411082468256
+    fmt: .4f
+    label: pca_reconstruction one-vs-rest AUC vs. Coupure externe rapide (10-split
+      mean)
+    display: '0.4277'
+  pca_reconstruction_auc_stability_Coupure externe rapide_std:
+    value: 0.09531020910049015
+    fmt: .4f
+    label: pca_reconstruction one-vs-rest AUC vs. Coupure externe rapide (10-split
+      std)
+    display: '0.0953'
+  pca_reconstruction_auc_stability_Absence autorisation RF_mean:
+    value: 0.3891566048320886
+    fmt: .4f
+    label: pca_reconstruction one-vs-rest AUC vs. Absence autorisation RF (10-split
+      mean)
+    display: '0.3892'
+  pca_reconstruction_auc_stability_Absence autorisation RF_std:
+    value: 0.018882074655366232
+    fmt: .4f
+    label: pca_reconstruction one-vs-rest AUC vs. Absence autorisation RF (10-split
+      std)
+    display: '0.0189'
+  pca_reconstruction_auc_stability_Seuil de vide_mean:
+    value: 0.8093308103912072
+    fmt: .4f
+    label: pca_reconstruction one-vs-rest AUC vs. Seuil de vide (10-split mean)
+    display: '0.8093'
+  pca_reconstruction_auc_stability_Seuil de vide_std:
+    value: 0.03233745760911624
+    fmt: .4f
+    label: pca_reconstruction one-vs-rest AUC vs. Seuil de vide (10-split std)
+    display: '0.0323'
+  pca_reconstruction_auc_stability_Claquage ou quench cavité_mean:
+    value: 0.4614434414501181
+    fmt: .4f
+    label: pca_reconstruction one-vs-rest AUC vs. Claquage ou quench cavité (10-split
+      mean)
+    display: '0.4614'
+  pca_reconstruction_auc_stability_Claquage ou quench cavité_std:
+    value: 0.051907465392109414
+    fmt: .4f
+    label: pca_reconstruction one-vs-rest AUC vs. Claquage ou quench cavité (10-split
+      std)
+    display: '0.0519'
+  pca_reconstruction_auc_stability_Dép seuil de sécurité RF_mean:
+    value: 0.8658708672244904
+    fmt: .4f
+    label: pca_reconstruction one-vs-rest AUC vs. Dép seuil de sécurité RF (10-split
+      mean)
+    display: '0.8659'
+  pca_reconstruction_auc_stability_Dép seuil de sécurité RF_std:
+    value: 0.02003781879353177
+    fmt: .4f
+    label: pca_reconstruction one-vs-rest AUC vs. Dép seuil de sécurité RF (10-split
+      std)
+    display: '0.0200'
+  pca_reconstruction_auc_stability_Rég signal RF hors tolérance_mean:
+    value: 0.6658319882914896
+    fmt: .4f
+    label: pca_reconstruction one-vs-rest AUC vs. Rég signal RF hors tolérance (10-split
+      mean)
+    display: '0.6658'
+  pca_reconstruction_auc_stability_Rég signal RF hors tolérance_std:
+    value: 0.025097672239092168
+    fmt: .4f
+    label: pca_reconstruction one-vs-rest AUC vs. Rég signal RF hors tolérance (10-split
+      std)
+    display: '0.0251'
+  dbscan_eps:
+    value: 24.40906355134848
+    fmt: .4f
+    label: 'DBSCAN eps (auto-tuned: 75th-pct of 5-NN distances on X_test)'
+    display: '24.4091'
+  dbscan_overall_outlier_fraction:
+    value: 0.22093023255813954
+    fmt: .3f
+    label: 'DBSCAN: fraction of test events flagged as outliers'
+    display: '0.221'
+  kmeans_ari:
+    value: 0.6991420122134506
+    fmt: .4f
+    label: kmeans ARI vs. primary category
+    display: '0.6991'
+  kmeans_nmi:
+    value: 0.61578666368546
+    fmt: .4f
+    label: kmeans NMI vs. primary category
+    display: '0.6158'
+  kmeans_purity:
+    value: 0.7867364746945898
+    fmt: .4f
+    label: kmeans purity vs. primary category
+    display: '0.7867'
+  kmeans_silhouette:
+    value: 0.08583699588960617
+    fmt: .4f
+    label: kmeans internal silhouette
+    display: '0.0858'
+  agglomerative_ari:
+    value: 0.4020855013372349
+    fmt: .4f
+    label: agglomerative ARI vs. primary category
+    display: '0.4021'
+  agglomerative_nmi:
+    value: 0.4759186039995469
+    fmt: .4f
+    label: agglomerative NMI vs. primary category
+    display: '0.4759'
+  agglomerative_purity:
+    value: 0.7650959860383945
+    fmt: .4f
+    label: agglomerative purity vs. primary category
+    display: '0.7651'
+  agglomerative_silhouette:
+    value: 0.031413226250395256
+    fmt: .4f
+    label: agglomerative internal silhouette
+    display: '0.0314'
+  gmm_ari:
+    value: 0.4563727012308716
+    fmt: .4f
+    label: gmm ARI vs. primary category
+    display: '0.4564'
+  gmm_nmi:
+    value: 0.508556267206342
+    fmt: .4f
+    label: gmm NMI vs. primary category
+    display: '0.5086'
+  gmm_purity:
+    value: 0.7713787085514834
+    fmt: .4f
+    label: gmm purity vs. primary category
+    display: '0.7714'
+  gmm_silhouette:
+    value: 0.0748387357009603
+    fmt: .4f
+    label: gmm internal silhouette
+    display: '0.0748'
+  clustering_k:
+    value: 8
+    fmt: null
+    label: Number of clusters (= number of distinct categories present)
+    display: '8'
+  n_test_anomaly_part:
+    value: 860
+    fmt: null
+    label: Test-set events (Part 1, anomaly detection)
+    display: '860'
+meta:
+  pretrigger: false
+  anomaly_detection_methods:
+  - isolation_forest
+  - lof
+  - mahalanobis
+  - pca_reconstruction
+  - dbscan (outlier flag only, no AUC)
+  clustering_methods:
+  - kmeans
+  - agglomerative
+  - gmm
+  category_counts:
+    Normal: 1478
+    Seuil pick-up: 94
+    Coupure externe rapide: 11
+    Absence autorisation RF: 329
+    Seuil de vide: 46
+    Claquage ou quench cavité: 31
+    Dép seuil de sécurité RF: 86
+    Rég signal RF hors tolérance: 790
+  ground_truth_caveat: Cluster-alignment ground truth (Part 2) is argmax(y_multilabel,
+    axis=1), extended with a 'Normal' category for non-fault events -- the same deterministic
+    'first flagged category in bit order' convention as prepare_08_phase3a_rootcause.py's
+    y_root, not an independently-verified root cause. Multi-fault events are folded
+    into their first-flagged category only.
+  auc_scope_note: Part 1 AUCs are one-vs-rest per fault category (each event's OTHER
+    labels are ignored for that column's AUC), matching the multi-label task's own
+    per-label evaluation convention used in step 07/Phase A-C, not a single-label
+    multiclass comparison.

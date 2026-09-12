@@ -155,7 +155,7 @@ class Step08Processor:
                 'single_split_n_test': {'value': int(len(y_test)), 'fmt': None, 'label': 'Single-split (seed=42) test set size'},
             },
             pipeline_run={
-                'dataset_version': 'V6',
+                'dataset_version': (lambda _n: _n.upper() if _n else 'V2')(self.input_dir.name.replace('cooked_data', '').lstrip('_')),
                 'dataset_path': str(self.input_dir / 'features_engineered.pkl'),
                 'script': 'pipeline/00_scripts/prepare_08_phase3a_rootcause.py',
             },
@@ -189,7 +189,7 @@ class Step08Processor:
                                     'label': 'Total fault events used (root-cause task, fault-only subset)'},
             },
             pipeline_run={
-                'dataset_version': 'V6',
+                'dataset_version': (lambda _n: _n.upper() if _n else 'V2')(self.input_dir.name.replace('cooked_data', '').lstrip('_')),
                 'dataset_path': str(self.input_dir / 'features_engineered.pkl'),
                 'script': 'pipeline/00_scripts/prepare_08_phase3a_rootcause.py',
             },

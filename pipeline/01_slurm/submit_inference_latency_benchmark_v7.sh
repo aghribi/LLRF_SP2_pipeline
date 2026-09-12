@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# No _v6 predecessor existed for this script (it was run without a submit
+# script the one time it's been run so far); modeled on the SHAP/weakness-
+# diagnosis submit scripts for consistency.
+#SBATCH --job-name=inference_latency_v7
+#SBATCH --output=logs/inference_latency_v7.%j.out
+#SBATCH --error=logs/inference_latency_v7.%j.err
+#SBATCH --time=00:30:00
+#SBATCH --cpus-per-task=2
+#SBATCH --mem=8G
+#SBATCH --partition=htc
+
+PYTHON_ENV="/pbs/home/a/aghribi/throng_m4cast/environment/env_llrfspiral2/bin/python"
+PROJECT_DIR="/pbs/throng/m4cast/projects/SPIRAL2/anomalies/anomalies_exploration"
+SCRIPT="${PROJECT_DIR}/pipeline/00_scripts/benchmark_inference_latency.py"
+
+export SPIRAL2_COOKED_DIR="/sps/m4cast/_spiral2_data/_llrf_data/cooked_data_v7"
+
+echo "Running ${SCRIPT} against V7 | Job ${SLURM_JOB_ID} | $(date)"
+cd ${PROJECT_DIR}
+${PYTHON_ENV} ${SCRIPT}
+EXIT_CODE=$?
+echo "Exit code: ${EXIT_CODE} | $(date)"
+[ ${EXIT_CODE} -eq 0 ] && echo "SUCCESS" || echo "FAILED"
+exit ${EXIT_CODE}

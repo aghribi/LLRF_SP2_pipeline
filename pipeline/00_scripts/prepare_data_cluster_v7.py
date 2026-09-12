@@ -230,6 +230,7 @@ Usage:
 import argparse
 import pickle
 import logging
+import re
 import sys
 import time
 import signal
@@ -1287,11 +1288,31 @@ def engineer_features(signals_processed, metadata, zero_idx, dt_us):
     # NOT encode particle-beam presence, it encodes feed-forward state in the
     # LLRF control loop. Same field/logic as V6's 'beam_present', renamed only
     # -- see module docstring.
-    feed_forward_status = metadata.get('BEAM', 'UNKNOWN')
-    if isinstance(feed_forward_status, str):
-        features['feed_forward_enabled'] = int(feed_forward_status.upper() in ['OUI', 'YES', 'ON'])
+    #
+    # CORRECTION (2026-09-09, same day): the BEAM field was not actually
+    # populated before 2021 -- the recorded value (always "NON") is a stale
+    # default, not a real measurement of that era's feed-forward state.
+    # Per the project lead: assume feed-forward was ON by default pre-2021
+    # (standard operating procedure predating this toggle's introduction),
+    # regardless of what the unpopulated field literally says. Mirrors
+    # Classify_PostMortemFile's own _get_acquisition_year() year-gating for
+    # the filter fix -- same field, same "not meaningful before 2021" logic,
+    # now applied to the feature value as well as the filter.
+    acquisition_year = None
+    date_str = metadata.get('DATE', '') or ''
+    if isinstance(date_str, str):
+        year_match = re.search(r'(19|20)\d{2}', date_str)
+        if year_match:
+            acquisition_year = int(year_match.group(0))
+
+    if acquisition_year is not None and acquisition_year < 2021:
+        features['feed_forward_enabled'] = 1
     else:
-        features['feed_forward_enabled'] = int(feed_forward_status == 1)
+        feed_forward_status = metadata.get('BEAM', 'UNKNOWN')
+        if isinstance(feed_forward_status, str):
+            features['feed_forward_enabled'] = int(feed_forward_status.upper() in ['OUI', 'YES', 'ON'])
+        else:
+            features['feed_forward_enabled'] = int(feed_forward_status == 1)
 
     # V6: interlock_type (ALM-bit-derived) REMOVED -- it is a near-tautological
     # copy of the label (y_binary = alm > 0 uses the exact same ALM field this

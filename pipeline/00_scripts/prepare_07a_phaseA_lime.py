@@ -36,7 +36,12 @@ logger = logging.getLogger(__name__)
 # Paths
 import os
 COOKED = Path(os.environ.get('SPIRAL2_COOKED_DIR', '/sps/m4cast/_spiral2_data/_llrf_data/cooked_data'))
-PHASEA_DIR = COOKED / 'step_07_phaseA_br'
+# 2026-09-10: same fix as prepare_07a_phaseA_shap.py -- the trained-BR output
+# directory picked up a version suffix starting with V7 (step_07_phaseA_v7_br);
+# V6's is still the older unsuffixed step_07_phaseA_br, kept as-is.
+_version_suffix = COOKED.name.replace('cooked_data', '').lstrip('_')
+PHASEA_DIR = COOKED / ('step_07_phaseA_br' if not _version_suffix or _version_suffix == 'v6'
+                       else f'step_07_phaseA_{_version_suffix}_br')
 FEATURES_FILE = COOKED / 'features_engineered.pkl'
 BR_FILE = PHASEA_DIR / 'br_results.pkl'
 OUTPUT_FILE = PHASEA_DIR / 'lime_br.npz'

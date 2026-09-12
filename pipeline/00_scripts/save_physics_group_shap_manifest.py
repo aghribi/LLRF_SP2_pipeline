@@ -30,6 +30,7 @@ group's own sum from one feature in some categories) -- this manifest now
 also exposes the per-feature MEDIAN (far more robust to that failure mode)
 so the mean is not presented as if it were bias-free.
 """
+import os
 import sys
 from pathlib import Path
 import json
@@ -39,7 +40,11 @@ import pandas as pd
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from utilities.reporting.manifest import save_manifest
 
-OUTPUT_DIR = Path('/sps/m4cast/_spiral2_data/_llrf_data/cooked_data_v6/step_10_enhanced_shap')
+# 2026-09-10: was hardcoded to cooked_data_v6 -- parameterized the same way as
+# the SHAP extraction scripts it reads output from (SPIRAL2_COOKED_DIR,
+# default V6 for back-compat).
+COOKED = Path(os.environ.get('SPIRAL2_COOKED_DIR', '/sps/m4cast/_spiral2_data/_llrf_data/cooked_data_v6'))
+OUTPUT_DIR = COOKED / 'step_10_enhanced_shap'
 
 
 def main():
@@ -101,8 +106,8 @@ def main():
         phase='10_physics_group_shap',
         metrics=metrics,
         pipeline_run={
-            'dataset_version': 'V6',
-            'dataset_path': '/sps/m4cast/_spiral2_data/_llrf_data/cooked_data_v6/features_engineered.pkl',
+            'dataset_version': (lambda _n: _n.upper() if _n else 'V2')(COOKED.name.replace('cooked_data', '').lstrip('_')),
+            'dataset_path': str(COOKED / 'features_engineered.pkl'),
             'script': 'pipeline/00_scripts/prepare_10_enhanced_shap_analysis.py',
         },
         meta={

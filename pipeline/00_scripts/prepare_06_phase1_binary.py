@@ -231,7 +231,7 @@ class Step06Processor:
                 'value': float(recall_score(y_test, y_pred, zero_division=0)), 'fmt': '.1%', 'label': f'{label} recall'}
             comparison_metrics[f'{macro_slug}_f1'] = {
                 'value': float(f1_score(y_test, y_pred, zero_division=0)), 'fmt': '.3f', 'label': f'{label} F1'}
-        comparison_metrics['n_events_total'] = {'value': int(n_events), 'fmt': None, 'label': 'Total events (V6)'}
+        comparison_metrics['n_events_total'] = {'value': int(n_events), 'fmt': None, 'label': 'Total events'}
         comparison_metrics['n_events_test'] = {'value': int(len(y_test)), 'fmt': None, 'label': 'Test-set events'}
         comparison_metrics['n_features'] = {'value': int(X_train.shape[1]), 'fmt': None, 'label': 'Features used'}
 
@@ -239,7 +239,7 @@ class Step06Processor:
             phase='06_binary_classification',
             metrics=comparison_metrics,
             pipeline_run={
-                'dataset_version': 'V6',
+                'dataset_version': (lambda _n: _n.upper() if _n else 'V2')(self.input_dir.name.replace('cooked_data', '').lstrip('_')),
                 'dataset_path': str(self.input_dir / 'features_engineered.pkl'),
                 'script': 'pipeline/00_scripts/prepare_06_phase1_binary.py',
             },
@@ -296,7 +296,7 @@ class Step06Processor:
                                              'label': 'Single-split (seed=42) RF ROC AUC'},
             },
             pipeline_run={
-                'dataset_version': 'V6',
+                'dataset_version': (lambda _n: _n.upper() if _n else 'V2')(self.input_dir.name.replace('cooked_data', '').lstrip('_')),
                 'dataset_path': str(self.input_dir / 'features_engineered.pkl'),
                 'script': 'pipeline/00_scripts/prepare_06_phase1_binary.py',
             },

@@ -1,38 +1,38 @@
 phase: 08_phase3a_rootcause
-generated_at: '2026-09-07T13:36:27.424615+00:00'
+generated_at: '2026-09-08T21:30:18.889346+00:00'
 pipeline_run:
   dataset_version: V6
-  dataset_path: /sps/m4cast/_spiral2_data/_llrf_data/cooked_data_v6/features_engineered.pkl
+  dataset_path: /sps/m4cast/_spiral2_data/_llrf_data/cooked_data_v7/features_engineered.pkl
   script: pipeline/00_scripts/prepare_08_phase3a_rootcause.py
 metrics:
   headline_accuracy:
-    value: 0.9488817891373802
+    value: 0.935251798561151
     fmt: .1%
     label: Single-split (seed=42) accuracy
-    display: 94.9%
+    display: 93.5%
   headline_macro_f1:
-    value: 0.827594751617098
+    value: 0.7986490611718576
     fmt: .3f
     label: Single-split (seed=42) macro-F1
-    display: '0.828'
+    display: '0.799'
   headline_weighted_f1:
-    value: 0.9445176095790977
+    value: 0.9325926095266368
     fmt: .3f
     label: Single-split (seed=42) weighted-F1
-    display: '0.945'
+    display: '0.933'
   n_test:
-    value: 313
+    value: 417
     fmt: null
     label: Test-set events
-    display: '313'
+    display: '417'
   n_fault_events:
-    value: 1043
+    value: 1387
     fmt: null
     label: Total fault events used (root-cause task, fault-only subset)
-    display: '1043'
+    display: '1387'
 meta:
   stability_cross_reference: 'See 08_phase3a_rootcause_stability.yaml for the repeated-split
-    (10x) mean/std: class_weight=''balanced'' accuracy=0.9265, macro_f1=0.7695 --
+    (10x) mean/std: class_weight=''balanced'' accuracy=0.9237, macro_f1=0.7822 --
     prefer citing that mean/std over this single-split number where both fit.'
   ground_truth_caveat: y_root is np.argmax(y_multilabel, axis=1) -- the first flagged
     category in bit order, itself a deterministic rule this RF is trained to approximate.

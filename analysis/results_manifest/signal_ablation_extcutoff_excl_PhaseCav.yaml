@@ -1,0 +1,95 @@
+phase: signal_ablation_extcutoff_excl_PhaseCav
+generated_at: '2026-09-09T04:59:20.817918+00:00'
+pipeline_run:
+  dataset_version: V7
+  dataset_path: /sps/m4cast/_spiral2_data/_llrf_data/cooked_data_v7/features_engineered.pkl
+  script: pipeline/00_scripts/investigate_category_signal_ablation.py
+metrics:
+  n_category_events:
+    value: 11
+    fmt: null
+    label: Category events
+    display: '11'
+  n_normal_events:
+    value: 1478
+    fmt: null
+    label: Normal events (comparison set)
+    display: '1478'
+  n_features_used:
+    value: 398
+    fmt: null
+    label: Pre-trigger features used
+    display: '398'
+  n_features_excluded:
+    value: 20
+    fmt: null
+    label: Features excluded (channel-derived)
+    display: '20'
+  logistic_regression_accuracy:
+    value: 0.9977628635346756
+    fmt: .1%
+    label: logistic_regression accuracy
+    display: 99.8%
+  logistic_regression_roc_auc:
+    value: 1.0
+    fmt: .4f
+    label: logistic_regression ROC AUC
+    display: '1.0000'
+  logistic_regression_f1:
+    value: 0.8
+    fmt: .3f
+    label: logistic_regression F1
+    display: '0.800'
+  random_forest_accuracy:
+    value: 1.0
+    fmt: .1%
+    label: random_forest accuracy
+    display: 100.0%
+  random_forest_roc_auc:
+    value: 1.0
+    fmt: .4f
+    label: random_forest ROC AUC
+    display: '1.0000'
+  random_forest_f1:
+    value: 1.0
+    fmt: .3f
+    label: random_forest F1
+    display: '1.000'
+  xgboost_accuracy:
+    value: 0.9955257270693513
+    fmt: .1%
+    label: xgboost accuracy
+    display: 99.6%
+  xgboost_roc_auc:
+    value: 1.0
+    fmt: .4f
+    label: xgboost ROC AUC
+    display: '1.0000'
+  xgboost_f1:
+    value: 0.5
+    fmt: .3f
+    label: xgboost F1
+    display: '0.500'
+  svm_accuracy:
+    value: 0.9932885906040269
+    fmt: .1%
+    label: svm accuracy
+    display: 99.3%
+  svm_roc_auc:
+    value: 1.0
+    fmt: .4f
+    label: svm ROC AUC
+    display: '1.0000'
+  svm_f1:
+    value: 0.0
+    fmt: .3f
+    label: svm F1
+    display: '0.000'
+meta:
+  category: Coupure externe rapide
+  excluded_channels:
+  - PhaseCav
+  purpose: Category-vs-Normal, pre-trigger-only, testing whether early detection survives
+    excluding the raw signal(s) this category's own deterministic classification criterion
+    is based on -- distinguishes a real independent early-warning signal from the
+    model just reading out the same quantity that will trip the deterministic cut.

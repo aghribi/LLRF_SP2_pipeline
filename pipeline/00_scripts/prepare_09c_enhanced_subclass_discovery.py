@@ -435,8 +435,9 @@ def create_subclass_visualization(X, y, best_results, output_dir):
     best_fault_result = None
     best_sil = -1
     for r in best_results:
-        if r and r.get('best_silhouette', -1) > best_sil:
-            best_sil = r['best_silhouette']
+        sil = r.get('best_silhouette') if r else None
+        if sil is not None and sil > best_sil:
+            best_sil = sil
             best_fault_result = r
 
     if best_fault_result:
@@ -488,6 +489,11 @@ def main():
     if y is None:
         print("ERROR: Labels not found in features file")
         return
+
+    # Real per-category event counts for this run's actual dataset -- used below
+    # to report which categories were excluded (and why), instead of a hardcoded
+    # V6-era count that goes stale the moment the underlying dataset changes.
+    fault_counts = {name: int(get_fault_mask(y, i).sum()) for i, name in enumerate(FAULT_LABELS)}
 
     all_results = {
         'timestamp': datetime.now().isoformat(),
@@ -606,25 +612,47 @@ def main():
                                    'label': 'Fault categories with enough events (>=20) to cluster'},
         'n_categories_total': {'value': 7, 'fmt': None, 'label': 'Total fault categories'},
     }
+    no_valid_clustering = []
     for _, row in summary_df.iterrows():
         slug = str(row['Fault Type']).lower().replace(' ', '_').replace('/', '_').replace("'", '')
+        if pd.isna(row['Best K']):
+            # Category met the >=20-event inclusion threshold but every clustering method
+            # returned no valid result for it (e.g. no method reached a usable silhouette
+            # score) -- record this explicitly rather than crashing on int(NaN) or silently
+            # writing a fabricated k.
+            no_valid_clustering.append(str(row['Fault Type']))
+            continue
         metrics[f'{slug}_best_k'] = {'value': int(row['Best K']), 'fmt': None,
                                       'label': f"{row['Fault Type']}: best k (n={int(row['Samples'])})"}
         metrics[f'{slug}_silhouette'] = {'value': float(row['Silhouette']), 'fmt': '.3f',
                                           'label': f"{row['Fault Type']}: silhouette score"}
+    # Dataset version from the actual input directory (e.g. "cooked_data_v7" -> "V7"), not
+    # hardcoded -- this script is run against whichever dataset SPIRAL2_COOKED_DIR points to.
+    _version_suffix = COOKED.name.replace('cooked_data', '').lstrip('_')
+    dataset_version = _version_suffix.upper() if _version_suffix else 'V2'
     save_manifest(
         phase='09c_enhanced_subclass_discovery',
         metrics=metrics,
         pipeline_run={
-            'dataset_version': 'V6',
+            'dataset_version': dataset_version,
             'dataset_path': str(COOKED / 'features_engineered.pkl'),
             'script': 'pipeline/00_scripts/prepare_09c_enhanced_subclass_discovery.py',
         },
         meta={
             'excluded_categories_note': (
-                "Seuil pick-up (12 events) and Coupure externe rapide (11 events) are excluded "
-                "from per-fault clustering (minimum 20 events required); this reflects data "
-                "scarcity, not an absence of substructure."
+                (
+                    "{} excluded from per-fault clustering (minimum 20 events required); this "
+                    "reflects data scarcity, not an absence of substructure."
+                ).format(
+                    ', '.join(f'{name} ({fault_counts[name]} events)'
+                              for name in FAULT_LABELS if name not in set(summary_df['Fault Type']))
+                    or 'No category'
+                )
+            ),
+            'no_valid_clustering_note': (
+                f"Categories with >=20 events where every clustering method still returned no "
+                f"usable result: {', '.join(no_valid_clustering)}." if no_valid_clustering else
+                "All analyzed categories produced a valid clustering result."
             ),
             'per_category_table': summary_df.to_dict(orient='records'),
         },

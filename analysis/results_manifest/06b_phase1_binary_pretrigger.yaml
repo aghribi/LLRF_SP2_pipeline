@@ -1,0 +1,128 @@
+phase: 06b_phase1_binary_pretrigger
+generated_at: '2026-09-08T22:13:37.927344+00:00'
+pipeline_run:
+  dataset_version: V7
+  dataset_path: /sps/m4cast/_spiral2_data/_llrf_data/cooked_data_v7/features_engineered.pkl
+  script: pipeline/00_scripts/prepare_06b_phase1_binary_pretrigger.py
+metrics:
+  logistic_regression_accuracy:
+    value: 0.9895348837209302
+    fmt: .1%
+    label: Logistic Regression accuracy
+    display: 99.0%
+  logistic_regression_roc_auc:
+    value: 0.9989009442134442
+    fmt: .4f
+    label: Logistic Regression ROC AUC
+    display: '0.9989'
+  logistic_regression_precision:
+    value: 0.9951338199513382
+    fmt: .1%
+    label: Logistic Regression precision
+    display: 99.5%
+  logistic_regression_recall:
+    value: 0.9831730769230769
+    fmt: .1%
+    label: Logistic Regression recall
+    display: 98.3%
+  logistic_regression_f1:
+    value: 0.9891172914147521
+    fmt: .3f
+    label: Logistic Regression F1
+    display: '0.989'
+  random_forest_accuracy:
+    value: 0.9953488372093023
+    fmt: .1%
+    label: Random Forest accuracy
+    display: 99.5%
+  random_forest_roc_auc:
+    value: 0.9997780232155233
+    fmt: .4f
+    label: Random Forest ROC AUC
+    display: '0.9998'
+  random_forest_precision:
+    value: 0.992822966507177
+    fmt: .1%
+    label: Random Forest precision
+    display: 99.3%
+  random_forest_recall:
+    value: 0.9975961538461539
+    fmt: .1%
+    label: Random Forest recall
+    display: 99.8%
+  random_forest_f1:
+    value: 0.9952038369304557
+    fmt: .3f
+    label: Random Forest F1
+    display: '0.995'
+  xgboost_accuracy:
+    value: 0.9953488372093023
+    fmt: .1%
+    label: XGBoost accuracy
+    display: 99.5%
+  xgboost_roc_auc:
+    value: 0.9998592342342343
+    fmt: .4f
+    label: XGBoost ROC AUC
+    display: '0.9999'
+  xgboost_precision:
+    value: 0.992822966507177
+    fmt: .1%
+    label: XGBoost precision
+    display: 99.3%
+  xgboost_recall:
+    value: 0.9975961538461539
+    fmt: .1%
+    label: XGBoost recall
+    display: 99.8%
+  xgboost_f1:
+    value: 0.9952038369304557
+    fmt: .3f
+    label: XGBoost F1
+    display: '0.995'
+  svm_rbf_accuracy:
+    value: 0.9755813953488373
+    fmt: .1%
+    label: SVM (RBF) accuracy
+    display: 97.6%
+  svm_rbf_roc_auc:
+    value: 0.9973471067221067
+    fmt: .4f
+    label: SVM (RBF) ROC AUC
+    display: '0.9973'
+  svm_rbf_precision:
+    value: 0.9647058823529412
+    fmt: .1%
+    label: SVM (RBF) precision
+    display: 96.5%
+  svm_rbf_recall:
+    value: 0.9855769230769231
+    fmt: .1%
+    label: SVM (RBF) recall
+    display: 98.6%
+  svm_rbf_f1:
+    value: 0.9750297265160524
+    fmt: .3f
+    label: SVM (RBF) F1
+    display: '0.975'
+  n_events_total:
+    value: 2865
+    fmt: null
+    label: Total events
+    display: '2865'
+  n_events_test:
+    value: 860
+    fmt: null
+    label: Test-set events
+    display: '860'
+  n_features:
+    value: 418
+    fmt: null
+    label: Pre-trigger-only features used
+    display: '418'
+meta:
+  purpose: Same model comparison as 06_binary_classification, restricted to the pre-trigger-only
+    'true precursor' feature subset (same restriction step 05 uses) instead of the
+    full feature set -- tests whether fault vs. normal is still separable using only
+    information available before the interlock trip, unlike 06's full-window result
+    which trivially sees the trip itself.

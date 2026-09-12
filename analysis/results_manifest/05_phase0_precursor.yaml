@@ -1,70 +1,70 @@
 phase: 05_phase0_precursor
-generated_at: '2026-09-07T13:35:53.961300+00:00'
+generated_at: '2026-09-08T21:30:10.315765+00:00'
 pipeline_run:
   dataset_version: V6
-  dataset_path: /sps/m4cast/_spiral2_data/_llrf_data/cooked_data_v6/features_engineered.pkl
+  dataset_path: /sps/m4cast/_spiral2_data/_llrf_data/cooked_data_v7/features_engineered.pkl
   script: pipeline/00_scripts/prepare_05_phase0_precursor.py
 metrics:
   random_forest_roc_auc:
-    value: 0.9991114217252396
+    value: 0.9997780232155233
     fmt: .4f
     label: Supervised RF ROC AUC (true-precursor feature subset)
-    display: '0.9991'
+    display: '0.9998'
   random_forest_cv_f1_mean:
-    value: 0.986573707990247
+    value: 0.9916835790042914
     fmt: .3f
     label: RF 5-fold CV F1 (mean)
-    display: '0.987'
+    display: '0.992'
   random_forest_cv_f1_std:
-    value: 0.011801295851194117
+    value: 0.004534778144605057
     fmt: .3f
     label: RF 5-fold CV F1 (std)
-    display: '0.012'
+    display: '0.005'
   isolation_forest_roc_auc:
-    value: 0.6376297923322685
+    value: 0.6971749393624393
     fmt: .4f
     label: Isolation Forest ROC AUC (unsupervised)
-    display: '0.6376'
+    display: '0.6972'
   lof_roc_auc:
-    value: 0.5796924920127795
+    value: 0.6265484234234234
     fmt: .4f
     label: LOF ROC AUC (unsupervised)
-    display: '0.5797'
+    display: '0.6265'
   mahalanobis_roc_auc:
-    value: 0.788148961661342
+    value: 0.7980173683298684
     fmt: .4f
     label: Mahalanobis distance ROC AUC (unsupervised)
-    display: '0.7881'
+    display: '0.7980'
   pca_reconstruction_roc_auc:
-    value: 0.6368111022364217
+    value: 0.6811492983367984
     fmt: .4f
     label: PCA reconstruction error ROC AUC (unsupervised)
-    display: '0.6368'
+    display: '0.6811'
   ensemble_roc_auc:
-    value: 0.9880790734824282
+    value: 0.996009831947332
     fmt: .4f
     label: Ensemble ROC AUC (unsupervised methods + RF probability)
-    display: '0.9881'
+    display: '0.9960'
   dbscan_outlier_fraction:
     value: 1.0
     fmt: .3f
     label: 'DBSCAN: fraction of test events flagged as outliers'
     display: '1.000'
   n_events:
-    value: 2109
+    value: 2865
     fmt: null
     label: Total events used
-    display: '2109'
+    display: '2865'
   n_features:
-    value: 386
+    value: 418
     fmt: null
     label: True-precursor feature columns (fixed pre-trigger window)
-    display: '386'
+    display: '418'
   n_test:
-    value: 633
+    value: 860
     fmt: null
     label: Test-set events
-    display: '633'
+    display: '860'
 meta:
   unsupervised_vs_supervised_gap_note: The unsupervised methods (Isolation Forest/LOF/Mahalanobis/PCA-reconstruction)
     never see labels and score 0.58-0.79; the supervised RF and the Ensemble (which
