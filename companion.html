@@ -1,0 +1,562 @@
+<title>LLRF Fault Diagnosis</title>
+<meta name="description" content="Reference companion for the SPIRAL2 LLRF fault-diagnosis pipeline: data, methods, results, glossary, and bibliography.">
+
+<style>
+  :root {
+    --paper: #f5f6f7;
+    --paper-raised: #ffffff;
+    --ink: #16191d;
+    --ink-muted: #565f68;
+    --ink-faint: #8890a0;
+    --border: #dce0e4;
+    --border-strong: #c5cbd1;
+    --accent: #0e6e86;
+    --accent-deep: #0a4f60;
+    --accent-soft: #e4eef1;
+    --fault: #b5482e;
+    --fault-soft: #f6e8e3;
+    --good: #3c7a56;
+    --good-soft: #e7f1ea;
+    --shadow: 0 1px 2px rgba(15, 25, 30, 0.05), 0 8px 24px -12px rgba(15, 25, 30, 0.14);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #12161a;
+      --paper-raised: #181d22;
+      --ink: #e8eaed;
+      --ink-muted: #9aa3ad;
+      --ink-faint: #6d7680;
+      --border: #2a3138;
+      --border-strong: #3a434c;
+      --accent: #5fb8cf;
+      --accent-deep: #8fd0e2;
+      --accent-soft: #1a2e34;
+      --fault: #dd8266;
+      --fault-soft: #34211c;
+      --good: #7fbf9a;
+      --good-soft: #1c2e24;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 28px -12px rgba(0, 0, 0, 0.55);
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #12161a;
+    --paper-raised: #181d22;
+    --ink: #e8eaed;
+    --ink-muted: #9aa3ad;
+    --ink-faint: #6d7680;
+    --border: #2a3138;
+    --border-strong: #3a434c;
+    --accent: #5fb8cf;
+    --accent-deep: #8fd0e2;
+    --accent-soft: #1a2e34;
+    --fault: #dd8266;
+    --fault-soft: #34211c;
+    --good: #7fbf9a;
+    --good-soft: #1c2e24;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 28px -12px rgba(0, 0, 0, 0.55);
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Public Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 16px;
+    line-height: 1.62;
+  }
+  h1, h2, h3, h4 {
+    font-family: "Source Serif 4", Georgia, "Times New Roman", serif;
+    font-weight: 600;
+    text-wrap: balance;
+    margin: 0;
+    color: var(--ink);
+  }
+  code, .mono, .num, dfn {
+    font-family: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+    font-style: normal;
+  }
+  .num { font-variant-numeric: tabular-nums; }
+  p { margin: 0 0 1em; max-width: 68ch; }
+  a { color: var(--accent-deep); text-decoration-color: var(--border-strong); text-underline-offset: 2px; }
+  a:hover { text-decoration-color: currentColor; }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .shell { display: flex; align-items: flex-start; min-height: 100vh; }
+
+  nav.toc {
+    position: sticky; top: 0; height: 100vh; overflow-y: auto;
+    width: 250px; flex: 0 0 250px;
+    background: var(--paper-raised);
+    border-right: 1px solid var(--border);
+    padding: 28px 18px;
+  }
+  .brand { margin-bottom: 22px; }
+  .brand .eyebrow {
+    display: block; font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--ink-faint); margin-bottom: 4px;
+  }
+  .brand .name { font-family: "Source Serif 4", serif; font-size: 19px; font-weight: 700; line-height: 1.25; }
+  .toc-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 1px; }
+  .toc-list a {
+    display: block; padding: 6px 9px; border-radius: 6px; font-size: 13.5px;
+    color: var(--ink-muted); text-decoration: none;
+  }
+  .toc-list a:hover { background: var(--accent-soft); color: var(--accent-deep); }
+  .toc-group { font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; color: var(--ink-faint); padding: 14px 9px 4px; }
+  .toc-group:first-child { padding-top: 0; }
+
+  main { flex: 1 1 auto; min-width: 0; padding: 56px 48px 100px; max-width: 900px; margin: 0 auto; }
+
+  header.hero { margin-bottom: 48px; }
+  header.hero h1 { font-size: 33px; margin-bottom: 10px; }
+  header.hero .dek { font-size: 16.5px; color: var(--ink-muted); max-width: 62ch; }
+  .stat-row {
+    display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1px; background: var(--border); border: 1px solid var(--border);
+    border-radius: 10px; overflow: hidden; margin-top: 22px;
+  }
+  .stat { background: var(--paper-raised); padding: 13px 15px; }
+  .stat .k { display: block; font-size: 10px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 4px; }
+  .stat .v { font-size: 19px; font-weight: 600; }
+  .stat.fault .v { color: var(--fault); }
+  .stat.good .v { color: var(--good); }
+
+  section.block { margin: 52px 0; scroll-margin-top: 20px; }
+  section.block > .eyebrow {
+    display: block; font-size: 11px; letter-spacing: 0.09em; text-transform: uppercase;
+    color: var(--accent-deep); margin-bottom: 6px; font-weight: 600;
+  }
+  section.block h2 { font-size: 24px; margin-bottom: 14px; }
+  section.block h3 { font-size: 17px; margin: 26px 0 10px; }
+  .lede { font-size: 15.5px; color: var(--ink-muted); }
+
+  hr.rule { border: none; border-top: 1px solid var(--border); margin: 52px 0; }
+
+  .table-wrap { overflow-x: auto; margin: 4px 0 20px; border: 1px solid var(--border); border-radius: 10px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; background: var(--paper-raised); }
+  caption { text-align: left; font-size: 13px; color: var(--ink-muted); padding: 10px 14px 0; caption-side: top; }
+  th, td { padding: 9px 14px; text-align: left; border-top: 1px solid var(--border); white-space: nowrap; }
+  thead th {
+    border-top: none; font-size: 10.5px; letter-spacing: 0.05em; text-transform: uppercase;
+    color: var(--ink-faint); background: var(--paper);
+  }
+  tbody tr:hover { background: var(--accent-soft); }
+  td.num, th.num { font-family: "IBM Plex Mono", monospace; font-variant-numeric: tabular-nums; }
+
+  .note {
+    border: 1px solid var(--border); border-left: 3px solid var(--accent);
+    border-radius: 8px; padding: 13px 16px; margin: 4px 0 20px; background: var(--paper-raised);
+    font-size: 14.5px; color: var(--ink-muted);
+  }
+  .note b { color: var(--ink); font-weight: 600; }
+
+  .diagram { background: var(--paper-raised); border: 1px solid var(--border); border-radius: 12px; padding: 20px; box-shadow: var(--shadow); overflow-x: auto; margin: 8px 0 24px; }
+  .diagram svg { display: block; width: 100%; height: auto; min-width: 640px; }
+  .dg-box { fill: var(--paper-raised); stroke: var(--border-strong); stroke-width: 1.2; }
+  .dg-box.trunk { fill: var(--paper); }
+  .dg-title { fill: var(--ink); font-weight: 600; font-family: "Public Sans", sans-serif; }
+  .dg-sub { fill: var(--ink-muted); font-family: "IBM Plex Mono", monospace; }
+  .dg-flow { stroke: var(--accent); stroke-width: 1.4; fill: none; }
+  .dg-dot { fill: var(--accent); }
+
+  dl.glossary { display: grid; grid-template-columns: max-content 1fr; gap: 8px 20px; margin: 0 0 20px; }
+  dl.glossary dt { font-family: "IBM Plex Mono", monospace; font-weight: 600; color: var(--accent-deep); scroll-margin-top: 20px; }
+  dl.glossary dd { margin: 0; color: var(--ink-muted); max-width: 58ch; }
+
+  ol.refs { list-style: none; margin: 0; padding: 0; counter-reset: refs; display: flex; flex-direction: column; gap: 10px; }
+  ol.refs li { counter-increment: refs; padding-left: 2.4em; position: relative; font-size: 14.5px; color: var(--ink-muted); }
+  ol.refs li::before {
+    content: "[" counter(refs) "]"; position: absolute; left: 0; color: var(--ink-faint);
+    font-family: "IBM Plex Mono", monospace; font-size: 13px;
+  }
+  ol.refs li b { color: var(--ink); font-weight: 500; }
+  ol.refs .doi { font-family: "IBM Plex Mono", monospace; font-size: 12.5px; }
+
+  footer.page-foot {
+    margin-top: 60px; padding-top: 20px; border-top: 1px solid var(--border);
+    font-size: 12.5px; color: var(--ink-faint);
+  }
+
+  @media (max-width: 860px) {
+    .shell { flex-direction: column; }
+    nav.toc { position: relative; width: 100%; height: auto; flex-basis: auto; border-right: none; border-bottom: 1px solid var(--border); }
+    main { padding: 32px 22px 80px; }
+    .stat-row { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    dl.glossary { grid-template-columns: 1fr; }
+  }
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@600;700&family=Public+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+
+<div class="shell">
+  <nav class="toc">
+    <div class="brand">
+      <span class="eyebrow">SPIRAL2 &middot; GANIL</span>
+      <span class="name">LLRF Fault Diagnosis</span>
+    </div>
+    <ul class="toc-list">
+      <li><a href="#overview">Overview</a></li>
+      <li class="toc-group">Data &amp; features</li>
+      <li><a href="#data">Data foundation</a></li>
+      <li><a href="#features">Feature engineering</a></li>
+      <li class="toc-group">Models</li>
+      <li><a href="#precursor">Early fault-onset detection</a></li>
+      <li><a href="#binary">Binary classification</a></li>
+      <li><a href="#multilabel">Multi-label classification</a></li>
+      <li><a href="#rootcause">Root-cause identification</a></li>
+      <li><a href="#subtype">Fault subtype clustering</a></li>
+      <li class="toc-group">Interpretation</li>
+      <li><a href="#explainability">Explainability</a></li>
+      <li><a href="#latency">Inference latency</a></li>
+      <li class="toc-group">Reference</li>
+      <li><a href="#glossary">Glossary &amp; acronyms</a></li>
+      <li><a href="#references">Bibliography</a></li>
+      <li><a href="#team">Project team</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <header class="hero" id="overview">
+      <h1>LLRF Fault Diagnosis for SPIRAL2</h1>
+      <p class="dek">
+        A machine-learning pipeline for diagnosing superconducting-cavity RF faults at the SPIRAL2
+        linear accelerator (GANIL): from raw postmortem acquisitions through fault detection, early
+        fault-onset warning, root-cause identification, and subtype discovery, with SHAP/saliency/LIME
+        explainability throughout. This page is a technical reference for the pipeline and its current
+        results, not a lab notebook &mdash; see the project repository for full methodology, code, and
+        the accompanying manuscript.
+      </p>
+      <div class="stat-row">
+        <div class="stat"><span class="k">Raw files scanned</span><span class="v num">14,232</span></div>
+        <div class="stat"><span class="k">Events (dataset V7)</span><span class="v num">2,865</span></div>
+        <div class="stat good"><span class="k">Normal</span><span class="v num">1,478</span></div>
+        <div class="stat fault"><span class="k">Fault (7 categories)</span><span class="v num">1,387</span></div>
+      </div>
+    </header>
+
+    <section class="block" id="data">
+      <span class="eyebrow">Data foundation</span>
+      <h2>From raw acquisitions to labeled events</h2>
+      <p>
+        SPIRAL2's superconducting cavities log a <dfn>postmortem</dfn> buffer &mdash; a short window of
+        RF and control-loop signals around any interlock trip or manual acquisition. 14,232 such files
+        were scanned across the 2019&ndash;2025 operational period. A validated ground-truth classifier
+        (<code>Classify_PostMortemFile</code>) applies six ordered quality checks (acquisition validity,
+        feed-forward state, loop status, signal-quality metrics) and assigns each passing file to one of
+        seven fault categories or <em>Normal</em>, yielding the 2,865-event dataset used throughout this
+        pipeline (referred to internally as dataset version V7).
+      </p>
+      <div class="table-wrap">
+        <table>
+          <caption>Fault category distribution, dataset V7</caption>
+          <thead><tr><th>Category</th><th class="num">Events</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td>Rég signal RF hors tolérance <span class="mono" style="color:var(--ink-faint)">(RF regulation out of tolerance)</span></td><td class="num">790</td><td>Largest category</td></tr>
+            <tr><td>Absence autorisation RF <span class="mono" style="color:var(--ink-faint)">(RF authorization absent)</span></td><td class="num">329</td><td></td></tr>
+            <tr><td>Seuil pick-up <span class="mono" style="color:var(--ink-faint)">(Pickup threshold)</span></td><td class="num">94</td><td></td></tr>
+            <tr><td>Dép seuil de sécurité RF <span class="mono" style="color:var(--ink-faint)">(RF safety threshold exceeded)</span></td><td class="num">86</td><td></td></tr>
+            <tr><td>Seuil de vide <span class="mono" style="color:var(--ink-faint)">(Vacuum threshold)</span></td><td class="num">46</td><td></td></tr>
+            <tr><td>Claquage ou quench cavité <span class="mono" style="color:var(--ink-faint)">(Cavity quench/breakdown)</span></td><td class="num">31</td><td></td></tr>
+            <tr><td>Coupure externe rapide <span class="mono" style="color:var(--ink-faint)">(Fast external cutoff)</span></td><td class="num">11</td><td>Smallest &mdash; 72&times; rarer than the largest</td></tr>
+            <tr><td><b>Normal</b></td><td class="num">1,478</td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="lede">
+        Class imbalance is severe (72&times; between rarest and most common fault category) and shapes
+        results throughout the pipeline: rarer categories are consistently harder to classify, cluster,
+        and explain, regardless of method.
+      </p>
+    </section>
+
+    <section class="block" id="features">
+      <span class="eyebrow">Feature engineering</span>
+      <h2>810 features, mostly generic, a physics-informed core</h2>
+      <p>
+        Each postmortem trace is high-pass filtered, trigger-aligned, and Z-scored, then reduced to 810
+        features after correlation-based deduplication. The large majority (501 Temporal, 260 Statistical,
+        10 Metadata/Status) are generic time-series descriptors &mdash; derivatives, moments, segment
+        statistics &mdash; applicable to any channel. A much smaller, physics-informed core (39 features
+        across seven named families) targets specific known LLRF fault mechanisms:
+      </p>
+      <div class="table-wrap">
+        <table>
+          <caption>Physics-informed feature families</caption>
+          <thead><tr><th>Family</th><th class="num">Features</th><th>Targets</th></tr></thead>
+          <tbody>
+            <tr><td>Effective Decay</td><td class="num">6</td><td>Cavity-voltage collapse timescale (quench signature)</td></tr>
+            <tr><td>Detuning</td><td class="num">5</td><td>Resonance-frequency drift</td></tr>
+            <tr><td>Microphonics</td><td class="num">4</td><td>Mechanical vibration coupling to the cavity</td></tr>
+            <tr><td>RF Mismatch</td><td class="num">9</td><td>Forward/reflected power imbalance</td></tr>
+            <tr><td>Modulator Command</td><td class="num">6</td><td>Drive-amplifier command signal behavior</td></tr>
+            <tr><td>Phase Stability</td><td class="num">4</td><td>RF phase-loop regulation quality</td></tr>
+            <tr><td>RF Power Flow</td><td class="num">5</td><td>Forward/reflected power levels and jumps</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="note">
+        The physics-informed families are a small fraction of the feature set (39 of 810, 4.8%) but are
+        disproportionately informative for the fault categories they target &mdash; see
+        <a href="#explainability">Explainability</a>.
+      </div>
+    </section>
+
+    <hr class="rule">
+
+    <section class="block" id="precursor">
+      <span class="eyebrow">Model &middot; early warning</span>
+      <h2>Early fault-onset detection</h2>
+      <p>
+        A Random Forest trained on a fixed pre-trigger window (excluding whole-signal and steady-state
+        features that would leak post-trigger information) distinguishes eventually-faulting captures
+        from normal ones well before the interlock trips, reaching <b>&asymp;0.999 ROC AUC</b> &mdash;
+        against a 0.58&ndash;0.79 AUC range for unsupervised anomaly-detection baselines (Isolation
+        Forest, LOF, Mahalanobis distance, PCA reconstruction) on the same restricted features. Sampled
+        true-positive events remain confidently detected (probability &gt;0.5) well outside the window the
+        classifier was trained to reason about, evidence that at least part of the observed separability
+        reflects a stable per-capture characteristic rather than a purely fault-onset-proximate signal;
+        this is disclosed as an open question rather than resolved.
+      </p>
+    </section>
+
+    <section class="block" id="binary">
+      <span class="eyebrow">Model &middot; classification</span>
+      <h2>Binary classification (fault vs. normal)</h2>
+      <p>
+        Restricted to the pre-trigger-only feature subset &mdash; the operationally meaningful version of
+        this task, since it does not see the interlock-trip transient itself &mdash; four classical
+        methods stay near-ceiling:
+      </p>
+      <div class="table-wrap">
+        <table>
+          <caption>Pre-trigger-only binary classification accuracy</caption>
+          <thead><tr><th>Method</th><th class="num">Accuracy</th></tr></thead>
+          <tbody>
+            <tr><td>Random Forest</td><td class="num">99.5%</td></tr>
+            <tr><td>XGBoost</td><td class="num">99.5%</td></tr>
+            <tr><td>Logistic Regression</td><td class="num">99.0%</td></tr>
+            <tr><td>SVM (RBF)</td><td class="num">97.6%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="lede">
+        Excluding each category's own deterministic-classifier defining signal (e.g. vacuum pressure for
+        vacuum-threshold faults) leaves accuracy essentially unchanged for most categories &mdash;
+        evidence that pre-trigger separability is broadly redundant across channels, not a disguised
+        readout of the one signal that will eventually trip the alarm.
+      </p>
+    </section>
+
+    <section class="block" id="multilabel">
+      <span class="eyebrow">Model &middot; classification</span>
+      <h2>Multi-label classification</h2>
+      <p>
+        Four supervised approaches predict all seven fault categories at once (Binary Relevance,
+        Classifier Chains, Label Powerset, MultiOutput Random Forest). Label Powerset is the strongest:
+      </p>
+      <div class="table-wrap">
+        <table>
+          <caption>Multi-label macro-F1, repeated-split mean &plusmn; std</caption>
+          <thead><tr><th>Approach</th><th class="num">Full window</th><th class="num">Pre-trigger only</th></tr></thead>
+          <tbody>
+            <tr><td>Label Powerset (best)</td><td class="num">0.780 &plusmn; 0.029</td><td class="num">0.664 &plusmn; 0.024</td></tr>
+            <tr><td>MultiOutput Random Forest</td><td class="num">0.710 &plusmn; 0.027</td><td class="num">0.557 &plusmn; 0.010</td></tr>
+            <tr><td>Binary Relevance</td><td class="num">0.713 &plusmn; 0.027</td><td class="num">0.553 &plusmn; 0.017</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="lede">
+        The rarest category (<em>Coupure externe rapide</em>, 11 events) scores 0.000 F1 across every
+        approach and every split &mdash; a sample-size floor rather than a methodological weakness.
+      </p>
+    </section>
+
+    <section class="block" id="rootcause">
+      <span class="eyebrow">Model &middot; classification</span>
+      <h2>Root-cause identification</h2>
+      <p>
+        Given that a fault occurred, a class-weighted Random Forest predicts which of the seven categories
+        is responsible, reaching <b>92.4% &plusmn; 1.0% accuracy</b> and <b>0.782 &plusmn; 0.011 macro-F1</b>
+        (repeated-split mean &plusmn; std) on the 1,387 fault events. The training target is the first
+        active fault flag in the ground-truth record &mdash; a deterministic rule, not an independently
+        labeled physical root cause &mdash; disclosed as a limitation of the task's current formulation.
+        Class weighting meaningfully improves only the rarest well-represented category
+        (<em>Claquage ou quench cavité</em>, +0.099 F1); the dominant confusion runs between the two
+        largest categories, consistent with a real category-size effect rather than a specific physical
+        ambiguity.
+      </p>
+    </section>
+
+    <section class="block" id="subtype">
+      <span class="eyebrow">Model &middot; clustering</span>
+      <h2>Fault subtype clustering</h2>
+      <p>
+        Within each fault category with enough events, unsupervised clustering (K-Means, Agglomerative,
+        Gaussian Mixture) searches for finer subtypes, requiring every candidate cluster to hold at least
+        15% of that category's events to reject outlier-driven splits.
+      </p>
+      <div class="table-wrap">
+        <table>
+          <caption>Balanced-split subtype clustering results</caption>
+          <thead><tr><th>Category</th><th class="num">n</th><th>Split</th><th class="num">Silhouette</th></tr></thead>
+          <tbody>
+            <tr><td>Dép seuil de sécurité RF</td><td class="num">86</td><td class="num">15 / 71</td><td class="num">0.335</td></tr>
+            <tr><td>Seuil pick-up</td><td class="num">94</td><td class="num">18 / 76</td><td class="num">0.189</td></tr>
+            <tr><td>Seuil de vide</td><td class="num">46</td><td class="num">7 / 39</td><td class="num">0.179</td></tr>
+            <tr><td>Absence autorisation RF</td><td class="num">329</td><td class="num">73 / 256</td><td class="num">0.130</td></tr>
+            <tr><td>Claquage ou quench cavité</td><td class="num">31</td><td class="num">13 / 18</td><td class="num">0.074</td></tr>
+            <tr><td>Rég signal RF hors tolérance</td><td class="num">790</td><td class="num">&mdash;</td><td class="num">no valid split</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="lede">
+        By the standard silhouette scale, only <em>Dép seuil de sécurité RF</em> (0.335) clears the
+        threshold conventionally read as real structure; the rest are technically balanced but weak.
+        The largest category finds no split meeting the balance constraint at all &mdash; a follow-up
+        investigation found three independent methods agreeing on a genuine 13% minority subgroup that
+        simply falls under the floor, and a supervised classifier trained on this category's separate,
+        rule-based 9-way physics subtype label reaches macro-F1 = 0.812, confirming that real subtype
+        structure exists here even though unsupervised search alone could not find it.
+      </p>
+    </section>
+
+    <hr class="rule">
+
+    <section class="block" id="explainability">
+      <span class="eyebrow">Interpretation</span>
+      <h2>Explainability</h2>
+      <p>
+        SHAP explains the per-category classical models, gradient-based saliency explains four deep
+        architectures (CNN, CNN-LSTM, MLP, Transformer), and LIME provides local, instance-level
+        explanations. Because the seven physics-informed feature families are vastly outnumbered by
+        generic Statistical/Temporal features (39 vs. 771), importance is reported per-feature-mean
+        (dividing out group size) rather than as a group sum, which would trivially favor the larger
+        generic groups regardless of informativeness.
+      </p>
+      <div class="table-wrap">
+        <table>
+          <caption>Dominant SHAP feature group per fault category, per-feature mean</caption>
+          <thead><tr><th>Category</th><th>Top group</th><th class="num">Share</th></tr></thead>
+          <tbody>
+            <tr><td>Seuil pick-up</td><td>Statistical</td><td class="num">40.8%</td></tr>
+            <tr><td>Coupure externe rapide</td><td>RF Mismatch</td><td class="num">33.1%</td></tr>
+            <tr><td>Absence autorisation RF</td><td>Modulator Command</td><td class="num">26.1%</td></tr>
+            <tr><td>Seuil de vide</td><td>Statistical</td><td class="num">46.1%</td></tr>
+            <tr><td>Claquage ou quench cavité</td><td>Effective Decay</td><td class="num">34.8%</td></tr>
+            <tr><td>Dép seuil de sécurité RF</td><td>Statistical</td><td class="num">22.5%</td></tr>
+            <tr><td>Rég signal RF hors tolérance</td><td>Effective Decay</td><td class="num">26.7%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="lede">
+        A physics-informed family dominates four of seven categories despite the severe count imbalance.
+        Both quench-related categories (an abrupt collapse and a regulation deviation) converge on
+        Effective Decay, consistent with each being, at the feature level, a rapid change in cavity
+        voltage. Gradient-based saliency on the four deep architectures shows the same structural pattern
+        (Temporal-family dominance by group sum, for the same count-imbalance reason) as an independent
+        cross-check using a different model family entirely.
+      </p>
+    </section>
+
+    <section class="block" id="latency">
+      <span class="eyebrow">Interpretation</span>
+      <h2>Inference latency</h2>
+      <p>
+        Single-event, single-threaded inference (scaler transform + predict, no batching) was benchmarked
+        directly rather than assumed:
+      </p>
+      <div class="table-wrap">
+        <table>
+          <caption>Real single-event inference latency</caption>
+          <thead><tr><th>Model</th><th class="num">Mean</th><th class="num">p95</th></tr></thead>
+          <tbody>
+            <tr><td>Binary classification (Random Forest)</td><td class="num">12.3ms</td><td class="num">12.5ms</td></tr>
+            <tr><td>Early fault-onset detection (Random Forest)</td><td class="num">12.6ms</td><td class="num">12.5ms</td></tr>
+            <tr><td>Multi-label (Label Powerset, XGBoost)</td><td class="num">0.35ms</td><td class="num">0.38ms</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="lede">
+        Every model is comfortably fast enough for the "one new postmortem file arrives" deployment
+        scenario this benchmark targets. XGBoost is roughly 35&times; faster per event than the
+        Random-Forest-based models.
+      </p>
+    </section>
+
+    <hr class="rule">
+
+    <section class="block" id="glossary">
+      <span class="eyebrow">Reference</span>
+      <h2>Glossary &amp; acronyms</h2>
+      <dl class="glossary">
+        <dt id="g-llrf">LLRF</dt><dd>Low-Level Radio Frequency &mdash; the control system regulating a cavity's RF field amplitude and phase.</dd>
+        <dt id="g-rf">RF</dt><dd>Radio Frequency &mdash; the oscillating electromagnetic field used to accelerate the particle beam.</dd>
+        <dt id="g-cavity">Cavity</dt><dd>A superconducting resonant structure that transfers RF energy to the particle beam.</dd>
+        <dt id="g-quench">Quench</dt><dd>A sudden, localized loss of superconductivity in a cavity, causing a rapid collapse of the stored RF field.</dd>
+        <dt id="g-postmortem">Postmortem buffer</dt><dd>A short recording of signals captured automatically around a fault trigger, used for offline diagnosis.</dd>
+        <dt id="g-alm">ALM</dt><dd>Alarme (French: alarm) &mdash; the control-system bit flagging an active interlock/fault condition.</dd>
+        <dt id="g-ffwd">Feed-forward</dt><dd>An LLRF control-loop mode that pre-compensates known disturbances rather than reacting to them; operationally meaningful only from 2021 onward in this dataset.</dd>
+        <dt id="g-rocauc">ROC&nbsp;AUC</dt><dd>Area under the Receiver Operating Characteristic curve &mdash; a threshold-independent measure of binary classification quality (1.0 = perfect, 0.5 = chance).</dd>
+        <dt id="g-f1">F1 / macro-F1</dt><dd>The harmonic mean of precision and recall for one class; macro-F1 averages this unweighted across all classes, so rare classes count equally with common ones.</dd>
+        <dt id="g-shap">SHAP</dt><dd>SHapley Additive exPlanations &mdash; a game-theoretic method attributing a model's prediction to its input features.</dd>
+        <dt id="g-lime">LIME</dt><dd>Local Interpretable Model-agnostic Explanations &mdash; explains one individual prediction by fitting a simple local surrogate model around it.</dd>
+        <dt id="g-saliency">Saliency</dt><dd>A gradient-based explanation method for neural networks: how much a small change in each input feature would change the output.</dd>
+        <dt id="g-silhouette">Silhouette score</dt><dd>A clustering-quality measure from &minus;1 to 1, comparing each point's distance to its own cluster vs. the nearest other cluster.</dd>
+        <dt id="g-spiral2">SPIRAL2</dt><dd>The superconducting linear accelerator facility at GANIL, Caen, France.</dd>
+        <dt id="g-ganil">GANIL</dt><dd>Grand Accélérateur National d'Ions Lourds &mdash; the French national heavy-ion accelerator laboratory.</dd>
+      </dl>
+    </section>
+
+    <section class="block" id="references">
+      <span class="eyebrow">Reference</span>
+      <h2>Bibliography</h2>
+      <p class="lede">Methods, prior work, and SPIRAL2-specific references used throughout this pipeline. Every DOI below was checked directly against Crossref or the publisher's own record; a handful of legitimate older or preprint-venue papers have no DOI at all, and are marked as such rather than given a guessed one.</p>
+      <ol class="refs" id="refs-list">
+        <li><b>SPIRAL2 / GANIL</b> &mdash; A. Orduz et al., &ldquo;SPIRAL2 commissioning and operations&rdquo;, <i>Journal of Instrumentation</i> 19, T05006 (2024). <span class="doi"><a href="https://doi.org/10.1088/1748-0221/19/05/t05006">10.1088/1748-0221/19/05/t05006</a></span></li>
+        <li><b>SPIRAL2 LLRF control</b> &mdash; F. Bouly et al., &ldquo;Superconducting Cavity and RF Control loop model for the SPIRAL2 LINAC&rdquo;, LINAC2022 (2022). <span class="doi"><a href="https://doi.org/10.18429/JACoW-LINAC2022-THPOPA13">10.18429/JACoW-LINAC2022-THPOPA13</a></span></li>
+        <li><b>AI for accelerators, overview</b> &mdash; A. Ghribi et al., &ldquo;Artificial intelligence for advancing particle accelerators&rdquo;, <i>Europhysics News</i> 56(1), 15&ndash;19 (2025). <span class="doi"><a href="https://doi.org/10.1051/epn/2025106">10.1051/epn/2025106</a></span></li>
+        <li><b>ML for accelerator fault diagnosis</b> &mdash; C. Tennant et al., &ldquo;Superconducting Radio-Frequency Cavity Fault Classification Using Machine Learning at Jefferson Laboratory&rdquo;, <i>Phys. Rev. Accel. Beams</i> 23, 114601 (2020). <span class="doi"><a href="https://doi.org/10.1103/PhysRevAccelBeams.23.114601">10.1103/PhysRevAccelBeams.23.114601</a></span></li>
+        <li><b>ML for accelerator anomaly detection</b> &mdash; C. Peters et al., &ldquo;Machine Learning for Time Series Prediction of an Accelerator Beam to Recognize Equipment Malfunction&rdquo;, IPAC&rsquo;21 (2021). <span class="doi"><a href="https://doi.org/10.18429/JACoW-IPAC2021-TUPAB328">10.18429/JACoW-IPAC2021-TUPAB328</a></span></li>
+        <li><b>ML for beam-loss classification</b> &mdash; G. Valentino et al., &ldquo;Machine Learning Applied at the LHC for Beam Loss Pattern Classification&rdquo;, <i>J. Phys.: Conf. Ser.</i> 1067, 072036 (2018). <span class="doi"><a href="https://doi.org/10.1088/1742-6596/1067/7/072036">10.1088/1742-6596/1067/7/072036</a></span></li>
+        <li><b>Quench prediction (LSTM)</b> &mdash; M. Mertik &amp; A. Skoczeń et al., &ldquo;A Conceptual Development of Quench Prediction App based on LSTM and ELQA Framework&rdquo;, arXiv:1610.09201 (2016). <span class="doi"><a href="https://doi.org/10.48550/arXiv.1610.09201">10.48550/arXiv.1610.09201</a></span></li>
+        <li><b>Model-based fault estimation</b> &mdash; B. Sayyar-Rodsari &amp; C. Schweiger, &ldquo;Optimal Model-Based Fault Estimation and Correction for Particle Accelerators and Industrial Plants&rdquo;, SLAC tech. report (2010). <span class="doi"><a href="https://doi.org/10.2172/992983">10.2172/992983</a></span></li>
+        <li><b>Rule-based accelerator fault diagnosis</b> &mdash; E. Malandain &amp; P. Skarek, &ldquo;An Expert System for Accelerator Fault Diagnosis&rdquo;, PAC&rsquo;87, 559&ndash;561 (1987). <a href="https://proceedings.jacow.org/p87/PDF/PAC1987_0559.PDF">JACoW archive</a> &mdash; no DOI exists (pre-DOI-era proceedings).</li>
+        <li><b>XFEL anomaly detection</b> &mdash; A. S. Nawaz, &ldquo;Probabilistic Model-based Anomaly Detection for the European X-ray Free Electron Laser&rdquo;, PhD thesis, Universit&auml;t zu L&uuml;beck (2021). No DOI found (institutional-repository thesis).</li>
+        <li><b>Isolation Forest</b> &mdash; F. T. Liu, K. M. Ting &amp; Z.-H. Zhou, ICDM, 413&ndash;422 (2008). <span class="doi"><a href="https://doi.org/10.1109/icdm.2008.17">10.1109/icdm.2008.17</a></span></li>
+        <li><b>Local Outlier Factor</b> &mdash; M. M. Breunig et al., ACM SIGMOD, 93&ndash;104 (2000). <span class="doi"><a href="https://doi.org/10.1145/342009.335388">10.1145/342009.335388</a></span></li>
+        <li><b>DBSCAN</b> &mdash; M. Ester et al., &ldquo;A Density-Based Algorithm for Discovering Clusters in Large Spatial Databases with Noise&rdquo;, KDD, 226&ndash;231 (1996). No DOI exists (pre-DOI-era proceedings).</li>
+        <li><b>Deep autoencoding GMM (anomaly detection)</b> &mdash; B. Zong et al., ICLR (2018). No DOI found (ICLR/OpenReview venue).</li>
+        <li><b>GANomaly</b> &mdash; S. Akcay, A. Atapour-Abarghouei &amp; T. P. Breckon, ACCV, 622&ndash;637 (2018/2019). <span class="doi"><a href="https://doi.org/10.1007/978-3-030-20893-6_39">10.1007/978-3-030-20893-6_39</a></span></li>
+        <li><b>Silhouette score</b> &mdash; P. J. Rousseeuw, &ldquo;Silhouettes: A Graphical Aid to the Interpretation and Validation of Cluster Analysis&rdquo;, <i>J. Comput. Appl. Math.</i> 20, 53&ndash;65 (1987). <span class="doi"><a href="https://doi.org/10.1016/0377-0427(87)90125-7">10.1016/0377-0427(87)90125-7</a></span></li>
+        <li><b>SHAP</b> &mdash; S. M. Lundberg &amp; S.-I. Lee, &ldquo;A Unified Approach to Interpreting Model Predictions&rdquo;, NeurIPS, 4765&ndash;4774 (2017). No DOI found (NeurIPS venue).</li>
+        <li><b>LIME</b> &mdash; M. T. Ribeiro, S. Singh &amp; C. Guestrin, &ldquo;&lsquo;Why Should I Trust You?&rsquo;: Explaining the Predictions of Any Classifier&rdquo;, ACM SIGKDD, 1135&ndash;1144 (2016). <span class="doi"><a href="https://doi.org/10.1145/2939672.2939778">10.1145/2939672.2939778</a></span></li>
+        <li><b>Explainable AI, survey</b> &mdash; A. Barredo Arrieta et al., &ldquo;Explainable Artificial Intelligence (XAI)&rdquo;, <i>Information Fusion</i> 58, 82&ndash;115 (2020). <span class="doi"><a href="https://doi.org/10.1016/j.inffus.2019.12.012">10.1016/j.inffus.2019.12.012</a></span></li>
+        <li><b>Classifier Chains</b> &mdash; J. Read et al., ECML, 254&ndash;269 (2009). <span class="doi"><a href="https://doi.org/10.1007/978-3-642-04174-7_17">10.1007/978-3-642-04174-7_17</a></span></li>
+        <li><b>ML-kNN</b> &mdash; M.-L. Zhang &amp; Z.-H. Zhou, <i>Pattern Recognition</i> 40, 2038&ndash;2048 (2007). <span class="doi"><a href="https://doi.org/10.1016/j.patcog.2006.12.019">10.1016/j.patcog.2006.12.019</a></span></li>
+        <li><b>Multi-label decision trees</b> &mdash; C. Vens et al., &ldquo;Decision Trees for Hierarchical Multi-Label Classification&rdquo;, <i>Machine Learning</i> 73, 185&ndash;214 (2008). <span class="doi"><a href="https://doi.org/10.1007/s10994-008-5077-3">10.1007/s10994-008-5077-3</a></span></li>
+        <li><b>Multi-label learning, survey</b> &mdash; M.-L. Zhang &amp; Z.-H. Zhou, <i>IEEE TKDE</i> 26, 1819&ndash;1837 (2014). <span class="doi"><a href="https://doi.org/10.1109/tkde.2013.39">10.1109/tkde.2013.39</a></span></li>
+        <li><b>Causal inference</b> &mdash; J. Pearl, <i>Causality: Models, Reasoning, and Inference</i>, 2nd ed., Cambridge University Press (2009). <span class="doi"><a href="https://doi.org/10.1017/cbo9780511803161">10.1017/cbo9780511803161</a></span></li>
+        <li><b>Granger causality</b> &mdash; C. W. J. Granger, <i>Econometrica</i> 37, 424&ndash;438 (1969). <span class="doi"><a href="https://doi.org/10.2307/1912791">10.2307/1912791</a></span></li>
+      </ol>
+    </section>
+
+    <section class="block" id="team">
+      <span class="eyebrow">Reference</span>
+      <h2>Project team</h2>
+      <ul style="list-style:none; margin:0; padding:0; display:flex; flex-wrap:wrap; gap:8px 28px; font-size:15px;">
+        <li>Charly Lassalle</li>
+        <li>Alexandre Dalibard Brund</li>
+        <li>Marco Di Giacomo</li>
+        <li>Fr&eacute;d&eacute;ric Bouly</li>
+      </ul>
+    </section>
+
+    <footer class="page-foot">
+      Internal collaboration reference &mdash; SPIRAL2 LLRF anomaly-detection project, GANIL.
+      Methodology, code, and full results live in the project repository; this page summarizes current
+      results for collaborators outside the day-to-day development.
+      <br><a href="index.html">&larr; Full pipeline exploration notes</a>
+    </footer>
+  </main>
+</div>
