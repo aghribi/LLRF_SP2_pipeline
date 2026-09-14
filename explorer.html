@@ -293,6 +293,37 @@
     margin-bottom: 5px;
   }
 
+  .info-note {
+    border: 1px solid var(--border-strong);
+    border-left: 3px solid var(--accent);
+    border-radius: 8px;
+    padding: 13px 16px;
+    margin: 18px 0 0;
+    background: var(--surface);
+    font-size: 13.5px;
+    color: var(--text-muted);
+    max-width: 76ch;
+  }
+  .info-note b { color: var(--text); font-weight: 600; }
+
+  dl.glossary { display: grid; grid-template-columns: max-content 1fr; gap: 9px 22px; margin: 0; }
+  dl.glossary dt {
+    font-family: "IBM Plex Mono", monospace;
+    font-weight: 600;
+    color: var(--accent-strong);
+    scroll-margin-top: 20px;
+  }
+  dl.glossary dd { margin: 0; color: var(--text-muted); max-width: 58ch; font-size: 13.5px; }
+
+  ol.refs { list-style: none; margin: 0; padding: 0; counter-reset: refs; display: flex; flex-direction: column; gap: 10px; }
+  ol.refs li { counter-increment: refs; padding-left: 2.4em; position: relative; font-size: 13.5px; color: var(--text-muted); }
+  ol.refs li::before {
+    content: "[" counter(refs) "]"; position: absolute; left: 0; color: var(--text-faint);
+    font-family: "IBM Plex Mono", monospace; font-size: 12.5px;
+  }
+  ol.refs li b { color: var(--text); font-weight: 600; }
+  ol.refs .doi { font-family: "IBM Plex Mono", monospace; font-size: 12px; }
+
   .finding-card {
     display: flex;
     align-items: baseline;
@@ -405,31 +436,6 @@
 
   hr.rule { border: none; border-top: 1px solid var(--border); margin: 52px 0 40px; }
 
-  /* ---------- Session log ---------- */
-  section.log h2 { font-size: 19px; margin-bottom: 6px; }
-  section.log .sub { color: var(--text-muted); font-size: 13.5px; margin-bottom: 20px; max-width: 70ch; }
-  .log-entries {
-    display: flex;
-    flex-direction: column;
-    border-left: 2px solid var(--border);
-    padding-left: 20px;
-  }
-  .log-entry { position: relative; padding-bottom: 22px; }
-  .log-entry:last-child { padding-bottom: 0; }
-  .log-entry::before {
-    content: "";
-    position: absolute;
-    left: -25px; top: 4px;
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: var(--accent);
-    border: 2px solid var(--bg);
-    box-shadow: 0 0 0 1px var(--accent);
-  }
-  .log-date { font-size: 12px; color: var(--text-faint); display: block; margin-bottom: 3px; }
-  .log-text { font-size: 14px; max-width: 76ch; }
-  .log-text b { font-weight: 600; }
-
   @media (max-width: 900px) {
     .app { flex-direction: column; }
     .sidebar {
@@ -467,7 +473,10 @@
       <a class="nav-item" href="#s07"><span class="n">07</span><span>Subtype clustering</span></a>
       <div class="nav-group-label">Synthesis</div>
       <a class="nav-item" href="#s08"><span class="n">08</span><span>Explainability &amp; reporting</span></a>
-      <a class="nav-item" href="#log"><span class="n">&#8213;</span><span>Session log</span></a>
+      <div class="nav-group-label">Reference</div>
+      <a class="nav-item" href="#glossary"><span class="n">&#8213;</span><span>Glossary &amp; acronyms</span></a>
+      <a class="nav-item" href="#references"><span class="n">&#8213;</span><span>Bibliography</span></a>
+      <a class="nav-item" href="#team"><span class="n">&#8213;</span><span>Project team</span></a>
     </nav>
 
     <div class="sidebar-foot">
@@ -508,6 +517,13 @@
           <span class="stat-value">810</span>
         </div>
       </div>
+      <p class="info-note">
+        <b>Data &amp; code availability.</b> The structured feature matrix, ground-truth labels,
+        intermediate signal data, feature ontology, and full results manifest underlying this page
+        are archived on Zenodo:
+        <a href="https://doi.org/10.5281/zenodo.22729653">doi.org/10.5281/zenodo.22729653</a>.
+        Pipeline code: <a href="https://github.com/aghribi/LLRF_SP2_pipeline">github.com/aghribi/LLRF_SP2_pipeline</a>.
+      </p>
     </header>
 
     <section class="overview" id="overview">
@@ -2746,519 +2762,77 @@
 
     <hr class="rule">
 
-    <section class="log" id="log">
-      <h2>Session log</h2>
-      <p class="sub">A running narrative of what we've looked at and found, in the order we looked at it &mdash; kept here rather than scattered across chat turns.</p>
-      <div class="log-entries" id="logEntries">
-        <div class="log-entry">
-          <span class="log-date">2026-09-08</span>
-          <p class="log-text">
-            Set up this explorer. Pipeline overview diagram and all nine step sections drawn
-            directly from the current report (<code>report/sections/03_system_description.tex</code>,
-            <code>04_methodology.tex</code>, 2026-09-07 revision) and the V6/777-feature dataset &mdash;
-            no plots yet, no numbers invented. <b>Next:</b> pick a step to open up with real plots.
-          </p>
-        </div>
-        <div class="log-entry">
-          <span class="log-date">2026-09-08</span>
-          <p class="log-text">
-            <b>00 Data foundation, done.</b> Pulled the exact quality-filter breakdown from
-            <code>Classify_PostMortemFile</code>'s ground-truth CSV (11,999 of 14,109 files rejected:
-            68% <code>Beam NON</code>, 13% <code>Loop OFF</code>, 9% <code>AMPT&gt;10%</code>, 7%
-            <code>KPI&lt;10</code>, plus small Ucav/mask checks) &mdash; the filter runs as an
-            early-exit cascade, so these aren't independent counts. Then ran a real signal-coherence
-            check requested by the user: read actual cavity-voltage/drive amplitude via
-            <code>PyPostMortem</code> for a 550-file random sample across the passing baseline and
-            every rejected reason, independent of the header flags that got each file rejected.
-            <code>Loop OFF</code> is cleanly coherent (95% dead). <code>Beam NON</code> is genuinely
-            heterogeneous &mdash; roughly a third of the sample shows a fully live cavity (loop still
-            closed, no fault bit tripped for many) &mdash; not a broken header bit, but real RF-only
-            conditioning/standby operation without a particle beam, a legitimate state the header is
-            reporting correctly. <code>AMPT</code>/<code>KPI</code> are acquisition-quality metrics,
-            not state flags, so their high live-fraction is expected, not a red flag. Side finding:
-            <code>courant pickup</code> pins near a constant ~33&nbsp;&micro;A for most files regardless
-            of state &mdash; not a reliable solo diagnostic. <b>Next:</b> pick step 01 or 02, or dig
-            further into the Beam-NON heterogeneity (e.g. is it worth splitting into a separate
-            no-beam/RF-conditioning cohort for a future study?).
-          </p>
-        </div>
-        <div class="log-entry">
-          <span class="log-date">2026-09-09</span>
-          <p class="log-text">
-            <b>Correction from the project lead:</b> <code>BEAM</code> (OUI/NON) does not mean
-            particle-beam presence &mdash; it means <b>feed-forward enabled/disabled</b> in the LLRF
-            control loop, and the field has only been operationally meaningful since 2021. Checked
-            directly against the ground-truth CSV: 2019 is 100% <code>BEAM=NON</code>, 2020 is 96.4%
-            &mdash; a constant default, not a real signal &mdash; then a genuine, declining rate from
-            2021 (50.3%) to 2025 (9.3%) as feed-forward adoption grew. Re-derived the whole coherence
-            story on the corrected premise (the "RF-only, no beam" reading from yesterday is retracted
-            &mdash; feed-forward being off never implied anything about RF/beam state, so the live-looking
-            minority needed no special story). More importantly, this surfaces a real, actionable bug:
-            the classifier applies this check the same way in every year, so it's likely discarding
-            ~700 legitimate 2019&ndash;2020 events (tested 200 pre-2021 <code>BEAM=NON</code>-only
-            rejects against every other real check: 29/200, 14.5%, pass everything else &mdash; mostly
-            Normal, some genuine faults). Also checked whether any independent beam-presence signal
-            exists in the data at all (the classifier's own <code>Presence faisceau</code> field) &mdash;
-            it doesn't hold up either (built from a mismatched état bit, reads "off" almost everywhere
-            even in beam-present baseline files). <b>Next:</b> user to decide whether to (a) recommend
-            <code>Classify_PostMortemFile</code> scope the feed-forward check to 2021+ and re-run to
-            recover the ~700 events, (b) fix the "beam-present" wording in
-            <code>report/sections/03_system_description.tex</code> now, or (c) file both as future work
-            and move on to step 01.
-          </p>
-        </div>
-        <div class="log-entry">
-          <span class="log-date">2026-09-09</span>
-          <p class="log-text">
-            <b>Fix applied, re-run, confirmed &mdash; Phase 1 (V7 extraction) started.</b>
-            <code>Classify_PostMortemFile</code>'s <code>_check_filters()</code> now scopes the
-            feed-forward check to acquisitions from 2021 onward (parses the year from the header's own
-            <code>DATE</code> field), config key renamed <code>check_feed_forward</code> +
-            <code>feed_forward_min_year: 2021</code>, rejection label renamed <code>Feed-forward NON</code>.
-            Re-ran the classifier across the full 2019&ndash;2025 corpus (backed up the old CSV first):
-            <b>ground-truth-passing rows went from 2,110 to 2,866 (+756, +35.8%)</b>, a real diff not an
-            estimate &mdash; entirely from 2019 (+73) and 2020 (+683), every year 2021&ndash;2025
-            byte-for-byte unchanged. Rewrote this section's charts/numbers to match (the old "8,205
-            Beam NON" framing this page used to show is now clearly marked as the pre-fix count; current
-            corrected count is 3,229, no longer the single dominant reason). Also fixed the same stale
-            <code>beam_present</code> feature name in <code>prepare_data_cluster_v6.py</code> (forked as
-            <code>prepare_data_cluster_v7.py</code>, renamed to <code>feed_forward_enabled</code>) and
-            in the two downstream scripts that hardcode it for SHAP-taxonomy grouping. Report: Sec. 3
-            rewritten with the real numbers, verified compiling clean locally (0 fatal errors); Abstract
-            and Sections 4&ndash;9 + Appendices A&ndash;C gray-banner-marked "pending V7 re-run" until
-            the corrected dataset propagates through. <b>V7 extraction is running now</b> (SLURM job
-            58226540, launched today, forked from V6 with the same corrected ground truth) &mdash; V6
-            (2,109 events) is still what every step below this one describes until that finishes.
-            <b>Next:</b> once V7 lands, validate it, then Phase 2 (re-run steps 01&ndash;08 against it).
-          </p>
-        </div>
-        <div class="log-entry">
-          <span class="log-date">2026-09-09</span>
-          <p class="log-text">
-            <b>V7 extraction complete and validated.</b> SLURM job 58226540 finished (54 min,
-            2019&ndash;2025 full corpus): <b>2,865 events, 1,478 Normal / 1,387 fault, 810 features</b>
-            (up from 777 &mdash; expected correlation-dedup threshold sensitivity to the new dataset
-            composition, checked directly: 57 features newly survive, 24 previously-survivors no longer
-            do, <code>beam_present</code> correctly among the latter since it's the same field renamed).
-            Reconciles exactly (2,866 ground-truth-passing minus the same single extraction failure V6
-            also hit). Validated the recovered 2019&ndash;2020 events aren't degenerate: NaN rate
-            0.20%/0.31% vs. 0.45% corpus-wide (lower, not higher), fault-category mix matches the rest
-            of the corpus. Also caught and fixed a real gap: the coherence-check strip plot's x-axis
-            still literally rendered <code>Beam NON</code> as a chart label (the caption explained it,
-            but the chart itself didn't) &mdash; relabeled to <code>Feed-forward off</code> directly,
-            per direct user feedback. <b>Next:</b> Phase 2 (re-run steps 01&ndash;08 against V7) &mdash;
-            checking in with the user before launching, per the plan (multi-hour, many SLURM jobs).
-          </p>
-        </div>
-        <div class="log-entry">
-          <span class="log-date">2026-09-09</span>
-          <p class="log-text">
-            <b>Data foundation re-verified, then 01 Preprocessing explored.</b> Extra pass on V7
-            before moving on: every fault category grew and none shrank (+756 splits as
-            Normal +412, RF regulation +199, Absence autorisation RF +20, Pickup threshold +82,
-            &hellip;), class balance held (50.5%&rarr;51.6% Normal), and pulled three real raw 2019
-            events directly (not just aggregate stats) &mdash; genuine LLRF traces, sensible Ucav
-            ranges, <code>LOOP=ON</code>/closed-loop operation, exactly the "feed-forward off but
-            otherwise normal" story the correction predicts. Then read the real
-            <code>preprocess_signals()</code> code and pulled one real event
-            (<code>2022 10 12 CMA01_0001</code>, NDEC=200, an Oscillation-Ucav fault) all the way
-            through: high-pass filter &rarr; Z-score, with the true trigger at sample 50,047 &mdash;
-            concretely showing the old hardcoded <code>trigger_idx=3000</code> would have been 534ms
-            (47% of the file) early. Also verified directly that this file's single most extreme
-            Z-score value (93.6&sigma;) sits at literal sample 0, the filter's own startup transient
-            &mdash; confirms the report's stated reason for excluding early-file samples from
-            analysis, not just an assertion. <b>Next:</b> continue exchanging on preprocessing, or
-            move to 02 Feature engineering.
-          </p>
-        </div>
-        <div class="log-entry">
-          <span class="log-date">2026-09-09</span>
-          <p class="log-text">
-            <b>02 Feature engineering explored.</b> Ran the real family classifier the paper's own
-            SHAP analysis uses (100% coverage on both V6 and V7, zero unclassified) against V7's 810
-            features: physics-informed families are byte-identical in count to V6 (39 features, all
-            seven families unchanged) &mdash; only Statistical (262&rarr;260) and Temporal
-            (466&rarr;501) shifted, which is exactly what the >0.95 correlation-dedup threshold does
-            when the dataset's composition changes, not a sign anything computational changed.
-            Confirms the report's "~20:1" physics-vs-generic imbalance claim still holds (19.8:1 on
-            V7). Then pulled two real quench events all the way through the effective-decay
-            &tau;<sub>eff</sub> fit: one fits cleanly (R&sup2;=0.596), the other barely fits at all
-            (R&sup2;=0.011) despite both being genuine <em>Claquage</em> events &mdash; checked across
-            more quench events and most look like the poor-fit case, which is a real, honest
-            confirmation of the report's own claim that an actively-regulated collapse isn't a clean
-            passive exponential (that's why R&sup2;/non-exponentiality are tracked as features, not an
-            afterthought). Re-ran the near-constant-feature check on V7: 16 (was 15 on V6, one new
-            addition traced to the 2019&ndash;2020 recovery shifting <code>llrf_loop_closed</code>'s
-            variance, not a new bug); the two previously-disclosed non-functional threshold features
-            are unchanged. <b>Next:</b> continue exchanging, or move to 03 Precursor detection.
-          </p>
-        </div>
-        <div class="log-entry">
-          <span class="log-date">2026-09-09</span>
-          <p class="log-text">
-            <b>Correction to the decay-fit figure, from user feedback.</b> Three real problems with
-            the first pass: no units on the y-axis, the "poor fit" panel's window was mismatched to
-            what actually happens physically (the collapse is over in 1&ndash;2 samples, so a
-            5.7&nbsp;ms log-linear fit is regressing mostly noise), and jumping to "active loop makes
-            it non-exponential" from two examples was underdetermined. Redid it properly: measured
-            collapse time (to 20% of pre-trigger amplitude) for <b>all 31 real quench events</b>, not
-            two. Real result, not two cherry-picked examples: <b>a clean bimodal split, 23/31 (74%)
-            collapse within 0.17&nbsp;ms, the other 8 (26%) take 4.0&ndash;5.2&nbsp;ms, zero events in
-            between.</b> Cross-checked against the pipeline's own step-09 subtype clustering for this
-            category (19/9 split on V6): correlated with the fast/slow split (the smaller cluster is
-            disproportionately the no-valid-decay-window group) but not identical &mdash; the real
-            top-differentiating features between those two existing clusters (same Cohen's-d method
-            the report's own subtype figure uses) are modulator-command/reference-frequency stats, not
-            the decay features. Net: the user's hypothesis holds up as a real, sharp physical
-            distinction, and it's a cleaner signal than what the current full-feature-space clustering
-            finds &mdash; flagged as a concrete methodology improvement (cluster on decay-timescale
-            features directly for this category) rather than something to just note and move past.
-            Rebuilt the figure in linear MV/m units instead of unlabeled log scale.
-          </p>
-        </div>
-        <div class="log-entry">
-          <span class="log-date">2026-09-09</span>
-          <p class="log-text">
-            <b>03 Precursor detection, explored.</b> Ran the step 05 unsupervised-vs-supervised
-            comparison (RF 0.9991 AUC vs. 0.58&ndash;0.79 for five unsupervised baselines) and the
-            window-leak follow-up (RF still 0.9998 on a properly fixed-window 382-column subset,
-            unsupervised methods unchanged at 0.65/0.59 on the same columns &mdash; rules out a
-            window-length leak as the explanation). Then went further: computed real
-            probability-vs-time curves for 20 sampled true-positive fault events (12 offsets each,
-            out to 477&nbsp;ms before the trigger, SLURM job 58250756 after fixing a path bug from
-            an earlier attempt &mdash; see below). <b>19 of 20 curves are essentially flat</b>,
-            already saturated at &ge;0.85 confidence at the furthest offset tested, no ramp-up
-            toward the trigger. Combined with the existing lead-time finding (39/40 sampled events
-            right-censored, never dropping below 0.5 within ~477&nbsp;ms), this is direct evidence
-            <em>against</em> a genuine near-trigger precursor signal and <em>for</em> the report's
-            already-flagged alternative: a stable per-capture characteristic of eventually-faulting
-            files, not fault-onset proximity. The report's own proposed disambiguating test
-            (score the same features on a window from the middle of a Normal event, away from any
-            boundary) is still open, not run here.
-          </p>
-          <p class="log-text">
-            <b>Infrastructure note.</b> The probability-curve job initially failed (SLURM job
-            58240255, 1s, exit 2): the driver script had been written to a Claude session's own
-            <code>/scratch/...</code> path, invisible to SLURM worker nodes once that session ended.
-            Rewrote it to the shared filesystem
-            (<code>pipeline/00_scripts/investigate_precursor_curves.py</code>) and resubmitted via a
-            proper <code>sbatch</code> wrapper &mdash; completed cleanly in 3 minutes.
-          </p>
-        </div>
-        <div class="log-entry">
-          <span class="log-date">2026-09-09</span>
-          <p class="log-text">
-            <b>Disambiguating test run &mdash; result complicates the earlier "stable per-capture
-            characteristic" reading.</b> Ran the report's own proposed follow-up: score the same
-            386-feature set on a window from the middle of a Normal event's own recording, far
-            from any boundary (SLURM job 58257135, 20 confidently-true-negative Normal events).
-            <b>0 of 20 scored above the 0.5 fault threshold</b> (0.00&ndash;0.05 for 18 of 20; two
-            at 0.34/0.44, still below). If the model were keying on a generic, label-blind
-            acquisition characteristic, these should have scored elevated too &mdash; they didn't.
-            Revised step 03's prose accordingly: this rules out "meaningless artifact," but doesn't
-            resolve whether the flat, early, fault-specific signal reflects a genuine slow-developing
-            physical precursor or an early fault-associated condition change that isn't itself
-            ramping toward the trigger. Left as open, now with one wrong branch (generic artifact)
-            eliminated rather than three explanations still on the table.
-          </p>
-        </div>
-        <div class="log-entry">
-          <span class="log-date">2026-09-09</span>
-          <p class="log-text">
-            <b>Full pipeline re-run on V7.</b> Found and fixed a real bug: the feed-forward filter
-            fix (Sec. 00) only updated the quality filter, not the separate feature-engineering
-            code that populates <code>feed_forward_enabled</code> &mdash; it was still copying the
-            raw (unpopulated, always "NON" pre-2021) header field verbatim. Per the project lead's
-            domain knowledge, feed-forward was on by default before 2021, the field just was never
-            recorded that era. Fixed in <code>prepare_data_cluster_v7.py</code>, re-extracted V7
-            (2,865 events, 810 features unchanged in shape, one feature column corrected), and
-            re-ran the full step 04-09 + DL-variant pipeline against the corrected data. Also found
-            and fixed the same "hardcoded dataset_version: V6" bug (independent of which data was
-            actually used) in two different scripts' manifest-writing code
-            (<code>prepare_09c_enhanced_subclass_discovery.py</code>,
-            <code>prepare_06_phase1_binary.py</code>) &mdash; worth checking for elsewhere before
-            trusting a manifest's <code>dataset_version</code> field blindly.
-          </p>
-          <p class="log-text">
-            <b>04 Binary classification, explored (V7).</b> Near-ceiling across all four methods
-            (RF/XGBoost 100%, LogReg 99.9%, SVM 99.3%), consistent with the pre-fix numbers &mdash;
-            this fix mainly affected one feature and one fault category, not the whole feature
-            space. See the mini-table in step 04 above.
-          </p>
-          <p class="log-text">
-            <b>Open thread, not resolved by the fix:</b> "RF regulation out of tolerance"
-            subtype clustering (step 07/09c) still fails to find a valid balanced split on V7,
-            even with <code>feed_forward_enabled</code> now perfectly uniform for this category
-            (so it can no longer be the driver). Remaining candidates: the broader V6&rarr;V7
-            feature-space shift, or genuine finer real substructure at 790 events that a k=2-6
-            search with a 15%-balance floor can't express as one clean split. Not yet investigated
-            further.
-          </p>
-        </div>
-        <div class="log-entry">
-          <span class="log-date">2026-09-09</span>
-          <p class="log-text">
-            <b>New task: pre-trigger-only binary classification (step 06b).</b> Challenged in
-            review: step 04's full-window near-100% result is "obvious" since it can see the
-            interlock-trip transient directly &mdash; not evidence of real modeling capability.
-            Built <code>prepare_06b_phase1_binary_pretrigger.py</code>, same
-            LogReg/RF/XGBoost/SVM comparison as step 04, restricted to the pre-trigger-only
-            418-feature subset (same restriction step 05 uses). Accuracy barely drops (RF 100%
-            &rarr; 99.5%, XGBoost 100% &rarr; 99.5%, LogReg 99.9% &rarr; 99.0%, SVM 99.3% &rarr;
-            97.6%) &mdash; the task stays near-ceiling even without seeing the trip itself. Doesn't
-            make the "obvious" concern go away by making the task hard; instead it's independent
-            confirmation, with a completely different model design, of the same finding from step
-            03's probability curves: a strong, already-confident fault-vs-normal signal exists
-            well before the trigger. See the new callout on step 04.
-          </p>
-        </div>
-        <div class="log-entry">
-          <span class="log-date">2026-09-09</span>
-          <p class="log-text">
-            <b>Reframed: pre-trigger-only is now the primary step 04 result, not a follow-up.</b>
-            User's call: since the pre-trigger-only version barely loses accuracy against the
-            full-window one, the full-window version isn't just "an easier baseline" &mdash; it
-            was never the operationally meaningful question in the first place, and shouldn't lead.
-            Swapped the headline table, script tag, and prose to
-            <code>prepare_06b_phase1_binary_pretrigger.py</code>'s numbers; the original
-            full-window result is kept only as a labeled contrast, not as the main finding. Also
-            updated the pipeline-overview diagram's binary-classification box ("Step 06 &middot;
-            full window" &rarr; "Step 06b &middot; pre-trigger only") for consistency.
-          </p>
-        </div>
-        <div class="log-entry">
-          <span class="log-date">2026-09-09</span>
-          <p class="log-text">
-            <b>Per-category signal ablation: does early detection survive losing each category's
-            own defining signal?</b> Sharper version of the pre-trigger question: for each fault
-            category, identified the raw signal(s) its own deterministic classification criterion
-            reads (verified in <code>Classify_PostMortemFile/src/classification.py</code> &mdash;
-            turned out the primary label for all 7 categories comes from a hardware ALM-bit
-            decode, only 4 get an additional physics-threshold refinement with a clear defining
-            signal), excluded every feature derived from it, re-ran category-vs-Normal pre-trigger
-            classification. New script <code>investigate_category_signal_ablation.py</code>, 66
-            runs (job 58283811). <b>Result: accuracy barely moves anywhere</b> &mdash; even
-            removing 66 of 418 features (four whole channels) for RF regulation out of tolerance
-            changes nothing; the sole exception is RF safety threshold (-0.7 points losing its
-            Ucav/A&nbsp;Ucr ratio). For "Absence autorisation RF" (no single defining channel), a
-            full 27-channel sweep stayed in a tight 99.1-99.8% band throughout. See the new
-            callout on step 04.
-          </p>
-        </div>
-        <div class="log-entry">
-          <span class="log-date">2026-09-09</span>
-          <p class="log-text">
-            <b>05 Multi-label classification, explored &mdash; a full supervised/unsupervised
-            &times; full-window/pre-trigger grid.</b> Re-ran the MultiOutput RF baseline and the
-            Binary Relevance/Classifier Chain/Label Powerset comparison restricted to the
-            pre-trigger-only 418-feature subset (same restriction as step 04): Macro-F1 stays in a
-            broadly similar band either way, echoing step 04's finding. Then built a genuinely new
-            unsupervised counterpart, previously absent from this task &mdash; step 03's four
-            anomaly-detection methods as per-category one-vs-rest AUC, plus K-Means/Agglomerative/GMM
-            clustering compared against ground truth via ARI/NMI/purity, both in full-window and
-            pre-trigger conditions. The anomaly-detection AUCs are similarly window-insensitive, but
-            clustering-vs-truth alignment is the sharpest contrast in the whole grid and runs the
-            <i>opposite</i> direction: full-window clustering finds real category structure
-            (K-Means ARI 0.699), pre-trigger-only is much weaker (ARI 0.149). Caught and fixed a
-            real bug before trusting any of it: DBSCAN's fixed <code>eps=0.5</code> (carried over
-            from step 03) flagged 100% of test events as outliers &mdash; degenerate, not a finding
-            &mdash; fixed by auto-tuning <code>eps</code> per run via the same k-distance heuristic
-            step 07's sub-type clustering already uses. Also fixed the same "hardcoded
-            <code>dataset_version</code>" bug and a fixed-output-path bug (pretrigger and
-            full-window runs would have silently overwritten each other's saved models) found along
-            the way. Committed to git (18 code/manifest files) and reflected in the report (new Sec.
-            4.5/6.6, one Discussion and one Conclusion bullet), full local pdflatex/bibtex build
-            verified clean.
-          </p>
-        </div>
-        <div class="log-entry">
-          <span class="log-date">2026-09-10</span>
-          <p class="log-text">
-            <b>06 Root cause identification, explored.</b> Pulled 59 commits the private GitLab
-            repo was behind on first (safe fast-forward, verified via
-            <code>merge-base --is-ancestor</code> before pulling) &mdash; this session's local
-            checkout had been stuck on a stale 6-commit snapshot; the real
-            <code>prepare_08_phase3a_rootcause.py</code> turned out to already include a leakage-safe
-            train/test split and a <code>class_weight='balanced'</code> phase-4 mitigation pass, none
-            of which the stale copy had. Real V7 numbers pulled from the manifest of the actual
-            2026-09-09 corrected-feed-forward re-run: repeated-split accuracy 0.924&plusmn;0.010,
-            macro-F1 0.782&plusmn;0.011. Class-weighting's one real effect is on
-            <b>Claquage ou quench cavité (+0.099 F1)</b>; "Coupure externe rapide" (11 events) stays
-            at the same 0.000 floor steps 04/05 already documented, weighted or not. Found and fixed
-            one more instance of the already-known <code>dataset_version</code> hardcoded-to-"V6"
-            manifest bug (sibling scripts <code>prepare_06_phase1_binary.py</code> and
-            <code>prepare_09c_enhanced_subclass_discovery.py</code> were fixed during the V7 re-run;
-            this one was missed) &mdash; display-only, doesn't change any metric, not yet re-run on
-            the cluster. Genuine cross-check, not just a restated number: root cause's macro-F1
-            (0.782) lands almost exactly on step 05's full multi-label Label Powerset macro-F1
-            (0.780), consistent with both measuring the same underlying 7-way fault separability
-            rather than root-cause framing adding new information. <b>Next:</b> step 07 (fault
-            subtype clustering) or step 08 (explainability), or a confusion-matrix plot for this
-            step on request.
-          </p>
-        </div>
-        <div class="log-entry">
-          <span class="log-date">2026-09-10</span>
-          <p class="log-text">
-            <b>06, plots added.</b> Confusion matrix and the class-weighting before/after chart, both
-            drawn from real numbers &mdash; the matrix from a one-shot read-only <code>ssh cca</code>
-            command that unpickled the actual V7 <code>root_cause.pkl</code> (seed=42 split) and
-            recomputed <code>sklearn.metrics.confusion_matrix</code> directly, no retraining, nothing
-            cached from before this session. Diagonal reproduces the 93.5% headline accuracy exactly
-            (390/417). New in the matrix that the F1 table alone didn't show: both "Coupure externe
-            rapide" test events (n=2) land on different wrong classes rather than one, and "Rég signal
-            RF hors tolérance" is an error attractor in both directions, consistent with being 60% of
-            the test set rather than a specific physical confusability.
-          </p>
-        </div>
-        <div class="log-entry">
-          <span class="log-date">2026-09-10</span>
-          <p class="log-text">
-            <b>07 Fault subtype clustering, explored.</b> On V7, "Seuil pick-up" crossed the 20-event
-            clustering floor (12&rarr;94 events, the feed-forward fix), so six of seven categories are
-            now analyzable instead of five &mdash; five converge to a balanced k=2 split
-            (silhouette 0.074&ndash;0.335), matching the manifest exactly when reproduced independently
-            on <code>cca</code>. Found and fixed a second, separate hardcoded-V6 bug in the same script
-            (already fixed for <code>dataset_version</code> back on 2026-09-09): the
-            <code>excluded_categories_note</code> text was still a literal V6-era sentence
-            ("Seuil pick-up (12 events)...") rather than computed from the run's own data. <b>Resolved
-            the open thread</b> from 2026-09-09 on "RF regulation out of tolerance" (n=790, no valid
-            split): one-shot investigation on <code>cca</code> shows three independent methods agree on
-            a real ~13% (101&ndash;103-event) minority subgroup, silhouette &asymp;0.22 &mdash; better
-            than 3 of the 5 categories that did pass &mdash; just under the 15% balance floor. Genuine
-            structure, not the outlier-driven degenerate split (789-vs-1) that floor was built to
-            reject; neither of the two candidate explanations on the table before turned out to be
-            quite right. <b>Next:</b> step 08 (explainability &amp; reporting), the last step.
-          </p>
-        </div>
-        <div class="log-entry">
-          <span class="log-date">2026-09-10</span>
-          <p class="log-text">
-            <b>08 Explainability, V7 jobs launched.</b> Checked first, per the user's standing
-            instruction to confirm V7 before reporting anything: explainability had never run on V7
-            at all (only <code>_v6</code> submit scripts existed anywhere in the pipeline for SHAP
-            A/B/C, the enhanced physics-group SHAP pass, weakness diagnosis, and the latency
-            benchmark). Asked the user how to proceed; chose to launch the V7 jobs first rather than
-            report V6 numbers or wait. Two scripts (<code>phase3_weakness_diagnosis.py</code>,
-            <code>benchmark_inference_latency.py</code>) hardcoded <code>cooked_data_v6</code>
-            directly rather than reading <code>SPIRAL2_COOKED_DIR</code> like the rest of the
-            pipeline &mdash; fixed to match. Verified every upstream V7 dependency (trained binary
-            RF, Label Powerset, precursor RF, Phase A/B models) already exists on <code>cca</code>
-            before submitting anything. Caught one real break in the process:
-            <code>prepare_07a_phaseA_shap.py</code> pointed at a directory
-            (<code>step_07_phaseA_br</code>) that doesn't exist under <code>cooked_data_v7</code>
-            (the real one is <code>step_07_phaseA_v7_br</code>) &mdash; would have failed the job
-            outright, fixed before submitting. Pushed all fixed/new scripts to <code>cca</code> via
-            <code>ssh cca 'cat &gt; path' &lt; localfile</code> after <code>rsync</code>/<code>scp</code>
-            both failed outright (CC-IN2P3's mandatory AI-usage login banner corrupts their binary
-            transfer protocol; a plain stdin/stdout redirect isn't affected and every file's line
-            count was verified to match after transfer). 7 SLURM jobs submitted and running
-            (58365861&ndash;58365867, the last depending on 58365864 via
-            <code>--dependency=afterok</code>). Also noticed, not yet fixed (out of scope for this
-            launch): four more manifests (<code>07_phase2_multilabel_stability</code>,
-            <code>07A_phaseA_br_cc_stability</code>, <code>08_phaseB_cc_stability</code>,
-            <code>09_phaseC_lp_stability</code>) already point at real V7 data but still carry the
-            same <code>dataset_version: V6</code> label bug fixed elsewhere &mdash; a display issue,
-            not a data issue. Per the <code>cca</code> rules, no polling loop against the cluster;
-            <b>Next:</b> check job status and bring back real numbers once asked, or once the user
-            checks back in.
-          </p>
-        </div>
-        <div class="log-entry">
-          <span class="log-date">2026-09-10</span>
-          <p class="log-text">
-            <b>08 Explainability, complete &mdash; all 7 jobs finished clean.</b> User reported job
-            58365865 done by email (SLURM's own <code>--mail-type=END</code>); checked all seven via
-            one-shot <code>sacct</code>, all COMPLETED, exit 0, 19s&ndash;5m each. Pulled the three
-            real manifests. <b>Physics-group SHAP:</b> "top group by sum" is Temporal for all 7
-            categories &mdash; the exact structural artifact this step's intro already warned about
-            (Temporal alone is 62% of all features); per-feature mean tells a sharper story, 4 of 7
-            categories topped by a genuine physics family despite those totaling under 5% of
-            features, and Claquage/Effective&nbsp;Decay (34.8% mean, 52.1% median) independently
-            reconfirms step 02's hand-found bimodal decay-time split. <b>Weakness diagnosis:</b>
-            imbalance-F1 correlation quantified (r=0.402, r=0.731 vs. log-size); a second
-            independently-built root-cause confusion matrix (unweighted RF) reproduces step 06's
-            pattern (93.8% vs. 93.5%, same dominant confusion direction); <b>the standout finding</b>
-            &mdash; a supervised 9-way physics-subtype classifier within "Rég signal RF hors
-            tolérance" reaches macro-F1=0.812, directly resolving step 07's open question (real
-            subtype structure exists, unsupervised clustering just couldn't discover categories it
-            was never given labels for). Learning curves make the binary-vs-root-cause contrast
-            concrete: binary saturates by 10% of the data (slope &minus;0.001), root-cause is still
-            climbing at 100% (slope +0.465, gap 0.307) &mdash; genuinely data-limited, not
-            model-limited. <b>Latency:</b> every model real-time (0.35&ndash;12.6ms/event), XGBoost
-            ~35&times; faster than the RF-based models, replacing the report's old unverified
-            "45ms"/"&lt;100ms" claims with real numbers. This was the last unexplored step in the
-            walkthrough. <b>Next:</b> user's call &mdash; deeper dives on any of today's findings
-            (e.g. the phaseA/B/C raw SHAP arrays weren't individually inspected, only the
-            physics-group summary), or wrap this pass and turn to the report/Overleaf sync.
-          </p>
-        </div>
-        <div class="log-entry">
-          <span class="log-date">2026-09-10</span>
-          <p class="log-text">
-            <b>User question surfaced a real gap: SHAP wasn't the whole explainability story.</b>
-            The pipeline runs three attribution methods, not one &mdash; only SHAP had actually
-            been checked. <b>Saliency</b> (gradient-based, all 4 phaseD deep architectures) turned
-            out to already be complete on V7 from a prior session (found via <code>sacct</code>
-            history, not launched this session) but never reported here until asked; computed a
-            real summary by reusing the SHAP script's own physics-group classifier: Temporal
-            dominates group-sum saliency for all 4 architectures (60&ndash;63%), the same structural
-            pattern SHAP showed. One concrete oddity worth a second look: MLP's single top feature
-            is <code>meta_KPI</code>, a data-quality metadata field (already flagged back in step
-            00), not a physics signal &mdash; the other three architectures don't show this.
-            <b>LIME</b> had the identical gap SHAP had &mdash; only <code>_v6</code> submit scripts
-            existed anywhere &mdash; plus the identical <code>step_07_phaseA_br</code> hardcode bug
-            already found and fixed in SHAP's twin script, present in
-            <code>prepare_07a_phaseA_lime.py</code> too and fixed the same way. Pushed the fix and 3
-            new V7 submit scripts to <code>cca</code>, launched Phase A/B/C LIME (58367851&ndash;53),
-            confirmed running. LIME is much slower than SHAP per instance (2h budget vs. 1h), so
-            these are still in flight. <b>Next:</b> check LIME job status once finished, then decide
-            between deeper dives or the report/Overleaf sync.
-          </p>
-        </div>
-        <div class="log-entry">
-          <span class="log-date">2026-09-10</span>
-          <p class="log-text">
-            <b>Report/Overleaf sync for steps 05-08 &mdash; found and fixed real errors, not just gaps.</b>
-            User asked directly whether the report had been updated; it hadn't, and checking surfaced
-            concrete wrong claims already sitting in the committed LaTeX, not just missing content.
-            Pulled the 3 fresh V7 manifests from <code>cca</code> into the local repo and regenerated
-            <code>_generated_macros.tex</code> (46 macros changed). <b>Confirmed-wrong claims fixed:</b>
-            the committed physics-group SHAP macro itself was stale/cross-wired (said "RF Power Flow,
-            40.8%" for Fast external cutoff; the real, fresh number is "RF Mismatch, 33.1%" &mdash;
-            40.8% was actually Pickup threshold's figure); the subtype-clustering prose named the wrong
-            category ("Vacuum threshold" as the one clearing the weak-structure silhouette band) when
-            it's actually "Dép seuil de sécurité RF"; a mean-vs-sum SHAP disagreement count was
-            understated as "4 of 7" when it's genuinely all 7; a median-vs-mean agreement count was off
-            by one for the same reason; the abstract cited the dataset size via a literally V6-named
-            macro (2,109 events) instead of the real current total (2,865); a latency claim ("p95
-            substantially higher than mean") no longer held against the real V7 numbers; and
-            <code>04_methodology.tex</code>'s subtype table was missing "Seuil pick-up" (now
-            analyzable) and still listed "Rég signal RF hors tolérance" with a Best-k/silhouette
-            reference to a macro that doesn't exist for it (null in the manifest) &mdash; this one was
-            a real fatal LaTeX compile error, not just wrong prose. Added new content throughout for
-            everything explored today that the report never mentioned: the RF-regulation
-            no-valid-split finding and near-miss investigation, the saliency cross-method comparison
-            (new subsection), the 9-subtype physics-breakdown finding (new "Weakness Diagnosis"
-            subsection, macro-F1=0.812), the learning-curve contrast, and real V7 latency numbers.
-            Verified with a full local pdflatex+bibtex-toolchain check: 3 pdflatex passes clean (34
-            pages, zero fatal errors, zero undefined control sequences, zero undefined references)
-            after temporarily neutralizing <code>\makeglossaries</code>/<code>\printglossary</code> for
-            the verification only (reverted immediately after, matching the exact precedent from a
-            2026-09-07 session log entry) &mdash; bibtex itself still fails locally on a pre-existing,
-            environment-specific quirk (a stray <code>mainNotes.bib</code> making <code>\bibdata</code>
-            abort before reaching the real bibliography file), unrelated to today's content and not
-            something this session's local TeX Live 2025 setup resolves; Overleaf's own toolchain has
-            handled this cleanly before per that same prior session log. <b>Not yet touched, flagged as
-            a separate, larger task:</b> <code>01_introduction.tex</code>, <code>03_system_description.tex</code>,
-            and <code>appendix_b_hyperparameters.tex</code> still describe the whole dataset as V6
-            (2,109 events) with an explicit "V7 re-extraction in progress" placeholder in
-            <code>03_system_description.tex</code> that is now itself stale &mdash; a foundational,
-            pipeline-wide correction beyond today's steps 05-08 scope. Nothing committed to git; all
-            changes sit locally, uncommitted, pending explicit request.
-          </p>
-        </div>
+    <section class="step" id="glossary">
+      <div class="step-head">
+        <span class="step-num">REF</span>
+        <h2>Glossary &amp; acronyms</h2>
       </div>
+      <dl class="glossary">
+        <dt id="g-llrf">LLRF</dt><dd>Low-Level Radio Frequency &mdash; the control system regulating a cavity's RF field amplitude and phase.</dd>
+        <dt id="g-rf">RF</dt><dd>Radio Frequency &mdash; the oscillating electromagnetic field used to accelerate the particle beam.</dd>
+        <dt id="g-cavity">Cavity</dt><dd>A superconducting resonant structure that transfers RF energy to the particle beam.</dd>
+        <dt id="g-quench">Quench</dt><dd>A sudden, localized loss of superconductivity in a cavity, causing a rapid collapse of the stored RF field.</dd>
+        <dt id="g-postmortem">Postmortem buffer</dt><dd>A short recording of signals captured automatically around a fault trigger, used for offline diagnosis.</dd>
+        <dt id="g-alm">ALM</dt><dd>Alarme (French: alarm) &mdash; the control-system bit flagging an active interlock/fault condition.</dd>
+        <dt id="g-ffwd">Feed-forward</dt><dd>An LLRF control-loop mode that pre-compensates known disturbances rather than reacting to them; operationally meaningful only from 2021 onward in this dataset.</dd>
+        <dt id="g-rocauc">ROC&nbsp;AUC</dt><dd>Area under the Receiver Operating Characteristic curve &mdash; a threshold-independent measure of binary classification quality (1.0 = perfect, 0.5 = chance).</dd>
+        <dt id="g-f1">F1 / macro-F1</dt><dd>The harmonic mean of precision and recall for one class; macro-F1 averages this unweighted across all classes, so rare classes count equally with common ones.</dd>
+        <dt id="g-shap">SHAP</dt><dd>SHapley Additive exPlanations &mdash; a game-theoretic method attributing a model's prediction to its input features.</dd>
+        <dt id="g-lime">LIME</dt><dd>Local Interpretable Model-agnostic Explanations &mdash; explains one individual prediction by fitting a simple local surrogate model around it.</dd>
+        <dt id="g-saliency">Saliency</dt><dd>A gradient-based explanation method for neural networks: how much a small change in each input feature would change the output.</dd>
+        <dt id="g-silhouette">Silhouette score</dt><dd>A clustering-quality measure from &minus;1 to 1, comparing each point's distance to its own cluster vs. the nearest other cluster.</dd>
+        <dt id="g-spiral2">SPIRAL2</dt><dd>The superconducting linear accelerator facility at GANIL, Caen, France.</dd>
+        <dt id="g-ganil">GANIL</dt><dd>Grand Acc&eacute;l&eacute;rateur National d'Ions Lourds &mdash; the French national heavy-ion accelerator laboratory.</dd>
+      </dl>
+    </section>
+
+    <section class="step" id="references">
+      <div class="step-head">
+        <span class="step-num">REF</span>
+        <h2>Bibliography</h2>
+      </div>
+      <p class="prose">Methods, prior work, and SPIRAL2-specific references used throughout this pipeline. Every DOI below was checked directly against Crossref or the publisher's own record; a handful of legitimate older or preprint-venue papers have no DOI at all, and are marked as such rather than given a guessed one.</p>
+      <ol class="refs" id="refs-list">
+        <li><b>SPIRAL2 / GANIL</b> &mdash; A. Orduz et al., &ldquo;SPIRAL2 commissioning and operations&rdquo;, <i>Journal of Instrumentation</i> 19, T05006 (2024). <span class="doi"><a href="https://doi.org/10.1088/1748-0221/19/05/t05006">10.1088/1748-0221/19/05/t05006</a></span></li>
+        <li><b>SPIRAL2 LLRF control</b> &mdash; F. Bouly et al., &ldquo;Superconducting Cavity and RF Control loop model for the SPIRAL2 LINAC&rdquo;, LINAC2022 (2022). <span class="doi"><a href="https://doi.org/10.18429/JACoW-LINAC2022-THPOPA13">10.18429/JACoW-LINAC2022-THPOPA13</a></span></li>
+        <li><b>AI for accelerators, overview</b> &mdash; A. Ghribi et al., &ldquo;Artificial intelligence for advancing particle accelerators&rdquo;, <i>Europhysics News</i> 56(1), 15&ndash;19 (2025). <span class="doi"><a href="https://doi.org/10.1051/epn/2025106">10.1051/epn/2025106</a></span></li>
+        <li><b>ML for accelerator fault diagnosis</b> &mdash; C. Tennant et al., &ldquo;Superconducting Radio-Frequency Cavity Fault Classification Using Machine Learning at Jefferson Laboratory&rdquo;, <i>Phys. Rev. Accel. Beams</i> 23, 114601 (2020). <span class="doi"><a href="https://doi.org/10.1103/PhysRevAccelBeams.23.114601">10.1103/PhysRevAccelBeams.23.114601</a></span></li>
+        <li><b>ML for accelerator anomaly detection</b> &mdash; C. Peters et al., &ldquo;Machine Learning for Time Series Prediction of an Accelerator Beam to Recognize Equipment Malfunction&rdquo;, IPAC&rsquo;21 (2021). <span class="doi"><a href="https://doi.org/10.18429/JACoW-IPAC2021-TUPAB328">10.18429/JACoW-IPAC2021-TUPAB328</a></span></li>
+        <li><b>ML for beam-loss classification</b> &mdash; G. Valentino et al., &ldquo;Machine Learning Applied at the LHC for Beam Loss Pattern Classification&rdquo;, <i>J. Phys.: Conf. Ser.</i> 1067, 072036 (2018). <span class="doi"><a href="https://doi.org/10.1088/1742-6596/1067/7/072036">10.1088/1742-6596/1067/7/072036</a></span></li>
+        <li><b>Quench prediction (LSTM)</b> &mdash; M. Mertik &amp; A. Skoczeń et al., &ldquo;A Conceptual Development of Quench Prediction App based on LSTM and ELQA Framework&rdquo;, arXiv:1610.09201 (2016). <span class="doi"><a href="https://doi.org/10.48550/arXiv.1610.09201">10.48550/arXiv.1610.09201</a></span></li>
+        <li><b>Model-based fault estimation</b> &mdash; B. Sayyar-Rodsari &amp; C. Schweiger, &ldquo;Optimal Model-Based Fault Estimation and Correction for Particle Accelerators and Industrial Plants&rdquo;, SLAC tech. report (2010). <span class="doi"><a href="https://doi.org/10.2172/992983">10.2172/992983</a></span></li>
+        <li><b>Rule-based accelerator fault diagnosis</b> &mdash; E. Malandain &amp; P. Skarek, &ldquo;An Expert System for Accelerator Fault Diagnosis&rdquo;, PAC&rsquo;87, 559&ndash;561 (1987). <a href="https://proceedings.jacow.org/p87/PDF/PAC1987_0559.PDF">JACoW archive</a> &mdash; no DOI exists (pre-DOI-era proceedings).</li>
+        <li><b>XFEL anomaly detection</b> &mdash; A. S. Nawaz, &ldquo;Probabilistic Model-based Anomaly Detection for the European X-ray Free Electron Laser&rdquo;, PhD thesis, Universit&auml;t zu L&uuml;beck (2021). No DOI found (institutional-repository thesis).</li>
+        <li><b>Isolation Forest</b> &mdash; F. T. Liu, K. M. Ting &amp; Z.-H. Zhou, ICDM, 413&ndash;422 (2008). <span class="doi"><a href="https://doi.org/10.1109/icdm.2008.17">10.1109/icdm.2008.17</a></span></li>
+        <li><b>Local Outlier Factor</b> &mdash; M. M. Breunig et al., ACM SIGMOD, 93&ndash;104 (2000). <span class="doi"><a href="https://doi.org/10.1145/342009.335388">10.1145/342009.335388</a></span></li>
+        <li><b>DBSCAN</b> &mdash; M. Ester et al., &ldquo;A Density-Based Algorithm for Discovering Clusters in Large Spatial Databases with Noise&rdquo;, KDD, 226&ndash;231 (1996). No DOI exists (pre-DOI-era proceedings).</li>
+        <li><b>Deep autoencoding GMM (anomaly detection)</b> &mdash; B. Zong et al., ICLR (2018). No DOI found (ICLR/OpenReview venue).</li>
+        <li><b>GANomaly</b> &mdash; S. Akcay, A. Atapour-Abarghouei &amp; T. P. Breckon, ACCV, 622&ndash;637 (2018/2019). <span class="doi"><a href="https://doi.org/10.1007/978-3-030-20893-6_39">10.1007/978-3-030-20893-6_39</a></span></li>
+        <li><b>Silhouette score</b> &mdash; P. J. Rousseeuw, &ldquo;Silhouettes: A Graphical Aid to the Interpretation and Validation of Cluster Analysis&rdquo;, <i>J. Comput. Appl. Math.</i> 20, 53&ndash;65 (1987). <span class="doi"><a href="https://doi.org/10.1016/0377-0427(87)90125-7">10.1016/0377-0427(87)90125-7</a></span></li>
+        <li><b>SHAP</b> &mdash; S. M. Lundberg &amp; S.-I. Lee, &ldquo;A Unified Approach to Interpreting Model Predictions&rdquo;, NeurIPS, 4765&ndash;4774 (2017). No DOI found (NeurIPS venue).</li>
+        <li><b>LIME</b> &mdash; M. T. Ribeiro, S. Singh &amp; C. Guestrin, &ldquo;&lsquo;Why Should I Trust You?&rsquo;: Explaining the Predictions of Any Classifier&rdquo;, ACM SIGKDD, 1135&ndash;1144 (2016). <span class="doi"><a href="https://doi.org/10.1145/2939672.2939778">10.1145/2939672.2939778</a></span></li>
+        <li><b>Explainable AI, survey</b> &mdash; A. Barredo Arrieta et al., &ldquo;Explainable Artificial Intelligence (XAI)&rdquo;, <i>Information Fusion</i> 58, 82&ndash;115 (2020). <span class="doi"><a href="https://doi.org/10.1016/j.inffus.2019.12.012">10.1016/j.inffus.2019.12.012</a></span></li>
+        <li><b>Classifier Chains</b> &mdash; J. Read et al., ECML, 254&ndash;269 (2009). <span class="doi"><a href="https://doi.org/10.1007/978-3-642-04174-7_17">10.1007/978-3-642-04174-7_17</a></span></li>
+        <li><b>ML-kNN</b> &mdash; M.-L. Zhang &amp; Z.-H. Zhou, <i>Pattern Recognition</i> 40, 2038&ndash;2048 (2007). <span class="doi"><a href="https://doi.org/10.1016/j.patcog.2006.12.019">10.1016/j.patcog.2006.12.019</a></span></li>
+        <li><b>Multi-label decision trees</b> &mdash; C. Vens et al., &ldquo;Decision Trees for Hierarchical Multi-Label Classification&rdquo;, <i>Machine Learning</i> 73, 185&ndash;214 (2008). <span class="doi"><a href="https://doi.org/10.1007/s10994-008-5077-3">10.1007/s10994-008-5077-3</a></span></li>
+        <li><b>Multi-label learning, survey</b> &mdash; M.-L. Zhang &amp; Z.-H. Zhou, <i>IEEE TKDE</i> 26, 1819&ndash;1837 (2014). <span class="doi"><a href="https://doi.org/10.1109/tkde.2013.39">10.1109/tkde.2013.39</a></span></li>
+        <li><b>Causal inference</b> &mdash; J. Pearl, <i>Causality: Models, Reasoning, and Inference</i>, 2nd ed., Cambridge University Press (2009). <span class="doi"><a href="https://doi.org/10.1017/cbo9780511803161">10.1017/cbo9780511803161</a></span></li>
+        <li><b>Granger causality</b> &mdash; C. W. J. Granger, <i>Econometrica</i> 37, 424&ndash;438 (1969). <span class="doi"><a href="https://doi.org/10.2307/1912791">10.2307/1912791</a></span></li>
+      </ol>
+    </section>
+
+    <section class="step" id="team">
+      <div class="step-head">
+        <span class="step-num">REF</span>
+        <h2>Project team</h2>
+      </div>
+      <ul style="list-style:none; margin:0; padding:0; display:flex; flex-wrap:wrap; gap:8px 28px; font-size:14.5px; color:var(--text);">
+        <li>Adnan Ghribi</li>
+        <li>Charly Lassalle</li>
+        <li>Alexandre Dalibard Brund</li>
+        <li>Marco Di Giacomo</li>
+        <li>Fr&eacute;d&eacute;ric Bouly</li>
+      </ul>
     </section>
   </main>
 </div>
