@@ -275,7 +275,7 @@
     "Rég signal RF hors tolérance": "var(--cat-rfdrift)",
   };
   const SHORT_NAME = {
-    "Absence autorisation RF": "Absence autorisation",
+    "Absence autorisation RF": "RF authorization missing",
     "Claquage ou quench cavité": "Quench",
     "Dép seuil de sécurité RF": "RF safety threshold",
     "Rég signal RF hors tolérance": "RF regulation drift",
@@ -285,13 +285,13 @@
   const callouts = [
     {
       tag: "Surprise",
-      html: `<strong>"Absence autorisation RF"</strong> &mdash; predicted to be multi-causal and noisy &mdash;
+      html: `<strong>"RF authorization missing"</strong> &mdash; predicted to be multi-causal and noisy &mdash;
         shows the <em>strongest, most consistent</em> signal of any fault type: real at pooled, CMA,
         CMB, and most per-module scopes, always the same direction (RF power/current/cooling pulled down).`
     },
     {
       tag: "Confound caught by design",
-      html: `<strong>"Rég signal RF hors tolérance"</strong> is null pooled (AUC 0.48) &mdash; but splits into two
+      html: `<strong>"RF regulation drift"</strong> is null pooled (AUC 0.48) &mdash; but splits into two
         <em>real, opposite-signed</em> effects on CMA (AUC 0.79) vs CMB (AUC 0.74). Pooling exactly
         cancels them. This is the reason the CMA/CMB/per-module split was worth doing.`
     },
@@ -310,12 +310,12 @@
     {
       tag: "Second method agrees",
       html: `A completely independent nonlinear approach (VAE latent space, click any row for the
-        4-window breakdown) confirms <strong>"Absence autorisation RF"</strong> again (AUC 0.68&ndash;0.72,
+        4-window breakdown) confirms <strong>"RF authorization missing"</strong> again (AUC 0.68&ndash;0.72,
         every window) &mdash; three different methods now agree on this one.`
     },
     {
       tag: "Same shape as the original RF finding",
-      html: `<strong>"Rég signal RF hors tolérance"</strong>'s VAE signal <em>decreases toward the
+      html: `<strong>"RF regulation drift"</strong>'s VAE signal <em>decreases toward the
         trigger</em> (0.69 far &rarr; 0.54 near, pooled) &mdash; the same early-and-flat, not-ramping
         pattern the original fast-RF post-mortem precursor work found on a completely different
         signal source.`
