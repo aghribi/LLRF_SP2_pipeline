@@ -177,6 +177,15 @@ temp/
 *DRAFT*.md
 *TODO*.md
 
+# Planning docs, checklists, and colleague-specific working comparisons stay
+# private-only, same spirit as epics/ and dev-notes/ above -- these are
+# internal working notes, not results or documentation meant for the public repo.
+docs/GIT_PREPARATION_CHECKLIST.md
+docs/ANALYSIS_NOTEBOOKS_COMPLETION.md
+docs/LASSALLE_PRETREATMENT_COMPARISON.md
+*CHECKLIST*.md
+*_COMPLETION.md
+
 # ============================================================================
 # What TO INCLUDE (explicitly tracked despite patterns above)
 # ============================================================================
