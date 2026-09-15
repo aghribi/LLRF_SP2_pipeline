@@ -4,8 +4,17 @@ A machine learning pipeline for detecting, classifying, and explaining faults in
 Low-Level RF (LLRF) control system of SPIRAL2's superconducting RF (SRF) cavities at GANIL,
 from raw post-mortem acquisition buffers through to physics-grounded explainability.
 
-Companion paper: see [`report/`](report/). Interactive pipeline walkthrough (data, features,
-and modeling, with real figures): **[LLRF Pipeline Explorer](https://aghribi.github.io/LLRF_SP2_pipeline/)**.
+Companion paper: see [`report/`](report/). Four interactive GitHub Pages, with real figures and results:
+
+- **[LLRF Pipeline Explorer](https://aghribi.github.io/LLRF_SP2_pipeline/)** — companion reference
+  for collaborators: current results, glossary, bibliography, project team.
+- **[Full pipeline exploration notes](https://aghribi.github.io/LLRF_SP2_pipeline/explorer.html)**
+  — step-by-step walkthrough (steps 00–08) with real plots and findings for every step.
+- **[Precursor Root-Cause Atlas](https://aghribi.github.io/LLRF_SP2_pipeline/precursor-dashboard.html)**
+  — EPICS slow-archiver precursor investigation: matched-pair, classifier, VAE, and LSTM-attention
+  results across every fault type and cryomodule scope.
+- **[Heat-Load Observer Sensitivity](https://aghribi.github.io/LLRF_SP2_pipeline/heatload-observer-dashboard.html)**
+  — the atlas above extended with 6 neural-network heat-load-observer channels (CMA02–12).
 
 ## What it does
 
