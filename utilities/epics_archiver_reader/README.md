@@ -30,6 +30,14 @@ table of `(channel_id, smpl_time, nanosecs, float_val)` rows — is the standard
 Channel Archiver RDB layout, so this should work against any facility's archiver built
 on that same tool, not just GANIL's.
 
+## Data samples
+
+`data_samples/` has the full GANIL SPIRAL2 EPICS PV inventory this project surveyed
+(4,497 PVs, categorized by subsystem) and the per-cryomodule extraction list built
+from it — real `pv_name` values usable as-is with `read_pv_history` against a
+compatible archiver, or as a reference for what a PV inventory for another
+facility's archiver might look like. See `data_samples/README.md` for details.
+
 ## Setup
 
 1. Install dependencies: `pip install -r requirements.txt`
