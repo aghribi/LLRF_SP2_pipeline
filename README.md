@@ -56,7 +56,8 @@ report/              LaTeX source for the companion paper: sections/, figures/ (
                      regenerable from pipeline output), code/ (figure + macro generation,
                      and the numeric-consistency checker).
 docs/                Pipeline architecture, feature reference, and dataset-lineage docs.
-utilities/           Supporting tools (data loading, diagnostics).
+utilities/           Supporting tools (data loading, diagnostics, and an EPICS slow-
+                     control archiver reader — see utilities/epics_archiver_reader/).
 ```
 
 ## Requirements
@@ -75,6 +76,12 @@ paths, the ground-truth classifier's own header field conventions) that a genera
 hasn't yet abstracted into configuration. See `docs/` and open issues for the current state of
 that effort. Contributions toward making this more directly reusable by other facilities are
 welcome — see `CONTRIBUTING.md`.
+
+## Credits
+
+`utilities/epics_archiver_reader/` is adapted from Charly Lassalle's `GetEPICSdata`
+package, written for his SPIRAL2 heat-load-observer PhD thesis work at GANIL — see
+that folder's `README.md`/`LICENSE` for full credit and the original source.
 
 ## License
 

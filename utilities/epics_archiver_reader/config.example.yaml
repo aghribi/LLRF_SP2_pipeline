@@ -1,0 +1,8 @@
+# Copy this file to config.yaml (gitignored, never committed) and fill in the real
+# connection details for your own EPICS Channel Archiver MySQL backend.
+
+host: "your-archiver-db-host"
+port: 3306
+user: "your-username"
+passwd: "your-password"
+db: "your-archiver-database-name"

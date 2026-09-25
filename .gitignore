@@ -170,6 +170,10 @@ temp/
 # local_config.py
 # .env
 
+# Real credentials for utilities/epics_archiver_reader/ -- only the .example
+# template is tracked, never the filled-in file.
+utilities/epics_archiver_reader/config.yaml
+
 # ============================================================================
 # Documentation (Temporary/Draft)
 # ============================================================================
